@@ -17,6 +17,25 @@ public class Calendar
 	public static void main(String [] args)
     {
         
+		// initialize variables
+        int month = 0;
+        int year = 0;
+		int startDay = 0;
+		
+		// get user input
+        Scanner input = new Scanner(System.in);
+        System.out.println();
+        System.out.print("Please enter a month (1-12): ");
+        month = input.nextInt();
+        System.out.println();
+        System.out.print("Please enter a year: ");
+        year = input.nextInt();
+        System.out.println();
+		
+		// text
+		startDay = getStartDay(month, year);
+		System.out.println("Start Day is " + startDay);
+		
     }
 	
 	
@@ -75,9 +94,7 @@ public class Calendar
 	 */
 	
 	public static String getMonthName(int month)
-	{
-		
-	}
+	{}
 	
 	
 	
@@ -130,9 +147,7 @@ public class Calendar
 	 */
 	
 	public static int getNumDaysInMonth(int month, int year)
-	{
-		
-	}
+	{}
 	
 	
 	
@@ -145,9 +160,7 @@ public class Calendar
 	 */
 	
 	public static boolean isLeapYear(int year)
-	{
-		
-	}
+	{}
 	
 	
 	
