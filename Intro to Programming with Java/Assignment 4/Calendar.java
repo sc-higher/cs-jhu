@@ -17,13 +17,13 @@ public class Calendar
     public static void main(String [] args)
     {
 
-		    // initialize variables
+		// initialize variables
         int month = 0;
         int year = 0;
-		    int startDay = 0;
+		int startDay = 0;
         String monthString = " ";
 
-		    // get user input
+		// get user input
         Scanner input = new Scanner(System.in);
         System.out.println();
         System.out.print("Please enter a month (1-12): ");
@@ -32,19 +32,12 @@ public class Calendar
         System.out.print("Please enter a year: ");
         year = input.nextInt();
         System.out.println();
+		
+		// print calendar
+		printMonthCalendar(month, year);
+		System.out.println();
 
-		    // get start day
-        // returns value between 1 and 7 (1 = monday, 7 = sunday)
-		    startDay = getStartDay(month, year);
-        System.out.println("Start Day is " + startDay);
-        System.out.println("Month is " + getMonthName(month));
-        printMonthHeader(month, year);
-        System.out.println();
-        System.out.println(isLeapYear(year));
-        System.out.println();
-        System.out.println("Number of days in month is: " + getNumDaysInMonth(month, year));
 
-        // TEXT
 
     }
 
@@ -59,9 +52,10 @@ public class Calendar
 	      */
 
         public static void printMonthCalendar(int month, int year)
-	      {
-
-	      }
+	    {
+            printMonthHeader(month, year);
+		    printMonthBody(month, year);
+	    }
 
 
 
@@ -75,9 +69,9 @@ public class Calendar
 
         public static void printMonthHeader(int month, int year)
         {
-            System.out.println("           " + getMonthName(month) + " " + year + "           ");
-            System.out.println("-----------------------------------");
-            System.out.println(" Sun  Mon  Tue  Wed  Thu  Fri  Sat ");
+            System.out.println("         " + getMonthName(month) + " " + year);
+            System.out.println("-----------------------------");
+            System.out.println(" Sun Mon Tue Wed Thu Fri Sat ");
         }
 
 
@@ -91,9 +85,51 @@ public class Calendar
 	      */
 
         public static void printMonthBody(int month, int year)
-	      {
-
-	      }
+	    {
+            if (getStartDay(month, year) == 7)
+			{
+				for (int i = 1; i <= getNumDaysInMonth(month, year); i++)
+				{
+					if (i < 10)
+					{
+						System.out.print("   " + i);
+					}
+					else
+					{
+						System.out.print("  " + i);
+					}
+					
+					if ((i+getStartDay(month, year)) % 7 == 0)
+					{
+						System.out.println();
+					}
+				}
+			}
+			
+			else
+			{
+			    for (int i = 1; i < getStartDay(month, year)+1; i++)
+			    {
+				    System.out.print("    ");
+			    }
+				for (int i = 1; i <= getNumDaysInMonth(month, year); i++)
+				{
+					if (i < 10)
+					{
+						System.out.print("   " + i);
+					}
+					else
+					{
+						System.out.print("  " + i);
+					}
+					
+					if ((i+getStartDay(month, year)) % 7 == 0)
+					{
+						System.out.println();
+					}
+				}
+			}
+	    }
 
 
 
@@ -252,7 +288,7 @@ public class Calendar
             if (criteria1 == 0)
             {
 
-                if (criteria2 == 0 & criteria3 != 0)
+                if (criteria3 != 0)
                 {
                     leap = false;
                 }
