@@ -11,14 +11,13 @@
 
 import java.util.Scanner;
 
-public class Calendar
+public class YearCalendar
 {
 
     public static void main(String [] args)
     {
 
 		// initialize variables
-        int month = 0;
         int year = 0;
 		int startDay = 0;
         String monthString = " ";
@@ -26,19 +25,18 @@ public class Calendar
 		// get user input
         Scanner input = new Scanner(System.in);
         System.out.println();
-        System.out.print("Please enter a month (1-12): ");
-        month = input.nextInt();
-        System.out.println();
         System.out.print("Please enter a year: ");
         year = input.nextInt();
         System.out.println();
 		
-		// print calendar
-		printMonthCalendar(month, year);
-		System.out.println();
-
-
-
+		// print calendar for each month of the year
+		for (int month = 1; month <= 12; month++)
+		{
+			System.out.println();
+			printMonthCalendar(month, year);
+		    System.out.println();
+		}
+		
     }
 
 
