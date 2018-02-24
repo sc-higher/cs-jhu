@@ -31,7 +31,7 @@ public class Calendar
         System.out.print("Please enter a year: ");
         year = input.nextInt();
         System.out.println();
-		
+
 		// print calendar
 		printMonthCalendar(month, year);
 		System.out.println();
