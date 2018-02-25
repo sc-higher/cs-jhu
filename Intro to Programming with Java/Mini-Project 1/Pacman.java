@@ -19,6 +19,8 @@ public class Pacman
         // initialize variables
         int height = 0;
         int width = 0;
+        int userselection = 0;
+        int[] position = new int[2];
         char[][] board = new char[height][width];
 
         // get user input
@@ -43,8 +45,43 @@ public class Pacman
 
         // print the game board to the screen
         printBoard(board, height, width);
+        System.out.println("X: " + position[0] + "   Y: " + position[1]);
 
+        // execute selection
+        while (userselection != 4)
+        {
+            userselection = getUserSelection();
 
+            switch(userselection)
+            {
+                case 0:
+                    pacmanInstructions();
+                    break;
+
+                case 1:
+                    turnLeft(board, position);
+                    printBoard(board, height, width);
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    break;
+
+                case 2:
+                    turnRight(board, position);
+                    printBoard(board, height, width);
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    break;
+
+                case 3:
+                    movePacman(board, position, height, width);
+                    break;
+
+                case 4:
+                    break;
+
+                default:
+                    System.out.println("Please enter a valid number.");
+
+            }
+        }
     }
 
     public static void pacmanInstructions()
@@ -71,6 +108,8 @@ public class Pacman
                 board[i][j] = '.';
             }
         }
+
+        board[0][0] = '>';
 
         return board;
     }
@@ -106,6 +145,147 @@ public class Pacman
             System.out.println();
         }
         System.out.println();
+    }
+
+
+    public static int getUserSelection()
+    {
+        Scanner input = new Scanner(System.in);
+        System.out.println();
+        System.out.print("Please enter selection: ");
+        int height = input.nextInt();
+        System.out.println();
+        return height;
+    }
+
+
+    public static char[][] turnLeft(char[][] board, int[] position)
+    {
+        int posx = position[0];
+        int posy = position[1];
+
+        switch (board[posy][posx])
+        {
+            case '>':
+                board[posy][posx] = '^';
+                break;
+            case '^':
+                board[posy][posx] = '<';
+                break;
+            case '<':
+                board[posy][posx] = 'V';
+                break;
+            case 'V':
+                board[posy][posx] = '>';
+                break;
+        }
+        return board;
+    }
+
+
+    public static char[][] turnRight(char[][] board, int[] position)
+    {
+        int posx = position[0];
+        int posy = position[1];
+
+        switch (board[posy][posx])
+        {
+            case '>':
+                board[posy][posx] = 'V';
+                break;
+            case 'V':
+                board[posy][posx] = '<';
+                break;
+            case '<':
+                board[posy][posx] = '^';
+                break;
+            case '^':
+                board[posy][posx] = '>';
+                break;
+        }
+        return board;
+    }
+
+
+    public static int[] movePacman(char[][] board, int[] position, int height, int width)
+    {
+        int posx = position[0];
+        int posy = position[1];
+
+        switch (board[posy][posx])
+        {
+            case '>':
+                if (posx > 0)
+                {
+                    board[posy][posx] = ' ';
+                    board[posy][posx-1] = '>';
+                    printBoard(board, height, width);
+                    posx--;
+                    position[0] = posx;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    return position;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    return position;
+                }
+
+            case 'V':
+                if (posy > 0)
+                {
+                    board[posy][posx] = ' ';
+                    board[posy-1][posx] = 'V';
+                    printBoard(board, height, width);
+                    posy--;
+                    position[1] = posy;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    return position;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    return position;
+                }
+
+            case '<':
+                if (posx < width-1)
+                {
+                    board[posy][posx] = ' ';
+                    board[posy][posx+1] = '<';
+                    printBoard(board, height, width);
+                    posx++;
+                    position[0] = posx;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    return position;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    return position;
+                }
+
+            case '^':
+                if (posy < height-1)
+                {
+                    board[posy][posx] = ' ';
+                    board[posy+1][posx] = '^';
+                    printBoard(board, height, width);
+                    posy++;
+                    position[1] = posy;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    return position;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    return position;
+                }
+
+            default:
+                System.out.println("FAIL");
+                return position;
+        }
     }
 
 }
