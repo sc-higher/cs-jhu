@@ -20,19 +20,64 @@ public class Pacman
         int height = 0;
         int width = 0;
         int userselection = 0;
-        int[] position = new int[2];
+        int[] position = new int[4];      // position[0] = x-position
+                                          // position[1] = y-position
+                                          // position[2] = 'cookie' counter
+                                          // position[3] = turn counter
         char[][] board = new char[height][width];
 
         // get user input
         Scanner input = new Scanner(System.in);
         System.out.println();
-        System.out.print("Please enter board height: ");
-        height = input.nextInt();
+
+        while (height < 2 || height > 30)
+        {
+            try      // this is necessary to make sure that appropriate input for height is given
+            {
+                System.out.print("Please enter board height: ");
+                height = input.nextInt();
+                if (height < 2 || height > 30)
+                {
+                    System.out.println();
+                    System.out.println("Only integer values between 2 and 30 allowed.");
+                    System.out.println();
+                }
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println();
+                System.out.println("Ooops! Please enter only integer values between 2 and 30.");
+                System.out.println("'" + input.next() + "'" + " was not valid input.");
+                System.out.println();
+            }
+        }
+
         System.out.println();
-        System.out.print("Please enter board width: ");
-        width = input.nextInt();
-        System.out.println();
-        int target = (int) (height*width*0.2);
+
+        while (width < 2 || width > 30)
+        {
+            try      // this is necessary to make sure that appropriate input for width is given
+            {
+                System.out.print("Please enter board width: ");
+                width = input.nextInt();
+                if (width < 2 || width > 30)
+                {
+                    System.out.println();
+                    System.out.println("Only integer values between 2 and 30 allowed.");
+                    System.out.println();
+                }
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println();
+                System.out.println("Ooops! Please enter only integer values between 2 and 30.");
+                System.out.println("'" + input.next() + "'" + " was not valid input.");
+                System.out.println();
+            }
+        }
+
+        // Set the target number of cookies (8%)
+        int target = (int) (height*width*0.08);
 
         // print instructions
         pacmanInstructions();
@@ -47,7 +92,373 @@ public class Pacman
         printBoard(board, height, width);
         System.out.println("X: " + position[0] + "   Y: " + position[1]);
 
-        // execute selection
+        // run the game
+        runGame(board, position, height, width, userselection);
+
+    }
+
+    /**
+     * Prints a number of lines containing the Pacman game instructions to the terminal.
+     * Accepts no input and returns nothing.
+     */
+
+    public static void pacmanInstructions()
+    {
+        System.out.println("Welcome to Pac-Man!");
+        System.out.println("Enter the number of the desired command.");
+        System.out.println("<0> Display Commands");
+        System.out.println("<1> Turn Left");
+        System.out.println("<2> Turn Right");
+        System.out.println("<3> Move");
+        System.out.println("<4> Exit");
+        System.out.println();
+    }
+
+
+    /**
+     * Creates the initial Pacman game board, of the dimensions specified by the user.
+     * The game board is a 2D char array of dimensions 'height' x 'width', where each
+     * array value is filled with a '.' expect for position board[0][0], which contains
+     * the Pacman character in the starting position ('>').
+     *
+     * @param height  an integer value representing the height of the game board
+     * @param width   an integer value representing the width of the game board
+     * @return  the game board, a 'height' x 'width' 2D array.
+     */
+
+    public static char[][] createBoard(int height, int width)
+    {
+        char[][] board = new char[height][width];
+
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                board[i][j] = '.';
+            }
+        }
+
+        board[0][0] = '>';
+
+        return board;
+    }
+
+
+    /**
+     * Randomly adds the Pacman 'cookies' to the game board. Replaces a user-specified percentage
+     * of '.' characters with the specified 'cookie' character.
+     *
+     * @param place   the type of character to represent the 'cookies'
+     * @param target  the number of 'cookies' to be placed on the board
+     * @param board   the game board on which the 'cookies' will be placed
+     * @param height  the game board height
+     * @param width   the game board width
+     */
+
+    public static void addCookies(char place, int target, char[][] board, int height, int width)
+    {
+        int count = 0;
+        while (count < target)
+        {
+
+            Random rand = new Random();
+            int x = rand.nextInt(width);
+            int y = rand.nextInt(height);
+
+            if (board[y][x] == '.')
+            {
+                board[y][x] = place;
+                count++;
+            }
+        }
+    }
+
+
+    /**
+     * Prints the game board to terminal.
+     *
+     * @param board   the game board to be printed
+     * @param height  the game board height
+     * @param width   the game board width
+     */
+
+    public static void printBoard(char[][] board, int height, int width)
+    {
+        for (int x = 0; x < height; x++)
+        {
+            for (int y = 0; y < width; y++)
+            {
+                System.out.print(board[x][y]);
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+
+    /**
+     * Prompts the user to enter a selection based off of the rules given by
+     * the pacmanInstructions() method. Returns an integer value representing
+     * the user's selection.
+     *
+     * @return   an integer value representing the user selection
+     */
+
+    public static int getUserSelection()
+    {
+        Scanner input = new Scanner(System.in);
+        System.out.println();
+        System.out.print("Please enter selection: ");
+        int selection = input.nextInt();
+        System.out.println();
+        return selection;
+    }
+
+
+    /**
+     * This method will turn the Pacman character left (counter-clockwise). In
+     * addition, the turn counter integer, contained in position[3], will be
+     * incremented by one to represent the user taking a turn.
+     *
+     * @param board     the game board on which the Pacman character exists and turns left
+     * @param position  a size four 1D array that represents x-position, y-position, cookie counter, and
+     *                  turn counter, respectively
+     */
+
+    public static void turnLeft(char[][] board, int[] position)
+    {
+        int posx = position[0];
+        int posy = position[1];
+
+        switch (board[posy][posx])
+        {
+            case '>':
+                board[posy][posx] = '^';
+                position[3]++;
+                break;
+            case '^':
+                board[posy][posx] = '<';
+                position[3]++;
+                break;
+            case '<':
+                board[posy][posx] = 'V';
+                position[3]++;
+                break;
+            case 'V':
+                board[posy][posx] = '>';
+                position[3]++;
+                break;
+        }
+    }
+
+
+    /**
+     * This method will turn the Pacman character right (clockwise). In
+     * addition, the turn counter integer, contained in position[3], will be
+     * incremented by one to represent the user taking a turn.
+     *
+     * @param board     the game board on which the Pacman character exists and turns right
+     * @param position  a size four 1D array that represents x-position, y-position, cookie counter, and
+     *                  turn counter, respectively
+     */
+
+    public static void turnRight(char[][] board, int[] position)
+    {
+        int posx = position[0];
+        int posy = position[1];
+
+        switch (board[posy][posx])
+        {
+            case '>':
+                board[posy][posx] = 'V';
+                position[3]++;
+                break;
+            case 'V':
+                board[posy][posx] = '<';
+                position[3]++;
+                break;
+            case '<':
+                board[posy][posx] = '^';
+                position[3]++;
+                break;
+            case '^':
+                board[posy][posx] = '>';
+                position[3]++;
+                break;
+        }
+    }
+
+
+    /**
+     * This method will move the Pacman character one space in the direction that the
+     * character is facing. The previous space will be replaced with a ' '. If the
+     * Pacman character would move into a 'cookie', the method will increment the
+     * 'cookie' counter (position[2]) by one. For every move made, the turn counter
+     * (position[3]) will increment by one. The x and y positions (position[0] and
+     * position[1], respectively) will be updated accordingly.
+     *
+     * @param board     the game board on which the move is being made
+     * @param position  a size four 1D array that represents x-position, y-position, cookie counter, and
+     *                  turn counter, respectively
+     * @param height    the height of the game board
+     * @param width     the width of the game board
+     */
+
+    public static void movePacman(char[][] board, int[] position, int height, int width)
+    {
+        int posx = position[0];
+        int posy = position[1];
+
+        switch (board[posy][posx])
+        {
+            case '>':      // one case for each of the four directions pacman can face
+                if (posx > 0)      // check if pacman is at edge of board (relevant to this move direction)
+                {
+                    if (board[posy][posx-1] == 'o')      // check if move will land pacman on cookie
+                    {
+                        position[2]++;      // increment cookie counter
+                    }
+                    board[posy][posx] = ' ';      // set previous position to ' '
+                    board[posy][posx-1] = '>';      // set new position to pacman character
+                    printBoard(board, height, width);      // display the updated board
+                    posx--;      // decrement position int
+                    position[0] = posx;      // update position array with new position data
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);      // print current position
+                    position[3]++;      // increment turn counter
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    break;
+                }
+
+            case 'V':
+                if (posy > 0)
+                {
+                    if (board[posy-1][posx] == 'o')
+                    {
+                        position[2]++;
+                    }
+                    board[posy][posx] = ' ';
+                    board[posy-1][posx] = 'V';
+                    printBoard(board, height, width);
+                    posy--;
+                    position[1] = posy;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    position[3]++;
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    break;
+                }
+
+            case '<':
+                if (posx < width-1)
+                {
+                    if (board[posy][posx+1] == 'o')
+                    {
+                        position[2]++;
+                    }
+                    board[posy][posx] = ' ';
+                    board[posy][posx+1] = '<';
+                    printBoard(board, height, width);
+                    posx++;
+                    position[0] = posx;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    position[3]++;
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    break;
+                }
+
+            case '^':
+                if (posy < height-1)
+                {
+                    if (board[posy+1][posx] == 'o')
+                    {
+                        position[2]++;
+                    }
+                    board[posy][posx] = ' ';
+                    board[posy+1][posx] = '^';
+                    printBoard(board, height, width);
+                    posy++;
+                    position[1] = posy;
+                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
+                    position[3]++;
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid move");
+                    break;
+                }
+
+            default:
+                System.out.println("FAIL");
+                break;
+        }
+    }
+
+
+    /**
+     * This method will print the game stats, including number of turns taken, number of
+     * 'cookies' acquired, and the average number of turns taken per 'cookie'.
+     *
+     * @param position   a size four 1D array that represents x-position, y-position, cookie counter, and
+     *                   turn counter, respectively
+     */
+
+    public static void gameStats(int[] position)
+    {
+        int numCookies = position[2];
+        int numTurns = position[3];
+
+        if (numCookies > 0)
+        {
+            double avgTurnsPerCookie = (double) numTurns / (double) numCookies;
+
+            System.out.println("----------------- STATS -----------------");
+            System.out.println("Total cookies acquired: " + numCookies);
+            System.out.println("Total turns taken: " + numTurns);
+            System.out.printf("Average number of turns per cookie: %.2f\n", avgTurnsPerCookie);
+            System.out.println();
+            System.out.println("Thanks for playing!");
+            System.out.println();
+        }
+
+        else
+        {
+            System.out.println("----------------- STATS -----------------");
+            System.out.println("Total cookies acquired: " + numCookies);
+            System.out.println("Total turns taken: " + numTurns);
+            System.out.println("Average number of turns per cookie: N/A");
+            System.out.println();
+            System.out.println("Thanks for playing!");
+            System.out.println();
+        }
+    }
+
+
+    /**
+     * This method will run the Pacman game. It will execute the user selections for turn, move,
+     * etc, until the user enters '4' in order to quit the game.
+     *
+     * @param board          the game board on which the move is being made
+     * @param position       a size four 1D array that represents x-position, y-position, cookie counter, and
+     *                       turn counter, respectively
+     * @param height         the height of the game board
+     * @param width          the width of the game board
+     * @param userselection  integer value representing the user selection for game options
+     */
+
+    public static void runGame(char[][] board, int[] position, int height, int width, int userselection)
+    {
         while (userselection != 4)
         {
             userselection = getUserSelection();
@@ -75,271 +486,13 @@ public class Pacman
                     break;
 
                 case 4:
+                    gameStats(position);
                     break;
 
                 default:
                     System.out.println("Please enter a valid number.");
 
             }
-        }
-    }
-
-    /**
-     * 
-     */
-
-    public static void pacmanInstructions()
-    {
-        System.out.println("Welcome to Pac-Man!");
-        System.out.println("Enter the number of the desired command.");
-        System.out.println("<0> Display Commands");
-        System.out.println("<1> Turn Left");
-        System.out.println("<2> Turn Right");
-        System.out.println("<3> Move");
-        System.out.println("<4> Exit");
-        System.out.println();
-    }
-
-
-    /**
-     *
-     * @param height
-     * @param width
-     * @return
-     */
-
-    public static char[][] createBoard(int height, int width)
-    {
-        char[][] board = new char[height][width];
-
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                board[i][j] = '.';
-            }
-        }
-
-        board[0][0] = '>';
-
-        return board;
-    }
-
-
-    /**
-     *
-     * @param place
-     * @param target
-     * @param board
-     * @param height
-     * @param width
-     */
-
-    public static void addCookies(char place, int target, char[][] board, int height, int width)
-    {
-        int count = 0;
-        while (count < target)
-        {
-
-            Random rand = new Random();
-            int x = rand.nextInt(width);
-            int y = rand.nextInt(height);
-
-            if (board[x][y] == '.')
-            {
-                board[x][y] = place;
-                count++;
-            }
-        }
-    }
-
-
-    /**
-     *
-     * @param board
-     * @param height
-     * @param width
-     */
-
-    public static void printBoard(char[][] board, int height, int width)
-    {
-        for (int x = 0; x < height; x++)
-        {
-            for (int y = 0; y < width; y++)
-            {
-                System.out.print(board[x][y]);
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-
-    /**
-     *
-     * @return
-     */
-
-    public static int getUserSelection()
-    {
-        Scanner input = new Scanner(System.in);
-        System.out.println();
-        System.out.print("Please enter selection: ");
-        int height = input.nextInt();
-        System.out.println();
-        return height;
-    }
-
-
-    /**
-     *
-     * @param board
-     * @param position
-     * @return
-     */
-
-    public static char[][] turnLeft(char[][] board, int[] position)
-    {
-        int posx = position[0];
-        int posy = position[1];
-
-        switch (board[posy][posx])
-        {
-            case '>':
-                board[posy][posx] = '^';
-                break;
-            case '^':
-                board[posy][posx] = '<';
-                break;
-            case '<':
-                board[posy][posx] = 'V';
-                break;
-            case 'V':
-                board[posy][posx] = '>';
-                break;
-        }
-        return board;
-    }
-
-
-    /**
-     *
-     * @param board
-     * @param position
-     * @return
-     */
-
-    public static char[][] turnRight(char[][] board, int[] position)
-    {
-        int posx = position[0];
-        int posy = position[1];
-
-        switch (board[posy][posx])
-        {
-            case '>':
-                board[posy][posx] = 'V';
-                break;
-            case 'V':
-                board[posy][posx] = '<';
-                break;
-            case '<':
-                board[posy][posx] = '^';
-                break;
-            case '^':
-                board[posy][posx] = '>';
-                break;
-        }
-        return board;
-    }
-
-
-    /**
-     *
-     * @param board
-     * @param position
-     * @param height
-     * @param width
-     * @return
-     */
-
-    public static int[] movePacman(char[][] board, int[] position, int height, int width)
-    {
-        int posx = position[0];
-        int posy = position[1];
-
-        switch (board[posy][posx])
-        {
-            case '>':
-                if (posx > 0)
-                {
-                    board[posy][posx] = ' ';
-                    board[posy][posx-1] = '>';
-                    printBoard(board, height, width);
-                    posx--;
-                    position[0] = posx;
-                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
-                    return position;
-                }
-                else
-                {
-                    System.out.println("Invalid move");
-                    return position;
-                }
-
-            case 'V':
-                if (posy > 0)
-                {
-                    board[posy][posx] = ' ';
-                    board[posy-1][posx] = 'V';
-                    printBoard(board, height, width);
-                    posy--;
-                    position[1] = posy;
-                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
-                    return position;
-                }
-                else
-                {
-                    System.out.println("Invalid move");
-                    return position;
-                }
-
-            case '<':
-                if (posx < width-1)
-                {
-                    board[posy][posx] = ' ';
-                    board[posy][posx+1] = '<';
-                    printBoard(board, height, width);
-                    posx++;
-                    position[0] = posx;
-                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
-                    return position;
-                }
-                else
-                {
-                    System.out.println("Invalid move");
-                    return position;
-                }
-
-            case '^':
-                if (posy < height-1)
-                {
-                    board[posy][posx] = ' ';
-                    board[posy+1][posx] = '^';
-                    printBoard(board, height, width);
-                    posy++;
-                    position[1] = posy;
-                    System.out.println("X: " + position[0] + "   Y: " + position[1]);
-                    return position;
-                }
-                else
-                {
-                    System.out.println("Invalid move");
-                    return position;
-                }
-
-            default:
-                System.out.println("FAIL");
-                return position;
         }
     }
 
