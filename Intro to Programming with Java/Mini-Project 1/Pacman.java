@@ -84,6 +84,10 @@ public class Pacman
         }
     }
 
+    /**
+     * 
+     */
+
     public static void pacmanInstructions()
     {
         System.out.println("Welcome to Pac-Man!");
@@ -96,6 +100,13 @@ public class Pacman
         System.out.println();
     }
 
+
+    /**
+     *
+     * @param height
+     * @param width
+     * @return
+     */
 
     public static char[][] createBoard(int height, int width)
     {
@@ -114,6 +125,15 @@ public class Pacman
         return board;
     }
 
+
+    /**
+     *
+     * @param place
+     * @param target
+     * @param board
+     * @param height
+     * @param width
+     */
 
     public static void addCookies(char place, int target, char[][] board, int height, int width)
     {
@@ -134,6 +154,13 @@ public class Pacman
     }
 
 
+    /**
+     *
+     * @param board
+     * @param height
+     * @param width
+     */
+
     public static void printBoard(char[][] board, int height, int width)
     {
         for (int x = 0; x < height; x++)
@@ -148,6 +175,11 @@ public class Pacman
     }
 
 
+    /**
+     *
+     * @return
+     */
+
     public static int getUserSelection()
     {
         Scanner input = new Scanner(System.in);
@@ -158,6 +190,13 @@ public class Pacman
         return height;
     }
 
+
+    /**
+     *
+     * @param board
+     * @param position
+     * @return
+     */
 
     public static char[][] turnLeft(char[][] board, int[] position)
     {
@@ -183,6 +222,13 @@ public class Pacman
     }
 
 
+    /**
+     *
+     * @param board
+     * @param position
+     * @return
+     */
+
     public static char[][] turnRight(char[][] board, int[] position)
     {
         int posx = position[0];
@@ -206,6 +252,15 @@ public class Pacman
         return board;
     }
 
+
+    /**
+     *
+     * @param board
+     * @param position
+     * @param height
+     * @param width
+     * @return
+     */
 
     public static int[] movePacman(char[][] board, int[] position, int height, int width)
     {
