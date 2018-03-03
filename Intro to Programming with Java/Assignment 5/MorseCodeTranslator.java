@@ -15,8 +15,25 @@ import java.util.Scanner;
 public class MorseCodeTranslator
 {
 
+    // create translation arrays
+    static char[] english = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+            'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+            ',', '.', '?', '!', ' '};
+
+    static String[] morse = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
+            ".---", "-.-", ".-..", "--", "-.", "---", ".---.", "--.-", ".-.",
+            "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", ".----",
+            "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.",
+            "-----", "--..--", ".-.-.-", "..--..", "", "|"};
+
+    static String alphabet = " abcdefghijklmnopqrstuvwxyz";
+
+
+    // call main method
     public static void main(String[] args)
     {
+
         // create scanner object
         Scanner input = new Scanner(System.in);
 
@@ -30,7 +47,7 @@ public class MorseCodeTranslator
         System.out.println();
         input.nextLine();
         System.out.print("Please enter a sentence you would like translated: ");
-        String userString = input.nextLine();
+        String userString = input.nextLine().toLowerCase();
 
         // test stuff
         System.out.println();
@@ -40,8 +57,6 @@ public class MorseCodeTranslator
         englishToMorse(userString);
 
 
-        //
-
     }
 
 
@@ -49,24 +64,43 @@ public class MorseCodeTranslator
 
     public static void englishToMorse(String userString)
     {
-        String[] splitToWords = userString.split(" ");
+        // initialize translated string
+        String translated = new String();
 
+        // create char array from user input string
+        char[] splitToChar = userString.toCharArray();
 
+        //
+        for (char thisLetter : splitToChar)
+        {
+            translated = translated + charToMorse(thisLetter) + " ";
+        }
+
+        System.out.println(translated);
     }
 
 
     public static String charToMorse(char letter)
     {
-        char[] english = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-                ',', '.', '?' };
+        String empty = new String();
+        String strLetter = "" + letter;
 
-        String[] morse = { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
-                ".---", "-.-", ".-..", "--", "-.", "---", ".---.", "--.-", ".-.",
-                "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", ".----",
-                "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.",
-                "-----", "--..--", ".-.-.-", "..--.." };
+        if (alphabet.contains(strLetter))
+        {
+            for (int i = 0; i <= english.length; i++)
+            {
+                if (letter == english[i])
+                {
+                    return morse[i];
+                }
+            }
+        }
+        else
+        {
+            return empty;
+        }
+
+        return empty;
 
     }
 
