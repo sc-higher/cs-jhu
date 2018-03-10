@@ -38,6 +38,7 @@ public class Date
 
     /** METHODS */
 
+    // date 'set' methods
     public void setMonth(int month)
     {
         dateMonth = month;
@@ -53,6 +54,7 @@ public class Date
         dateYear = year;
     }
 
+    // date 'get' methods
     public int getMonth()
     {
         return dateMonth;

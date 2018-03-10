@@ -39,6 +39,7 @@ public class Address
 
     /** METHODS */
 
+    // address 'set' methods
     public void setStreet(String street)
     {
         addressStreet = street;
@@ -59,6 +60,7 @@ public class Address
         addressZip = zip;
     }
 
+    // address 'get' methods
     public String getStreet()
     {
         return addressStreet;
