@@ -254,8 +254,8 @@ public class Pacman
                     userselection = Integer.valueOf(userstring);
                     if ( (userselection < 0) || (userselection > 4) )
                     {
-                        System.out.println("\nOoops! Please enter only integer" +
-                                " values between 0 and 4.\n");
+                        System.out.println("\nOoops! Please enter only integer"
+                                + " values between 0 and 4.\n");
                         pacmanInstructions();
                         printBoard(board, height, width);
                         System.out.println("X: " + position[0] + "   Y: " +
