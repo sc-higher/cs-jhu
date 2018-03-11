@@ -222,7 +222,9 @@ public class Pacman
      * @return                an integer value representing the user selection
      */
 
-    public static int getUserSelection(Scanner input, Integer userselection)
+    public static int getUserSelection(Scanner input, Integer userselection,
+                                       char[][] board, int[] position,
+                                       int height, int width)
     {
         System.out.println();
         String userstring = "";
@@ -236,8 +238,12 @@ public class Pacman
             // check if nothing was entered
             if ( userstring.isEmpty() )
             {
-                System.out.println("Ooops! Please enter only integer values" +
-                        " between 0 and 4.");
+                System.out.println("\nOoops! Please enter only integer values" +
+                        " between 0 and 4.\n");
+                pacmanInstructions();
+                printBoard(board, height, width);
+                System.out.println("X: " + position[0] + "   Y: " +
+                        position[1] + "\n");
             }
 
             else
@@ -248,15 +254,23 @@ public class Pacman
                     userselection = Integer.valueOf(userstring);
                     if ( (userselection < 0) || (userselection > 4) )
                     {
-                        System.out.println("Ooops! Please enter only integer" +
-                                " values between 0 and 4.");
+                        System.out.println("\nOoops! Please enter only integer" +
+                                " values between 0 and 4.\n");
+                        pacmanInstructions();
+                        printBoard(board, height, width);
+                        System.out.println("X: " + position[0] + "   Y: " +
+                                position[1] + "\n");
                     }
 
                 }
                 catch (NumberFormatException e)
                 {
-                    System.out.println("Ooops! Please enter only integer" +
-                            " values between 0 and 4.");
+                    System.out.println("\nOoops! Please enter only integer" +
+                            " values between 0 and 4.\n");
+                    pacmanInstructions();
+                    printBoard(board, height, width);
+                    System.out.println("X: " + position[0] + "   Y: " +
+                            position[1] + "\n");
                 }
             }
         }
@@ -532,7 +546,8 @@ public class Pacman
     {
         while (userselection != 4)
         {
-            userselection = getUserSelection(input, userselection);
+            userselection = getUserSelection(input, userselection, board,
+                    position, height, width);
 
             switch(userselection)
             {
