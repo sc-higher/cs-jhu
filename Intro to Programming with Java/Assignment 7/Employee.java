@@ -7,7 +7,7 @@
 public class Employee
 {
 
-    // declare employee variables
+    // declare Employee variables
     private int employeeNumber;
     private Name employeeName;
     private Address employeeAddress;
@@ -30,7 +30,7 @@ public class Employee
 
     }
 
-    // constructor for all arguments
+    // constructor for all variables
     public Employee(int number, Name name, Address address, Date date)
     {
         // employee number
@@ -89,6 +89,45 @@ public class Employee
     public Date getDate()
     {
         return employeeDate;
+    }
+
+    // SalariedEmployee set/get methods (avoid downcasting)
+    public int getSalary()
+    {
+        return 0;
+    }
+
+    public void setSalary(int salary)
+    {
+        System.out.println(salary);
+    }
+
+    // HourlyEmployee set/get methods (avoid downcasting)
+    public double getPayRate()
+    {
+        return 0.0;
+    }
+
+    public void setPayRate(double payRate)
+    {
+        System.out.println(payRate);
+    }
+
+    // hoursWorked get/set
+    public double getHoursWorked()
+    {
+        return 0.0;
+    }
+
+    public void setHoursWorked(double hoursWorked)
+    {
+        System.out.println(hoursWorked);
+    }
+
+    // totalEarnings get
+    public double getTotalEarnings()
+    {
+        return 0.0;
     }
 
 

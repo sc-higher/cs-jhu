@@ -9,7 +9,7 @@
 public class Date
 {
 
-    // declare date variables
+    // declare Date variables
     private int dateMonth;
     private int dateDay;
     private int dateYear;
@@ -26,7 +26,7 @@ public class Date
         dateYear = 0;
     }
 
-    // constructor for all arguments
+    // constructor for all variables
     public Date(int month, int day, int year)
     {
         // employee date

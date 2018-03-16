@@ -6,7 +6,7 @@
 public class Name
 {
 
-    // declare name variables
+    // declare Name variables
     private String employeeNameFirst;
     private String employeeNameLast;
 
@@ -21,7 +21,7 @@ public class Name
         employeeNameLast = "";
     }
 
-    // constructor for all arguments
+    // constructor for all variables
     public Name(String firstName, String lastName)
     {
         // employee name

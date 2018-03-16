@@ -8,7 +8,7 @@
 public class Address
 {
 
-    // declare address variables
+    // declare Address variables
     private String addressStreet;
     private String addressCity;
     private String addressState;
@@ -27,7 +27,7 @@ public class Address
         addressZip = "";
     }
 
-    // constructor for all arguments
+    // constructor for all variables
     public Address(String street, String city, String state, String zip)
     {
         // employee address
