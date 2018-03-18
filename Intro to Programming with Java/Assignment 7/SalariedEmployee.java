@@ -19,7 +19,8 @@ public class SalariedEmployee extends Employee
     }
 
     // constructor for all variables
-    public SalariedEmployee(int number, Name name, Address address, Date date, int salary)
+    public SalariedEmployee(int number, Name name, Address address, Date date,
+                            int salary)
     {
         super(number, name, address, date);
         annualSalary = salary;
