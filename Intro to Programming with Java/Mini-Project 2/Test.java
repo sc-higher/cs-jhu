@@ -16,44 +16,16 @@ public class Test
 {
     public static void main(String[] args)
     {
-        String fileName= "product-list-1.csv";
-        File file= new File(fileName);
+        String filename = "product-list-1.csv";
 
-        // this gives you a 2-dimensional array of strings
-        List<List<String>> lines = new ArrayList<>();
-        Scanner inputStream;
+        ReadCSV productList = new ReadCSV(filename);
 
-        try
-        {
-            inputStream = new Scanner(file);
+        productList.toArray();
 
-            while(inputStream.hasNextLine()){
-                String line = inputStream.nextLine();
-                String[] values = line.split(",");
-                // this adds the currently parsed line to the 2-dimensional string array
-                lines.add(Arrays.asList(values));
-            }
+        productList.print();
 
-            inputStream.close();
-        }
 
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
 
-        // the following code lets you iterate through the 2-dimensional array
-        int lineNo = 1;
-
-        for(List<String> line: lines)
-        {
-            int columnNo = 1;
-            for (String value: line) {
-                System.out.println("Line " + lineNo + " Column " + columnNo + ": " + value);
-                columnNo++;
-            }
-            lineNo++;
-        }
     }
 
 }
