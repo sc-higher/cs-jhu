@@ -1,5 +1,5 @@
 /**
- * This program is my response to Assignment 7 for the class 605.201.81 Intro
+ * This program is my response to Mini-Project 2 for the class 605.201.81 Intro
  * to Programming Using Java at the JHU EPP CS program.
  *
  * <TEXT HERE>
