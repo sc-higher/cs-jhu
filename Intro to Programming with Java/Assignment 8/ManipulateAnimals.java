@@ -3,8 +3,6 @@
  * class 605.201.81 Intro to Programming Using Java at
  * the JHU EPP CS program.
  *
- * <TEXT HERE>
- *
  * @author: Sean Connor
  */
 

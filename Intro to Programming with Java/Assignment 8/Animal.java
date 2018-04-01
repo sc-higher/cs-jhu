@@ -5,14 +5,13 @@ public class Animal implements IManipulate
     private int animalAge;
 
     // constructor
-    public Animal(String name, int age)
+    public Animal(String animalName, int animalAge)
     {
-        animalName = name;
-        animalAge = age;
+        this.animalName = animalName;
+        this.animalAge = animalAge;
     }
 
     // get and set methods
-
     public String getAnimalName()
     {
         return animalName;
@@ -34,21 +33,25 @@ public class Animal implements IManipulate
     }
 
     // interface methods
+    @Override
     public void drawObject()
     {
         System.out.println("Drawing an animal.");
     }
 
+    @Override
     public void rotateObject()
     {
         System.out.println("Rotating an animal.");
     }
 
+    @Override
     public void resizeObject()
     {
         System.out.println("Resizing an animal.");
     }
 
+    @Override
     public void playSound()
     {
         System.out.println("Animal sound.");

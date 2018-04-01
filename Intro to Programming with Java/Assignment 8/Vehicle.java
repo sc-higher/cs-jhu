@@ -5,14 +5,13 @@ public class Vehicle implements IManipulate
     private int vehicleYear;
 
     // constructor
-    public Vehicle(String name, int year)
+    public Vehicle(String vehicleName, int vehicleYear)
     {
-        vehicleName = name;
-        vehicleYear = year;
+        this.vehicleName = vehicleName;
+        this.vehicleYear = vehicleYear;
     }
 
     // get and set methods
-
     public String getVehicleName()
     {
         return vehicleName;
@@ -34,21 +33,25 @@ public class Vehicle implements IManipulate
     }
 
     // interface methods
+    @Override
     public void drawObject()
     {
         System.out.println("Drawing a vehicle.");
     }
 
+    @Override
     public void rotateObject()
     {
         System.out.println("Rotating a vehicle.");
     }
 
+    @Override
     public void resizeObject()
     {
         System.out.println("Resizing a vehicle.");
     }
 
+    @Override
     public void playSound()
     {
         System.out.println("Vehicle sound.");

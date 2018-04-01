@@ -22,10 +22,24 @@ public class Test
 
         productList.toArray();
 
+        System.out.println();
         productList.print();
 
+        char usd_symbol = 36;
+        char eur_symbol = 8364;
+        char jpy_symbol = 165;
 
+        System.out.println("\nValue of quarter: " + usd_symbol +
+                (double) USD.QUARTER.getValue()/100);
+
+        System.out.println("\nFive EUR: " + eur_symbol +
+                (double) EUR.FIVEN.getValue()/100);
+
+        System.out.println("\nOne hundred JPY: " + jpy_symbol +
+                JPY.HUNDRED.getValue());
 
     }
+
+
 
 }
