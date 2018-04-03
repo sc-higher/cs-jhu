@@ -17,6 +17,8 @@ public class ReadCSV
     // initialize variables
     private String fileName;
     private List<List<String>> lines = new ArrayList<>();
+    private int numRows;
+    private int numCols;
 
 
     // ReadCSV constructor
@@ -70,6 +72,32 @@ public class ReadCSV
             }
             System.out.println();
         }
+
+        System.out.println("lines[0][0] = " + lines.get(0).get(0));
+        System.out.println("lines[1][0] = " + lines.get(1).get(0));
+        System.out.println("lines[0][1] = " + lines.get(0).get(1));
+
+        System.out.println("\nlines length (# rows) = " + lines.size());
+        System.out.println("lines[0] = " + lines.get(0));
+        System.out.println("lines[0] length (# columns) = " +
+                lines.get(0).size());
+    }
+
+    public int numRows()
+    {
+        numRows = lines.size();
+        return numRows;
+    }
+
+    public int numCols()
+    {
+        numCols = lines.get(0).size();
+        return numCols;
+    }
+
+    public String getValue(int rowIndex, int colIndex)
+    {
+        return lines.get(rowIndex).get(colIndex);
     }
 
 

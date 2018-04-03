@@ -16,14 +16,23 @@ public class Test
 {
     public static void main(String[] args)
     {
+        // TEST ReadCSV
+
         String filename = "product-list-1.csv";
 
-        ReadCSV productList = new ReadCSV(filename);
+        ReadCSV productFromCSV = new ReadCSV(filename);
 
-        productList.toArray();
+        productFromCSV.toArray();
 
         System.out.println();
-        productList.print();
+        productFromCSV.print();
+
+        // TEST numRows numCols
+        System.out.println("\nNumber of rows: " + productFromCSV.numRows());
+        System.out.println("Number of columns: " + productFromCSV.numCols());
+
+
+        // TEST ENUMS AND SYMBOLS
 
         char usd_symbol = 36;
         char eur_symbol = 8364;
@@ -38,6 +47,64 @@ public class Test
         System.out.println("\nOne hundred JPY: " + jpy_symbol +
                 JPY.HUNDRED.getValue());
 
+        // TEST Product OBJECT ARRAYLIST
+
+        ArrayList<Product> productList = new ArrayList<Product>();
+//        productList.add( new Product("test1", 1, 10) );
+//        productList.add( new Product("test2", 2, 20) );
+//        System.out.println("\nProduct #1: " + productList.get(0).getName());
+
+        // TEST iterate through productFromCSV to add to productList
+
+        for (int i = 1; i < productFromCSV.numRows(); i++)
+        {
+            String name = productFromCSV.getValue(i,0);
+            int quantity = Integer.parseInt(productFromCSV.getValue(i,1));
+            int price = Integer.parseInt(productFromCSV.getValue(i,2));
+
+            productList.add( new Product(name,quantity,price) );
+
+        }
+
+        System.out.println("\nProduct 1 Name: " + productList.get(0).getName());
+        System.out.println("Product 1 Quantity: " + productList.get(0).getQuantity());
+        System.out.println("Product 1 Price: " + productList.get(0).getPrice());
+
+        System.out.println("\nProduct 2 Name: " + productList.get(1).getName());
+        System.out.println("Product 2 Quantity: " + productList.get(1).getQuantity());
+        System.out.println("Product 2 Price: " + productList.get(1).getPrice());
+
+        System.out.println("productList length: " + productList.size());
+
+        displayInventory(productList);
+        productList.get(0).setQuantity(5);
+        displayInventory(productList);
+
+    }
+
+
+    /**
+     *
+     * @param productList
+     */
+    private static void displayInventory(ArrayList<Product> productList)
+    {
+        String name = "Name";
+        String quantity = "Quantity";
+        String price = "Price";
+
+        System.out.printf("%1$15s", name);
+        System.out.printf("%1$15s", quantity);
+        System.out.printf("%1$15s", price);
+
+        for (int i = 0; i < productList.size(); i++)
+        {
+            System.out.printf("\n%1$15s", productList.get(i).getName());
+            System.out.printf("%1$15s", productList.get(i).getQuantity());
+            System.out.printf("%1$15s", productList.get(i).getPrice());
+        }
+
+        System.out.println();
     }
 
 
