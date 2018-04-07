@@ -14,6 +14,9 @@ import java.util.*;
 
 public class Test
 {
+
+    public static final Scanner input = new Scanner(System.in);
+
     public static void main(String[] args)
     {
         // TEST ReadCSV
@@ -47,24 +50,9 @@ public class Test
         System.out.println("\nOne hundred JPY: " + jpy_symbol +
                 JPY.HUNDRED.getValue());
 
-        // TEST Product OBJECT ARRAYLIST
-
+        // ReadCSV product contents to separate Product objects in arraylist
         ArrayList<Product> productList = new ArrayList<Product>();
-//        productList.add( new Product("test1", 1, 10) );
-//        productList.add( new Product("test2", 2, 20) );
-//        System.out.println("\nProduct #1: " + productList.get(0).getName());
-
-        // TEST iterate through productFromCSV to add to productList
-
-        for (int i = 1; i < productFromCSV.numRows(); i++)
-        {
-            String name = productFromCSV.getValue(i,0);
-            int quantity = Integer.parseInt(productFromCSV.getValue(i,1));
-            int price = Integer.parseInt(productFromCSV.getValue(i,2));
-
-            productList.add( new Product(name,quantity,price) );
-
-        }
+        toProductObject(productFromCSV, productList);
 
         System.out.println("\nProduct 1 Name: " + productList.get(0).getName());
         System.out.println("Product 1 Quantity: " + productList.get(0).getQuantity());
@@ -76,6 +64,7 @@ public class Test
 
         System.out.println("productList length: " + productList.size());
 
+        // TEST displayInventory method
         displayInventory(productList);
         productList.get(0).setQuantity(5);
         displayInventory(productList);
@@ -93,6 +82,10 @@ public class Test
         String quantity = "Quantity";
         String price = "Price";
 
+        System.out.println();
+        System.out.println("              Current Inventory              ");
+        System.out.println("---------------------------------------------");
+
         System.out.printf("%1$15s", name);
         System.out.printf("%1$15s", quantity);
         System.out.printf("%1$15s", price);
@@ -104,7 +97,26 @@ public class Test
             System.out.printf("%1$15s", productList.get(i).getPrice());
         }
 
-        System.out.println();
+        System.out.println("\n\n");
+    }
+
+
+    /**
+     *
+     * @param productFromCSV
+     * @param productList
+     */
+    private static void toProductObject(ReadCSV productFromCSV,
+                                        ArrayList<Product> productList)
+    {
+        for (int i = 1; i < productFromCSV.numRows(); i++)
+        {
+            String name = productFromCSV.getValue(i,0);
+            int quantity = Integer.parseInt(productFromCSV.getValue(i,1));
+            int price = Integer.parseInt(productFromCSV.getValue(i,2));
+
+            productList.add( new Product(name,quantity,price) );
+        }
     }
 
 
