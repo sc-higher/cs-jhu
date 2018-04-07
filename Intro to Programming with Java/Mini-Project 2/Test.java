@@ -69,6 +69,11 @@ public class Test
         productList.get(0).setQuantity(5);
         displayInventory(productList);
 
+        // TEST UserInput object
+        UserInput testmenu = new UserInput(2);
+        int num = testmenu.getUserSelection();
+        System.out.println("selection is: " + num);
+
     }
 
 
