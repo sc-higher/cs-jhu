@@ -1,16 +1,16 @@
-public class Product
+public class Item
 {
     // initialize variables
     String name;
+    int value;
     int quantity;
-    int price;
 
     // Product constructor
-    public Product(String name, int quantity, int price)
+    public Item(String name, int value, int quantity)
     {
         this.name = name;
+        this.value = value;
         this.quantity = quantity;
-        this.price = price;
     }
 
     // get and set methods
@@ -24,6 +24,16 @@ public class Product
         this.name = name;
     }
 
+    public int getValue()
+    {
+        return value;
+    }
+
+    public void setValue(int value)
+    {
+        this.value = value;
+    }
+
     public int getQuantity()
     {
         return quantity;
@@ -33,16 +43,5 @@ public class Product
     {
         this.quantity = quantity;
     }
-
-    public int getPrice()
-    {
-        return price;
-    }
-
-    public void setPrice(int price)
-    {
-        this.price = price;
-    }
-
 
 }
