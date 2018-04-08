@@ -69,6 +69,25 @@ public class Test
         productList.get(0).setQuantity(5);
         displayInventory(productList);
 
+        // TEST currency selection
+        System.out.println("TESTING CURRENCY FROM CSV");
+        filename = "JPY.csv";
+
+        ReadCSV currency = new ReadCSV(filename);
+
+        currency.toArray();
+
+        System.out.println();
+        currency.print();
+
+        System.out.println("\nNumber of rows: " + currency.numRows());
+        System.out.println("Number of columns: " + currency.numCols());
+
+
+//        System.out.println("\nOne hundred JPY: " + jpy_symbol +
+//                currency.HUNDRED.getValue());
+
+
         // TEST UserInput object
         UserInput testmenu = new UserInput(2);
         int num = testmenu.getUserSelection();
