@@ -7,13 +7,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class VMS
+public class VendingMachineSimulator
 {
     public static final Scanner input = new Scanner(System.in);
     public static final PrintOptions options = new PrintOptions();
 
     public static void main(String[] args)
     {
+        // Create a vending machine simulator object
+        VendingMachineSimulator vms = new VendingMachineSimulator();
+
         // Get user input for VM currency type
         UserInput currencySelectionMenu = new UserInput(3);
         options.printCurrencyOptions();
@@ -25,25 +28,27 @@ public class VMS
         int inventoryTypeSelection = inventorySelectionMenu.getUserSelection();
 
         // Load VM currency from CSV based on user selection
-        String filenameCurrency = setCurrencyFile(currencyTypeSelection);
+        String filenameCurrency = vms.setCurrencyFile(currencyTypeSelection);
         ReadCSV currencyFromCSV = new ReadCSV(filenameCurrency);
         currencyFromCSV.toArray();
         Item[] currency = currencyFromCSV.getItemArray();
 
         // Load VM inventory from CSV based on user selection
-        String filenameInventory = setInventoryFile(inventoryTypeSelection);
+        String filenameInventory = vms.setInventoryFile(inventoryTypeSelection);
         ReadCSV inventoryFromCSV = new ReadCSV(filenameInventory);
         inventoryFromCSV.toArray();
         Item[] inventory = inventoryFromCSV.getItemArray();
 
         // Create VM money counter
-        Item[] moneyCounter = createMoneyCounter(currency);
+        Item[] moneyCounter = vms.createMoneyCounter(currency);
 
         // Display vending machine money and inventory, and wallet money
         System.out.println("\nGreat, let's get started!\n");
-        displayAllInfo(currency,inventory,moneyCounter,currencyTypeSelection);
+        vms.displayAllInfo(currency,inventory,moneyCounter,currencyTypeSelection);
 
         // Run the VM simulator
+        int mainSelection = Integer.valueOf(-1);
+        vms.runVM(mainSelection,currency,inventory,moneyCounter,currencyTypeSelection);
 
 
 
@@ -58,7 +63,7 @@ public class VMS
     /*   METHODS   */
     /*-------------*/
 
-    private static String setCurrencyFile(int currencySelection)
+    private String setCurrencyFile(int currencySelection)
     {
         String filename;
 
@@ -80,7 +85,7 @@ public class VMS
         return filename;
     }
 
-    private static String setInventoryFile(int inventorySelection)
+    private String setInventoryFile(int inventorySelection)
     {
         String filename;
 
@@ -104,7 +109,7 @@ public class VMS
      *
      * @param itemList
      */
-    private static void displayInventory(Item[] itemArray)
+    private void displayInventory(Item[] itemArray)
     {
         String id = "ID";
         String name = "Name";
@@ -137,7 +142,7 @@ public class VMS
      *
      * @param itemList
      */
-    private static void displayVendingCurrency(Item[] itemArray,
+    private void displayVendingCurrency(Item[] itemArray,
                                                int currencySelection)
     {
         char usd_symbol = 36;
@@ -168,7 +173,7 @@ public class VMS
         System.out.println();
         System.out.println("-------------------------------------------------");
         System.out.println("|           Vending Machine Money (" + symbol +
-                        ")           |");
+                ")           |");
         System.out.println("-------------------------------------------------");
 
         System.out.printf("%1$5s", id);
@@ -193,8 +198,8 @@ public class VMS
      * @param itemArray
      * @param currencySelection
      */
-    private static void displayMoneyCounter(Item[] itemArray,
-                                               int currencySelection)
+    private void displayMoneyCounter(Item[] itemArray,
+                                            int currencySelection)
     {
         char usd_symbol = 36;
         char eur_symbol = 8364;
@@ -247,7 +252,7 @@ public class VMS
     /**
      *
      */
-    private static void displayAllInfo(Item[] currency, Item[] inventory,
+    private void displayAllInfo(Item[] currency, Item[] inventory,
                                        Item[] moneyCounter,
                                        int currencySelection)
     {
@@ -263,7 +268,7 @@ public class VMS
     /**
      *
      */
-    private static Item[] createMoneyCounter(Item[] currency)
+    private Item[] createMoneyCounter(Item[] currency)
     {
         int length = currency.length;
         Item[] moneyCounter = new Item[length];
@@ -282,6 +287,89 @@ public class VMS
         return moneyCounter;
     }
 
+
+    /**
+     *
+     */
+    private void runVM(int mainSelection,
+                       Item[] currency,
+                       Item[] inventory,
+                       Item[] moneyCounter,
+                       int currencySelection)
+    {
+        UserInput mainMenu = new UserInput(4);
+
+        UserInput moneyMenu = new UserInput(currency.length);
+        int moneySelection;
+
+        UserInput inventoryMenu = new UserInput(inventory.length);
+        int inventorySelection;
+
+        while (mainSelection != 0)
+        {
+            options.printMainOptions();
+            mainSelection = mainMenu.getUserSelection();
+
+            switch (mainSelection)
+            {
+                case 0:
+                    System.out.println("\nGoodbye!");
+                    mainSelection = 0;
+                    break;
+                case 1:
+                    displayAllInfo(currency,inventory,moneyCounter,currencySelection);
+                    moneySelection = moneyMenu.getUserSelection();
+                    insertMoney(moneySelection,currency,moneyCounter);
+                    mainSelection = -1;
+                    break;
+                case 2:
+                    removeAllMoney(currency,moneyCounter);
+                    displayAllInfo(currency,inventory,moneyCounter,currencySelection);
+                    mainSelection = -1;
+                    break;
+                case 3:
+                    mainSelection = -1;
+                    break;
+                default:
+                    mainSelection = -1;
+            }
+
+
+        }
+    }
+
+
+    /**
+     *
+     * @param moneySelection
+     * @param currency
+     * @param moneyCounter
+     */
+    private void insertMoney(int moneySelection,
+                             Item[] currency,
+                             Item[] moneyCounter)
+    {
+        currency[moneySelection].incrementQuantity();
+        moneyCounter[moneySelection].incrementQuantity();
+    }
+
+
+    /**
+     *
+     * @param currency
+     * @param moneyCounter
+     */
+    private void removeAllMoney(Item[] currency,
+                                Item[] moneyCounter)
+    {
+        for (int i = 0; i < currency.length; i++)
+        {
+            int x = currency[i].getQuantity();
+            x = x - moneyCounter[i].getQuantity();
+            currency[i].setQuantity(x);
+            moneyCounter[i].setQuantity(0);
+        }
+    }
 
 
 

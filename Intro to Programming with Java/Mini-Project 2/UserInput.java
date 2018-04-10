@@ -10,8 +10,8 @@ public class UserInput
     // constructor
     public UserInput(int numberChoices)
     {
-        userselection = Integer.valueOf(-1);
         this.numberChoices = numberChoices;
+        userselection = Integer.valueOf(-1);
     }
 
 
@@ -23,6 +23,7 @@ public class UserInput
     {
         System.out.println();
         String userstring = "";
+        userselection = Integer.valueOf(-1);
 
         // make sure input is valid
         while ( (userselection < 0) || (userselection >= numberChoices) )

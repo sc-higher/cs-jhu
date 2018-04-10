@@ -1,3 +1,3 @@
-Product,Price,Quantity
-Utz Original,75,8
-Utz Barbeque,75,1
+ID,Product,Price,Quantity
+(0),Utz Original,75,8
+(1),Utz Barbeque,75,1

@@ -1,5 +1,5 @@
 /**
- * This program is my response to Assignment 7 for the class 605.201.81 Intro
+ * This program is my response to <INSERT> for the class 605.201.81 Intro
  * to Programming Using Java at the JHU EPP CS program.
  *
  * <TEXT HERE>
@@ -15,44 +15,41 @@ import java.util.*;
 public class ReadCSV
 {
     // initialize variables
-    private String fileName;
-    private List<List<String>> lines = new ArrayList<>();
-    private int numRows;
-    private int numCols;
+    private String filename;
+    private String line;
+    private String[] values;
+    private int[] csvDimensions = new int[2]; // csvDimensions[rows,columns]
+    private String[][] itemStringArray;
+    private Item[] itemArray;
 
 
     // ReadCSV constructor
-    public ReadCSV(String fileName)
+    public ReadCSV(String filename)
     {
-        this.fileName = fileName;
-    }
+        this.filename = filename;
 
+        File csvFile = new File(filename);
 
-    /**
-     *
-     */
-    public void toArray()
-    {
-        File csvFile = new File(fileName);
-
-        // this gives you a 2-dimensional array of strings
         Scanner input;
 
         try
         {
             input = new Scanner(csvFile);
 
-            while (input.hasNextLine())
+            while( input.hasNextLine() )
             {
-                String line = input.nextLine();
-                String[] values = line.split(",");
-                // this adds the currently parsed line to the 2-dimensional string array
-                lines.add(Arrays.asList(values));
+                csvDimensions[0]++;  // determine CSV rows (height)
+
+                line = input.nextLine();
+                values = line.split(",");
             }
+
+            csvDimensions[1] = values.length;  // determine CSV columns (width)
 
             input.close();
         }
-        catch (FileNotFoundException e)
+
+        catch(FileNotFoundException e)
         {
             e.printStackTrace();
         }
@@ -62,46 +59,97 @@ public class ReadCSV
     /**
      *
      */
-    public void print()
+    public void toArray()
     {
-        for(List<String> line : lines)
+        int rows = csvDimensions[0];
+        int columns = csvDimensions[1];
+        itemStringArray = new String[rows][columns];
+
+        File csvFile = new File(filename);
+        Scanner input;
+
+        try
         {
-            for (String value : line)
+            input = new Scanner(csvFile);
+
+            for (int i = 0; i < rows; i++)
             {
-                System.out.printf("%1$15s", value);
+                line = input.nextLine();
+                values = line.split(",");
+
+                itemStringArray[i][0] = values[0];
+                itemStringArray[i][1] = values[1];
+                itemStringArray[i][2] = values[2];
+                itemStringArray[i][3] = values[3];
+            }
+
+            input.close();
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    public String[][] getStringArray()
+    {
+        return itemStringArray;
+    }
+
+
+    /**
+     *
+     */
+    public void printStringArray()
+    {
+        for (int i = 0; i < itemStringArray.length; i++)
+        {
+            for (int j = 0; j < itemStringArray[i].length; j++)
+            {
+                System.out.printf("%1$15s", itemStringArray[i][j]);
             }
             System.out.println();
         }
-
-        System.out.println("lines[0][0] = " + lines.get(0).get(0));
-        System.out.println("lines[1][0] = " + lines.get(1).get(0));
-        System.out.println("lines[0][1] = " + lines.get(0).get(1));
-
-        System.out.println("\nlines length (# rows) = " + lines.size());
-        System.out.println("lines[0] = " + lines.get(0));
-        System.out.println("lines[0] length (# columns) = " +
-                lines.get(0).size());
     }
 
-    public int numRows()
+
+    /**
+     *
+     * @param row
+     * @param column
+     * @return
+     */
+    public String getStringValue(int row, int column)
     {
-        numRows = lines.size();
-        return numRows;
+        return itemStringArray[row][column];
     }
 
-    public int numCols()
+
+    /**
+     *
+     * @param itemFromCSV
+     * @param itemList
+     */
+    public Item[] getItemArray()
     {
-        numCols = lines.get(0).size();
-        return numCols;
+        itemArray = new Item[itemStringArray.length - 1];
+
+        for (int i = 1; i < itemStringArray.length; i++)
+        {
+            String id = itemStringArray[i][0];
+            String name = itemStringArray[i][1];
+            int price = Integer.parseInt(itemStringArray[i][2]);
+            int quantity = Integer.parseInt(itemStringArray[i][3]);
+
+            itemArray[i-1] = new Item(id,name,price,quantity);
+        }
+
+        return itemArray;
     }
-
-    public String getValue(int rowIndex, int colIndex)
-    {
-        return lines.get(rowIndex).get(colIndex);
-    }
-
-
-
-
 
 }
