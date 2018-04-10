@@ -25,6 +25,7 @@ public class PrintOptions
         System.out.println("(1) - Insert money");
         System.out.println("(2) - Return all money");
         System.out.println("(3) - Make a selection");
+        System.out.println("(4) - Display all current information");
     }
 }
 

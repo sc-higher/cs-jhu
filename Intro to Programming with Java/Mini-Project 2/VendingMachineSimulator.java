@@ -297,13 +297,14 @@ public class VendingMachineSimulator
                        Item[] moneyCounter,
                        int currencySelection)
     {
-        UserInput mainMenu = new UserInput(4);
+        UserInput mainMenu = new UserInput(5);
 
         UserInput moneyMenu = new UserInput(currency.length);
         int moneySelection;
 
         UserInput inventoryMenu = new UserInput(inventory.length);
         int inventorySelection;
+        int totalMoney;
 
         while (mainSelection != 0)
         {
@@ -328,8 +329,26 @@ public class VendingMachineSimulator
                     mainSelection = -1;
                     break;
                 case 3:
+                    totalMoney = totalMoney(moneyCounter);
+                    inventorySelection = inventoryMenu.getUserSelection();
+
+                    if ( inventory[inventorySelection].getQuantity() > 0 )
+                    {
+                        purchaseItem(totalMoney, inventorySelection, inventory, currency, moneyCounter);
+                    }
+
+                    else
+                    {
+                        System.out.println("Insufficient inventory. " +
+                                "Please choose another item.");
+                    }
+
                     mainSelection = -1;
                     break;
+                case 4:
+                    displayAllInfo(currency,inventory,moneyCounter,currencySelection);
+                    mainSelection = -1;
+
                 default:
                     mainSelection = -1;
             }
@@ -367,6 +386,106 @@ public class VendingMachineSimulator
             int x = currency[i].getQuantity();
             x = x - moneyCounter[i].getQuantity();
             currency[i].setQuantity(x);
+            moneyCounter[i].setQuantity(0);
+        }
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    private int totalMoney(Item[] moneyCounter)
+    {
+        int sum = 0;
+
+        for (int i = 0; i < moneyCounter.length; i++)
+        {
+            sum = sum + ( moneyCounter[i].getQuantity() *
+                    moneyCounter[i].getValue() );
+        }
+
+        return sum;
+    }
+
+
+    private void purchaseItem(int totalMoney,
+                              int itemSelection,
+                              Item[] inventory,
+                              Item[] currency,
+                              Item[] moneyCounter)
+    {
+        int[] change;
+
+        if ( totalMoney >= inventory[itemSelection].getValue() )
+        {
+            change = calculateChange(totalMoney,itemSelection,inventory,currency,moneyCounter);
+            inventory[itemSelection].decrementQuantity();
+            System.out.println("Purchase successful!");
+            returnChange(change,moneyCounter,currency);
+
+        }
+
+        else
+        {
+            System.out.println("Purchase failed, insufficient funds.");
+        }
+
+    }
+
+
+    /**
+     *
+     * @param totalMoney
+     * @param itemSelection
+     * @param inventory
+     * @param currency
+     * @param moneyCounter
+     * @return
+     */
+    private int[] calculateChange(int totalMoney,
+                                 int itemSelection,
+                                 Item[] inventory,
+                                 Item[] currency,
+                                 Item[] moneyCounter)
+    {
+        int delta = totalMoney - inventory[itemSelection].getValue();
+        int[] change = new int[moneyCounter.length];
+        int mod;
+
+        for (int i = (moneyCounter.length - 1); i >= 0 ; i--)
+        {
+            mod = delta % moneyCounter[7].getValue();
+
+            if ( mod == 0 )
+            {
+                change[i] = delta / moneyCounter[i].getValue();
+                break;
+            }
+
+            else
+            {
+                change[i] = (int) Math.floor(
+                        delta / moneyCounter[i].getValue() );
+                delta = delta - ( change[i] * moneyCounter[i].getValue() );
+            }
+        }
+
+        return change;
+    }
+
+
+    private void returnChange(int[] change,
+                              Item[] moneyCounter,
+                              Item[] currency)
+    {
+        int x;
+        System.out.println("\nReturned the following change:");
+        for (int i = 0; i < moneyCounter.length; i++)
+        {
+            System.out.println(currency[i].getName() + ": " + change[i]);
+            x = currency[i].getQuantity();
+            currency[i].setQuantity( x - change[i] );
             moneyCounter[i].setQuantity(0);
         }
     }
