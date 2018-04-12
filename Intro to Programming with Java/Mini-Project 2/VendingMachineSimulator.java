@@ -455,7 +455,7 @@ public class VendingMachineSimulator
 
         for (int i = (moneyCounter.length - 1); i >= 0 ; i--)
         {
-            mod = delta % moneyCounter[7].getValue();
+            mod = delta % moneyCounter[i].getValue();
 
             if ( mod == 0 )
             {
