@@ -2,12 +2,13 @@
  * This program is part of my response to Assignment 10 for the class 605.201.81
  * Intro to Programming Using Java at the JHU EPP CS program.
  *
- * This program requires two or three arguments - (1) the data source file path,
- * (2) the destination file path, and (3) the number of records in the data file
- * (optional).
+ * This program requires one or two arguments - (1) the data source file path,
+ * and (2) the number of records in the data file to display (optional).
  *
- * The program requires data source file to be a text file of specific format.
- * The program will output a csv-style file to the same directory.
+ * The program requires data source file to be a text file output of the
+ * FormatData program (this can be txt, csv, xls, doc, etc).
+ *
+ * This program will output data read from the input file to the terminal.
  *
  * @author: Sean Connor
  */

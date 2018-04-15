@@ -79,7 +79,7 @@ class FormatData
         String[] percent_child_poverty = new String[
                 summed_child_population.length];
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#,###.00");
 
         for (int i = 0; i < summed_population.length; i++)
         {
