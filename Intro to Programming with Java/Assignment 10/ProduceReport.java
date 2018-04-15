@@ -14,6 +14,7 @@
  */
 
 import java.io.*;
+import java.text.DecimalFormat;
 
 class ProduceReport
 {
@@ -32,7 +33,27 @@ class ProduceReport
         {
             filename = args[0];
             temp_number_records = args[1];
-            number_records = Integer.parseInt(temp_number_records);
+
+            try
+            {
+                number_records = Integer.parseInt(temp_number_records);
+            }
+
+            catch (java.lang.Exception exception)
+            {
+                System.out.println("\nInvalid input. Argument 2 (number " +
+                        "of records) input must be integer between 0 " +
+                        "and 51, inclusive.\n");
+                exception.printStackTrace();
+                System.exit(1);
+            }
+
+            if (number_records > 51 || number_records < 0)
+            {
+                System.out.println("\nArgument 2 (number of records) must " +
+                        "be between 0 and 51 inclusive.\n");
+                System.exit(1);
+            }
         }
 
         else if (args.length == 1)
@@ -43,14 +64,49 @@ class ProduceReport
 
         else
         {
-            System.out.println("\nMissing required arguments. " +
+            System.out.println("\nInvalid number of arguments. " +
                     "Please try again.\n");
+            System.exit(1);
         }
+
+        //Find the file path
+        File file = new File(filename);
+        String path = file.getAbsolutePath();
+        System.out.println("\nFile: " + path + "\n");
+
 
         width = test.countItemsInLine(filename);
 
         String[][] data = test.parseCSV(filename,number_records,width);
 
+
+        //Calculate percent child poverty
+        for (int i = 0; i < data.length; i++)
+        {
+            data[i][width] = String.valueOf(
+                    ( ( Double.valueOf(data[i][width-1]) /
+                            Double.valueOf(data[i][width-2])) * 100 ) );
+        }
+
+
+        //Format all values
+        DecimalFormat df1 = new DecimalFormat("#,#00");
+        DecimalFormat df2 = new DecimalFormat("#,###.00");
+
+        int[][] temp_data = new int[data.length][width+1];
+
+        for (int i = 0; i < data.length; i++)
+        {
+            for (int j = 0; j < (width); j++)
+            {
+                data[i][j] = df1.format(Double.valueOf(data[i][j]));
+            }
+
+            data[i][width] = df2.format(Double.valueOf(data[i][width]));
+
+        }
+
+        //Print all data to terminal
         test.printHeaders();
         test.printStringArray(data);
 
@@ -83,7 +139,9 @@ class ProduceReport
 
         catch (Exception e)
         {
+            System.out.println("\nFile not found. Please try again.\n");
             e.printStackTrace();
+            System.exit(1);
         }
 
         return lines;
@@ -112,7 +170,9 @@ class ProduceReport
 
         catch(IOException e)
         {
+            System.out.println("\nFile not found. Please try again.\n");
             e.printStackTrace();
+            System.exit(1);
         }
 
         return width;
@@ -132,7 +192,7 @@ class ProduceReport
                                 int length,
                                 int width)
     {
-        String[][] data_array = new String[length][width];
+        String[][] data_array = new String[length][width+1];
 
         try ( BufferedReader br = new BufferedReader(
                 new InputStreamReader(
@@ -155,7 +215,9 @@ class ProduceReport
 
         catch(IOException e)
         {
+            System.out.println("\nFile not found. Please try again.\n");
             e.printStackTrace();
+            System.exit(1);
         }
 
         return data_array;

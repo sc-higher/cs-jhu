@@ -14,9 +14,6 @@
 
 import java.io.*;
 import java.lang.StringBuilder;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 class FormatData
 {
@@ -34,7 +31,28 @@ class FormatData
             filename = args[0];
             output_filename = args[1];
             String temp_number_records = args[2];
-            number_records = Integer.parseInt(temp_number_records);
+
+            try
+            {
+                number_records = Integer.parseInt(temp_number_records);
+            }
+
+            catch (java.lang.Exception exception)
+            {
+                System.out.println("\nInvalid input. Argument 3 (number " +
+                        "of records) input must be integer between 1 " +
+                        "and 13486, inclusive.\n");
+                exception.printStackTrace();
+                System.exit(1);
+            }
+
+            if (number_records > 13486 || number_records < 0)
+            {
+                System.out.println("\nInvalid input. Argument 3 (number " +
+                        "of records) input must be integer between 1 " +
+                        "and 13486, inclusive.\n");
+                System.exit(1);
+            }
         }
 
         else if (args.length == 2)
@@ -46,10 +64,11 @@ class FormatData
 
         else
         {
-            System.out.println("\nMissing required arguments. " +
+            System.out.println("\nInvalid number of arguments. " +
                     "Please try again.\n");
+            System.exit(1);
         }
-        
+
 
         //Parse all required data from input file and store type (i.e. state,
         //population, etc) in separate String arrays.
@@ -73,31 +92,12 @@ class FormatData
         long[] summed_child_poverty_population = test.sumStateData(
                 state,child_poverty_population,number_records);
 
-        double[] summed_percent_child_poverty = new double[
-                summed_population.length];
-
-        String[] percent_child_poverty = new String[
-                summed_child_population.length];
-
-        DecimalFormat df = new DecimalFormat("#,###.00");
-
-        for (int i = 0; i < summed_population.length; i++)
-        {
-            summed_percent_child_poverty[i] =
-                    (( (double) summed_child_poverty_population[i] /
-                            (double) summed_child_population[i]) * 100);
-
-            percent_child_poverty[i] = df.format(
-                    summed_percent_child_poverty[i]);
-        }
-
         //Write all data csv-style to output file
         test.writeData(output_filename,
                 distinct_state_codes,
                 summed_population,
                 summed_child_population,
-                summed_child_poverty_population,
-                percent_child_poverty);
+                summed_child_poverty_population);
 
     }
 
@@ -127,7 +127,9 @@ class FormatData
 
         catch (Exception e)
         {
+            System.out.println("\nFile not found. Please try again.\n");
             e.printStackTrace();
+            System.exit(1);
         }
 
         return lines;
@@ -168,7 +170,9 @@ class FormatData
 
         catch (Exception e)
         {
+            System.out.println("\nFile not found. Please try again.\n");
             e.printStackTrace();
+            System.exit(1);
         }
 
         return data_array;
@@ -232,7 +236,15 @@ class FormatData
         int state_count = 0;
         long[] summed_data = new long[51];
 
-        summed_data[state_count] = Long.parseLong(state[0]);
+        try
+        {
+            summed_data[state_count] = Long.parseLong(state[0]);
+        }
+        catch (java.lang.Exception exception)
+        {
+            System.out.println("\nInvalid input.\n");
+            exception.printStackTrace();
+        }
 
         for (int i = 1; i < number_records; i++)
         {
@@ -266,8 +278,7 @@ class FormatData
                            long[] field1,
                            long[] field2,
                            long[] field3,
-                           long[] field4,
-                           String[] field5)
+                           long[] field4)
     {
         try ( BufferedWriter bw = new BufferedWriter(
                                     new OutputStreamWriter(
@@ -283,8 +294,6 @@ class FormatData
                 sb.append(field3[i]);
                 sb.append(",");
                 sb.append(field4[i]);
-                sb.append(",");
-                sb.append(field5[i]);
                 sb.append("\n");
             }
             bw.write(sb.toString());
