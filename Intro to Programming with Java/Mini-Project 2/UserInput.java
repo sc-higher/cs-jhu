@@ -28,7 +28,7 @@ public class UserInput
         // make sure input is valid
         while ( (userselection < 0) || (userselection >= numberChoices) )
         {
-            System.out.print("Please enter selection: ");
+            System.out.print("Input: ");
             userstring = input.nextLine();
 
             // check if nothing was entered

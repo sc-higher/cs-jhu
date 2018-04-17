@@ -9,6 +9,7 @@ public class PrintOptions
         System.out.println("(0) - USD");
         System.out.println("(1) - EUR");
         System.out.println("(2) - JPY");
+        System.out.println("(3) - Other");
     }
 
     public void printInventoryOptions()
@@ -16,6 +17,7 @@ public class PrintOptions
         System.out.println("\nPlease select an inventory from the following:");
         System.out.println("(0) - Drinks");
         System.out.println("(1) - Snacks");
+        System.out.println("(2) - Other");
     }
 
     public void printMainOptions()

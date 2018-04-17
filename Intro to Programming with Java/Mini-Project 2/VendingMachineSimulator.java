@@ -18,23 +18,23 @@ public class VendingMachineSimulator
         VendingMachineSimulator vms = new VendingMachineSimulator();
 
         // Get user input for VM currency type
-        UserInput currencySelectionMenu = new UserInput(3);
+        UserInput currencySelectionMenu = new UserInput(4);
         options.printCurrencyOptions();
         int currencyTypeSelection = currencySelectionMenu.getUserSelection();
+        String filenameCurrency = vms.setCurrencyFile(currencyTypeSelection);
 
         // Get user info for VM inventory
-        UserInput inventorySelectionMenu = new UserInput(2);
+        UserInput inventorySelectionMenu = new UserInput(3);
         options.printInventoryOptions();
         int inventoryTypeSelection = inventorySelectionMenu.getUserSelection();
+        String filenameInventory = vms.setInventoryFile(inventoryTypeSelection);
 
         // Load VM currency from CSV based on user selection
-        String filenameCurrency = vms.setCurrencyFile(currencyTypeSelection);
         ReadCSV currencyFromCSV = new ReadCSV(filenameCurrency);
         currencyFromCSV.toArray();
         Item[] currency = currencyFromCSV.getItemArray();
 
         // Load VM inventory from CSV based on user selection
-        String filenameInventory = vms.setInventoryFile(inventoryTypeSelection);
         ReadCSV inventoryFromCSV = new ReadCSV(filenameInventory);
         inventoryFromCSV.toArray();
         Item[] inventory = inventoryFromCSV.getItemArray();
@@ -43,7 +43,7 @@ public class VendingMachineSimulator
         Item[] moneyCounter = vms.createMoneyCounter(currency);
 
         // Display vending machine money and inventory, and wallet money
-        System.out.println("\nGreat, let's get started!\n");
+        System.out.println("\nGreat, let's get started!");
         vms.displayAllInfo(currency,inventory,moneyCounter,currencyTypeSelection);
 
         // Run the VM simulator
@@ -65,7 +65,8 @@ public class VendingMachineSimulator
 
     private String setCurrencyFile(int currencySelection)
     {
-        String filename;
+        String filename = null;
+        boolean input_test = true;
 
         switch (currencySelection)
         {
@@ -78,6 +79,22 @@ public class VendingMachineSimulator
             case 2:
                 filename = "JPY.csv";
                 break;
+            case 3:
+                while (input_test)
+                {
+                    System.out.print("\nPlease enter filename: ");
+                    filename = input.nextLine();
+                    File f = new File(filename);
+                    if(f.exists() && !f.isDirectory())
+                    {
+                        input_test = false;
+                    }
+                    else
+                    {
+                        System.out.println("\nFile not found. Please try again.\n");
+                    }
+                }
+                break;
             default:
                 filename = "USD.csv";
         }
@@ -87,7 +104,8 @@ public class VendingMachineSimulator
 
     private String setInventoryFile(int inventorySelection)
     {
-        String filename;
+        String filename = null;
+        boolean input_test = true;
 
         switch (inventorySelection)
         {
@@ -96,6 +114,22 @@ public class VendingMachineSimulator
                 break;
             case 1:
                 filename = "snacks.csv";
+                break;
+            case 2:
+                while (input_test)
+                {
+                    System.out.print("\nPlease enter filename: ");
+                    filename = input.nextLine();
+                    File f = new File(filename);
+                    if(f.exists() && !f.isDirectory())
+                    {
+                        input_test = false;
+                    }
+                    else
+                    {
+                        System.out.println("\nFile not found. Please try again.\n");
+                    }
+                }
                 break;
             default:
                 filename = "drinks.csv";
@@ -256,7 +290,7 @@ public class VendingMachineSimulator
                                        Item[] moneyCounter,
                                        int currencySelection)
     {
-        System.out.println("Here is the most current information.");
+        System.out.println("\nHere is the most current information.");
         displayVendingCurrency(currency,currencySelection);
         displayMoneyCounter(moneyCounter,currencySelection);
         displayInventory(inventory);
@@ -314,22 +348,23 @@ public class VendingMachineSimulator
             switch (mainSelection)
             {
                 case 0:
-                    System.out.println("\nGoodbye!");
+                    System.out.println("\nGoodbye!\n");
                     mainSelection = 0;
                     break;
                 case 1:
-                    displayAllInfo(currency,inventory,moneyCounter,currencySelection);
+                    System.out.println("\nSelect a denomination from the currency list.");
                     moneySelection = moneyMenu.getUserSelection();
                     insertMoney(moneySelection,currency,moneyCounter);
                     mainSelection = -1;
                     break;
                 case 2:
                     removeAllMoney(currency,moneyCounter);
-                    displayAllInfo(currency,inventory,moneyCounter,currencySelection);
+                    System.out.println("\nMoney returned!");
                     mainSelection = -1;
                     break;
                 case 3:
                     totalMoney = totalMoney(moneyCounter);
+                    System.out.println("\nSelect an item from the inventory list.");
                     inventorySelection = inventoryMenu.getUserSelection();
 
                     if ( inventory[inventorySelection].getQuantity() > 0 )
@@ -339,7 +374,7 @@ public class VendingMachineSimulator
 
                     else
                     {
-                        System.out.println("Insufficient inventory. " +
+                        System.out.println("\nInsufficient inventory. " +
                                 "Please choose another item.");
                     }
 
@@ -420,15 +455,24 @@ public class VendingMachineSimulator
         if ( totalMoney >= inventory[itemSelection].getValue() )
         {
             change = calculateChange(totalMoney,itemSelection,inventory,currency,moneyCounter);
-            inventory[itemSelection].decrementQuantity();
-            System.out.println("Purchase successful!");
-            returnChange(change,moneyCounter,currency);
+            if ( !(change[currency.length] == 1) )
+            {
+                inventory[itemSelection].decrementQuantity();
+                System.out.println("\nPurchase successful!");
+                returnChange(change,moneyCounter,currency);
+            }
+
+            else
+            {
+                System.out.println("\nPurchase failed. Insufficient change.");
+                System.out.println("All money returned.");
+            }
 
         }
 
         else
         {
-            System.out.println("Purchase failed, insufficient funds.");
+            System.out.println("\nPurchase failed. Insufficient funds.");
         }
 
     }
@@ -444,30 +488,47 @@ public class VendingMachineSimulator
      * @return
      */
     private int[] calculateChange(int totalMoney,
-                                 int itemSelection,
-                                 Item[] inventory,
-                                 Item[] currency,
-                                 Item[] moneyCounter)
+                                  int itemSelection,
+                                  Item[] inventory,
+                                  Item[] currency,
+                                  Item[] moneyCounter)
     {
         int delta = totalMoney - inventory[itemSelection].getValue();
-        int[] change = new int[moneyCounter.length];
+        int[] change = new int[currency.length + 1]; // index 0 to n-1 store int values representing change to give. index n stores int value indicating success/fail of change calculation
         int mod;
+        int remainder;
 
-        for (int i = (moneyCounter.length - 1); i >= 0 ; i--)
+        for (int i = (currency.length - 1); i >= 0 ; i--)
         {
-            mod = delta % moneyCounter[i].getValue();
+            mod = delta % currency[i].getValue();
+            remainder = (int) Math.floor( delta / currency[i].getValue() );
 
-            if ( mod == 0 )
+            //
+            if ( mod == 0 && remainder <= currency[i].getQuantity() )
             {
-                change[i] = delta / moneyCounter[i].getValue();
+                change[i] = remainder;
                 break;
             }
 
+            //
+            else if ( remainder <= currency[i].getQuantity() )
+            {
+                change[i] = remainder;
+                delta = delta - ( change[i] * currency[i].getValue() );
+            }
+
+            //
+            else if ( i == 0 )
+            {
+                removeAllMoney(currency,moneyCounter);
+                change[currency.length] = 1; // This index is used to indicate success/fail of change calculation. Value of 1 indicates fail
+                break;
+            }
+
+            //
             else
             {
-                change[i] = (int) Math.floor(
-                        delta / moneyCounter[i].getValue() );
-                delta = delta - ( change[i] * moneyCounter[i].getValue() );
+                change[i] = 0;
             }
         }
 
