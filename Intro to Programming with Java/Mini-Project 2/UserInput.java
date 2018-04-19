@@ -1,3 +1,13 @@
+/**
+ * This program is my response to Project 2 for the class 605.201.81 Intro
+ * to Programming Using Java at the JHU EPP CS program.
+ * This class provides an easy way to retrieve user selection as integers.
+ * The constructor accepts two int arguments representing the range of int
+ * values that are accepted as user input.
+ * @author: Sean Connor
+ * Date:    15 April 2018
+ */
+
 import java.util.Scanner;
 
 public class UserInput
@@ -5,19 +15,32 @@ public class UserInput
     // initialize variables
     Scanner input = new Scanner(System.in);
     private Integer userselection;
-    private int numberChoices;   // the number of choices available
+    private int start;
+    private int end;
 
     // constructor
-    public UserInput(int numberChoices)
+    /**
+     * This constructor requires two int inputs, representing the start and
+     * end of the desired int selection range.
+     *
+     * @param start
+     * @param end
+     */
+    public UserInput(int start, int end)
     {
-        this.numberChoices = numberChoices;
+        this.start = start;
+        this.end = end;
         userselection = Integer.valueOf(-1);
     }
 
 
     /**
+     * This method prompts the user to enter an integer value between the
+     * start and end values (inclusive) specified in the constructor. Any
+     * non-int value, or int value outside of the specified range, will not
+     * be accepted. Method will continue until acceptable input is entered.
      *
-     * @return
+     * @return int value representing the user selection
      */
     public int getUserSelection()
     {
@@ -26,7 +49,7 @@ public class UserInput
         userselection = Integer.valueOf(-1);
 
         // make sure input is valid
-        while ( (userselection < 0) || (userselection >= numberChoices) )
+        while ((userselection < start) || (userselection > end))
         {
             System.out.print("Input: ");
             userstring = input.nextLine();
@@ -35,7 +58,7 @@ public class UserInput
             if ( userstring.isEmpty() )
             {
                 System.out.println("\nPlease enter only integer values" +
-                        " between 0 and " + (numberChoices-1) +".\n");
+                        " between " + start + " and " + end + ".\n");
             }
 
             else
@@ -44,17 +67,16 @@ public class UserInput
                 try
                 {
                     userselection = Integer.valueOf(userstring);
-                    if ((userselection < 0) || (userselection >= numberChoices))
+                    if ((userselection < start) || (userselection > end))
                     {
-                        System.out.println("\nPlease enter only integer " +
-                                "values between 0 and " + (numberChoices-1) +
-                                ".\n");
+                        System.out.println("\nPlease enter only integer values"
+                                + " between " + start + " and " + end + ".\n");
                     }
                 }
                 catch (NumberFormatException e)
                 {
                     System.out.println("\nPlease enter only integer values" +
-                            " between 0 and " + (numberChoices-1) +".\n");
+                            " between " + start + " and " + end + ".\n");
                 }
             }
         }

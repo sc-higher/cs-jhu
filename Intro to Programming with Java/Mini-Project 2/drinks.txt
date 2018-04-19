@@ -1,0 +1,4 @@
+ID,Product,Price,Quantity
+(0),Pepsi,150,3
+(1),Diet Pepsi,200,1
+(2),Orange Juice,99,2

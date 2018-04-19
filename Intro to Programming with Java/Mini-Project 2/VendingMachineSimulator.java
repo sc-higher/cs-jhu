@@ -1,6 +1,10 @@
 /**
- *
- *
+ * This program is my response to Project 2 for the class 605.201.81 Intro
+ * to Programming Using Java at the JHU EPP CS program.
+ * This class contains a main() method and is the primary class for the
+ * Vending Machine Simulator program.
+ * @author: Sean Connor
+ * Date:    15 April 2018
  */
 
 import java.io.File;
@@ -18,13 +22,13 @@ public class VendingMachineSimulator
         VendingMachineSimulator vms = new VendingMachineSimulator();
 
         // Get user input for VM currency type
-        UserInput currencySelectionMenu = new UserInput(4);
+        UserInput currencySelectionMenu = new UserInput(1,4);
         options.printCurrencyOptions();
         int currencyTypeSelection = currencySelectionMenu.getUserSelection();
         String filenameCurrency = vms.setCurrencyFile(currencyTypeSelection);
 
         // Get user info for VM inventory
-        UserInput inventorySelectionMenu = new UserInput(3);
+        UserInput inventorySelectionMenu = new UserInput(1,3);
         options.printInventoryOptions();
         int inventoryTypeSelection = inventorySelectionMenu.getUserSelection();
         String filenameInventory = vms.setInventoryFile(inventoryTypeSelection);
@@ -44,25 +48,36 @@ public class VendingMachineSimulator
 
         // Display vending machine money and inventory, and wallet money
         System.out.println("\nGreat, let's get started!");
-        vms.displayAllInfo(currency,inventory,moneyCounter,currencyTypeSelection);
+
+        vms.displayAllInfo(currency,
+                           inventory,
+                           moneyCounter,
+                           currencyTypeSelection);
 
         // Run the VM simulator
         int mainSelection = Integer.valueOf(-1);
-        vms.runVM(mainSelection,currency,inventory,moneyCounter,currencyTypeSelection);
 
-
-
-
+        vms.runVM(mainSelection,
+                  currency,
+                  inventory,
+                  moneyCounter,
+                  currencyTypeSelection);
     }
-
-
-
 
 
     /*-------------*/
     /*   METHODS   */
     /*-------------*/
 
+
+    /**
+     * This method accepts an integer representing the currency selection
+     * (USD, EUR, JPY, etc) and sets filename equal to the file containing
+     * the currency information.
+     *
+     * @param currencySelection   int indicating currency selection
+     * @return   String representing currency filename
+     */
     private String setCurrencyFile(int currencySelection)
     {
         String filename = null;
@@ -70,14 +85,60 @@ public class VendingMachineSimulator
 
         switch (currencySelection)
         {
-            case 0:
+            case 1:
                 filename = "USD.csv";
                 break;
-            case 1:
+            case 2:
                 filename = "EUR.csv";
                 break;
-            case 2:
+            case 3:
                 filename = "JPY.csv";
+                break;
+            case 4:
+                while (input_test)
+                {
+                    System.out.print("\nPlease enter filename: ");
+                    filename = input.nextLine();
+                    File f = new File(filename);
+                    if(f.exists() && !f.isDirectory())
+                    {
+                        input_test = false;
+                    }
+                    else
+                    {
+                        System.out.println("\nFile not found. Please " +
+                        "try again.\n");
+                    }
+                }
+                break;
+            default:
+                filename = "USD.csv";
+        }
+
+        return filename;
+    }
+
+
+    /**
+     * This method accepts an integer representing the inventory selection
+     * (drinks, snacks, other) and sets filename equal to the file containing
+     * the inventory information.
+     *
+     * @param inventorySelection   int indicating inventory selection
+     * @return   String representing inventory filename
+     */
+    private String setInventoryFile(int inventorySelection)
+    {
+        String filename = null;
+        boolean input_test = true;
+
+        switch (inventorySelection)
+        {
+            case 1:
+                filename = "drinks.csv";
+                break;
+            case 2:
+                filename = "snacks.csv";
                 break;
             case 3:
                 while (input_test)
@@ -91,43 +152,8 @@ public class VendingMachineSimulator
                     }
                     else
                     {
-                        System.out.println("\nFile not found. Please try again.\n");
-                    }
-                }
-                break;
-            default:
-                filename = "USD.csv";
-        }
-
-        return filename;
-    }
-
-    private String setInventoryFile(int inventorySelection)
-    {
-        String filename = null;
-        boolean input_test = true;
-
-        switch (inventorySelection)
-        {
-            case 0:
-                filename = "drinks.csv";
-                break;
-            case 1:
-                filename = "snacks.csv";
-                break;
-            case 2:
-                while (input_test)
-                {
-                    System.out.print("\nPlease enter filename: ");
-                    filename = input.nextLine();
-                    File f = new File(filename);
-                    if(f.exists() && !f.isDirectory())
-                    {
-                        input_test = false;
-                    }
-                    else
-                    {
-                        System.out.println("\nFile not found. Please try again.\n");
+                        System.out.println("\nFile not found. Please " +
+                        "try again.\n");
                     }
                 }
                 break;
@@ -140,8 +166,10 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method accepts an Item[] representing the inventory and prints out
+     * information for each item in the array.
      *
-     * @param itemList
+     * @param itemArray   Item[] containing all inventory Items
      */
     private void displayInventory(Item[] itemArray)
     {
@@ -173,11 +201,16 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method accepts an Item[] representing the currency to be used and
+     * the amount held by the vending machine. Also accepts an int value
+     * representing the currency type selection. Prints information for each
+     * currency Item in the array.
      *
-     * @param itemList
+     * @param itemArray   Item[] containing all currency Items
+     * @param currencySelection   int indicating currency selection
      */
     private void displayVendingCurrency(Item[] itemArray,
-                                               int currencySelection)
+                                        int currencySelection)
     {
         char usd_symbol = 36;
         char eur_symbol = 8364;
@@ -186,13 +219,13 @@ public class VendingMachineSimulator
 
         switch (currencySelection)
         {
-            case 0:
+            case 1:
                 symbol = usd_symbol;
                 break;
-            case 1:
+            case 2:
                 symbol = eur_symbol;
                 break;
-            case 2:
+            case 3:
                 symbol = jpy_symbol;
                 break;
             default:
@@ -228,12 +261,16 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method accepts an Item[] representing the money inserted into the
+     * vending machine during a particular purchase process. Also accepts an
+     * int value representing the currency type selection. Prints information
+     * for each currency Item in the array.
      *
-     * @param itemArray
-     * @param currencySelection
+     * @param itemArray   Item[] containing all currency Items
+     * @param currencySelection   int indicating currency selection
      */
     private void displayMoneyCounter(Item[] itemArray,
-                                            int currencySelection)
+                                     int currencySelection)
     {
         char usd_symbol = 36;
         char eur_symbol = 8364;
@@ -242,13 +279,13 @@ public class VendingMachineSimulator
 
         switch (currencySelection)
         {
-            case 0:
+            case 1:
                 symbol = usd_symbol;
                 break;
-            case 1:
+            case 2:
                 symbol = eur_symbol;
                 break;
-            case 2:
+            case 3:
                 symbol = jpy_symbol;
                 break;
             default:
@@ -284,23 +321,32 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method displays all information to include inventory, vending
+     * machine currency held, and the per use money counter.
      *
+     * @param currency   Item[] containing all currency Items
+     * @param inventory   Item[] containing all inventory Items
+     * @param moneyCounter   Item[] containing all money counter Items
+     * @param currencySelection   int indicating currency selection
      */
-    private void displayAllInfo(Item[] currency, Item[] inventory,
-                                       Item[] moneyCounter,
-                                       int currencySelection)
+    private void displayAllInfo(Item[] currency,
+                                Item[] inventory,
+                                Item[] moneyCounter,
+                                int currencySelection)
     {
         System.out.println("\nHere is the most current information.");
         displayVendingCurrency(currency,currencySelection);
         displayMoneyCounter(moneyCounter,currencySelection);
         displayInventory(inventory);
-
-
     }
 
 
     /**
+     * This method creates an Item[] representing the per use money counter.
+     * All denominations are set to zero. Returns the Item[].
      *
+     * @param currency   Item[] containing all currency Items
+     * @return   Item[] representing the per use money counter
      */
     private Item[] createMoneyCounter(Item[] currency)
     {
@@ -323,7 +369,14 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method is the primary method used to run the vending machine
+     * simulator.
      *
+     * @param mainSelection   int representing main menu user selection
+     * @param currency   Item[] containing all currency Items
+     * @param inventory   Item[] containing all inventory Items
+     * @param moneyCounter   Item[] containing all money counter Items
+     * @param currencySelection   int indicating currency selection
      */
     private void runVM(int mainSelection,
                        Item[] currency,
@@ -331,45 +384,75 @@ public class VendingMachineSimulator
                        Item[] moneyCounter,
                        int currencySelection)
     {
-        UserInput mainMenu = new UserInput(5);
+        UserInput mainMenu = new UserInput(1,5);
 
-        UserInput moneyMenu = new UserInput(currency.length);
+        UserInput moneyMenu = new UserInput(0,currency.length-1);
         int moneySelection;
-
-        UserInput inventoryMenu = new UserInput(inventory.length);
-        int inventorySelection;
         int totalMoney;
 
-        while (mainSelection != 0)
+        UserInput continueMenu = new UserInput(1,2);
+        int continueSelection;
+
+        UserInput inventoryMenu = new UserInput(0,inventory.length-1);
+        int inventorySelection;
+
+        options.printMainOptions();
+
+        while (mainSelection != 5)
         {
-            options.printMainOptions();
             mainSelection = mainMenu.getUserSelection();
 
             switch (mainSelection)
             {
-                case 0:
-                    System.out.println("\nGoodbye!\n");
-                    mainSelection = 0;
-                    break;
                 case 1:
-                    System.out.println("\nSelect a denomination from the currency list.");
-                    moneySelection = moneyMenu.getUserSelection();
-                    insertMoney(moneySelection,currency,moneyCounter);
+                    options.printMainOptions();
                     mainSelection = -1;
                     break;
+
                 case 2:
-                    removeAllMoney(currency,moneyCounter);
-                    System.out.println("\nMoney returned!");
+                    displayInventory(inventory);
                     mainSelection = -1;
                     break;
+
                 case 3:
-                    totalMoney = totalMoney(moneyCounter);
-                    System.out.println("\nSelect an item from the inventory list.");
+                    displayVendingCurrency(currency,currencySelection);
+                    mainSelection = -1;
+                    break;
+
+                case 4:
+                    // Select an item to purchase.
+                    System.out.println("\nSelect an item from the " +
+                                    "inventory list.");
                     inventorySelection = inventoryMenu.getUserSelection();
 
+                    // Attempt purchase. Check inventory quantity.
                     if ( inventory[inventorySelection].getQuantity() > 0 )
                     {
-                        purchaseItem(totalMoney, inventorySelection, inventory, currency, moneyCounter);
+                        // Insert money.
+                        boolean add_more_money = true;
+                        while ( add_more_money )
+                        {
+                            System.out.println("\nSelect a denomination " +
+                                            "from the currency list.");
+                            displayMoneyCounter(moneyCounter,currencySelection);
+                            moneySelection = moneyMenu.getUserSelection();
+                            insertMoney(moneySelection,currency,moneyCounter);
+                            options.printContinueOptions();
+                            // Check if user wants to insert more money
+                            continueSelection = continueMenu.getUserSelection();
+                            if ( continueSelection == 2 )
+                            {
+                                add_more_money = false;
+                            }
+                        }
+                        totalMoney = totalMoney(moneyCounter);
+
+                        // Purchase the item
+                        purchaseItem(totalMoney,
+                                     inventorySelection,
+                                     inventory,
+                                     currency,
+                                     moneyCounter);
                     }
 
                     else
@@ -380,9 +463,11 @@ public class VendingMachineSimulator
 
                     mainSelection = -1;
                     break;
-                case 4:
-                    displayAllInfo(currency,inventory,moneyCounter,currencySelection);
-                    mainSelection = -1;
+
+                case 5:
+                    System.out.println("\nGoodbye!\n");
+                    mainSelection = 5;
+                    break;
 
                 default:
                     mainSelection = -1;
@@ -394,10 +479,11 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method represents inserting money into the vending machine.
      *
-     * @param moneySelection
-     * @param currency
-     * @param moneyCounter
+     * @param moneySelection   int indicating currency selection
+     * @param currency   Item[] containing all currency Items
+     * @param moneyCounter   Item[] containing all money counter Items
      */
     private void insertMoney(int moneySelection,
                              Item[] currency,
@@ -409,9 +495,11 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method represents canceling a transaction and returning all money
+     * to the user from the vending machine.
      *
-     * @param currency
-     * @param moneyCounter
+     * @param currency   Item[] containing all currency Items
+     * @param moneyCounter   Item[] containing all money counter Items
      */
     private void removeAllMoney(Item[] currency,
                                 Item[] moneyCounter)
@@ -427,8 +515,11 @@ public class VendingMachineSimulator
 
 
     /**
+     * This method is used to calculate the total value of money inserted by
+     * the user.
      *
-     * @return
+     * @param moneyCounter   Item[] containing all money counter Items
+     * @return   int value representing total value of money inserted
      */
     private int totalMoney(Item[] moneyCounter)
     {
@@ -444,6 +535,18 @@ public class VendingMachineSimulator
     }
 
 
+    /**
+     * This method represents purchasing an item. Checks if sufficient money
+     * has been inserted to purchase the selected item. Checks if sufficient
+     * change is available to return to the user. Returns change to user
+     * after purchase.
+     *
+     * @param totalMoney   int representing total value of money inserted
+     * @param itemSelection   int indicating currency selection
+     * @param inventory   Item[] containing all inventory Items
+     * @param currency   Item[] containing all currency Items
+     * @param moneyCounter   Item[] containing all money counter Items
+     */
     private void purchaseItem(int totalMoney,
                               int itemSelection,
                               Item[] inventory,
@@ -454,7 +557,12 @@ public class VendingMachineSimulator
 
         if ( totalMoney >= inventory[itemSelection].getValue() )
         {
-            change = calculateChange(totalMoney,itemSelection,inventory,currency,moneyCounter);
+            change = calculateChange(totalMoney,
+                                     itemSelection,
+                                     inventory,
+                                     currency,
+                                     moneyCounter);
+
             if ( !(change[currency.length] == 1) )
             {
                 inventory[itemSelection].decrementQuantity();
@@ -473,19 +581,25 @@ public class VendingMachineSimulator
         else
         {
             System.out.println("\nPurchase failed. Insufficient funds.");
+            removeAllMoney(currency,moneyCounter);
         }
 
     }
 
 
     /**
+     * This method calculates the change to give to the user after a purchase.
+     * Ensures that adequate quantity of money exists in the vending machine to
+     * succesfuly provide change. Calculates change by denomination, not total
+     * value. Highest denominations are prioritized (change returned
+     * with as few bills/coins as possible).
      *
-     * @param totalMoney
-     * @param itemSelection
-     * @param inventory
-     * @param currency
-     * @param moneyCounter
-     * @return
+     * @param totalMoney   int representing total value of money inserted
+     * @param itemSelection   int indicating currency selection
+     * @param inventory   Item[] containing all inventory Items
+     * @param currency   Item[] containing all currency Items
+     * @param moneyCounter   Item[] containing all money counter Items
+     * @return int[] representing amount of each denomination to return
      */
     private int[] calculateChange(int totalMoney,
                                   int itemSelection,
@@ -494,7 +608,11 @@ public class VendingMachineSimulator
                                   Item[] moneyCounter)
     {
         int delta = totalMoney - inventory[itemSelection].getValue();
-        int[] change = new int[currency.length + 1]; // index 0 to n-1 store int values representing change to give. index n stores int value indicating success/fail of change calculation
+
+        // Indices 0 to n-1 store int values representing change to give
+        // Index n stores int value indicating success/fail of change calc
+        int[] change = new int[currency.length + 1];
+
         int mod;
         int remainder;
 
@@ -521,7 +639,11 @@ public class VendingMachineSimulator
             else if ( i == 0 )
             {
                 removeAllMoney(currency,moneyCounter);
-                change[currency.length] = 1; // This index is used to indicate success/fail of change calculation. Value of 1 indicates fail
+
+                // This index is used to indicate success/fail of change calc
+                // Value of 1 indicates fail
+                change[currency.length] = 1;
+
                 break;
             }
 
@@ -536,6 +658,15 @@ public class VendingMachineSimulator
     }
 
 
+    /**
+     * This method returns the change to the user, removing it from the
+     * vending machine in the process and reseting the money counter Items to
+     * zero quantity.
+     *
+     * @param change   int[] representing amount of each denomination to return
+     * @param moneyCounter   Item[] containing all money counter Items
+     * @param currency   Item[] containing all currency Items
+     */
     private void returnChange(int[] change,
                               Item[] moneyCounter,
                               Item[] currency)
@@ -550,8 +681,5 @@ public class VendingMachineSimulator
             moneyCounter[i].setQuantity(0);
         }
     }
-
-
-
 
 }

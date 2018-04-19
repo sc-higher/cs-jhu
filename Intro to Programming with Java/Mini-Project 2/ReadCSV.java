@@ -1,12 +1,12 @@
 /**
- * This program is my response to <INSERT> for the class 605.201.81 Intro
+ * This program is my response to Project 2 for the class 605.201.81 Intro
  * to Programming Using Java at the JHU EPP CS program.
- *
- * <TEXT HERE>
- *
+ * This class is used to read a CSV-style file of specific format. Methods
+ * are included to allow for conversion to a String[][] and creation of
+ * an Item[] for each line.
  * @author: Sean Connor
+ * Date:    15 April 2018
  */
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +23,13 @@ public class ReadCSV
     private Item[] itemArray;
 
 
-    // ReadCSV constructor
+    // constructor
+    /**
+     * This constructor requires the filename of the CSV-style file to be
+     * read.
+     *
+     * @param filename
+     */
     public ReadCSV(String filename)
     {
         this.filename = filename;
@@ -57,7 +63,8 @@ public class ReadCSV
 
 
     /**
-     *
+     * This method parses the CSV-style file given and adds each item to a
+     * new String[row][column].
      */
     public void toArray()
     {
@@ -93,8 +100,9 @@ public class ReadCSV
 
 
     /**
+     * This is a getter method that returns the parsed String[][].
      *
-     * @return
+     * @return String[row][column] containing the parsed items
      */
     public String[][] getStringArray()
     {
@@ -103,7 +111,7 @@ public class ReadCSV
 
 
     /**
-     *
+     * This method prints each item in the String[][] to the terminal
      */
     public void printStringArray()
     {
@@ -119,10 +127,11 @@ public class ReadCSV
 
 
     /**
+     * This method returns the value of a specific index in the String[][].
      *
      * @param row
      * @param column
-     * @return
+     * @return the item of the specified row and column
      */
     public String getStringValue(int row, int column)
     {
@@ -131,9 +140,11 @@ public class ReadCSV
 
 
     /**
+     * This method creates an Item object from each line (row) of the
+     * String[row][column] and adds it to an Item[row].
      *
-     * @param itemFromCSV
-     * @param itemList
+     * @return Item[] containing Items representing inventory, currency
+     *         denominations, etc.
      */
     public Item[] getItemArray()
     {
