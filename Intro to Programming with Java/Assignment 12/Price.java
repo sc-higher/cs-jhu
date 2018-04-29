@@ -1,3 +1,16 @@
+/**
+ * This program is part of my response to Assignment 12 for the class 605.201.81
+ * Intro to Programming Using Java at the JHU EPP CS program.
+ *
+ * This program allows the user to create a Price object that stores size and
+ * topping selection data. Topping selection data is stored as a boolean array.
+ * Methods are included that allow the PriceCalculator class to set size and
+ * topping selections and also to calculate price whenever there is a change.
+ * Total cost is automatically formated to USD-style and returned as a String.
+ *
+ * @author: Sean Connor
+ */
+
 import java.util.Locale;
 import java.text.NumberFormat;
 
@@ -65,22 +78,14 @@ public class Price
 
         // calculate topping cost
         double toppingCost = 0;
-//        if ( !toppings[0] ) // checks if plain or not
-//        {
-//            for ( boolean item : toppings )
-//            {
-//                if ( item )
-//                {
-//                    toppingCost = toppingCost + costPerTopping;
-//                }
-//            }
-//        }
-
-        for ( boolean item : toppings )
+        if ( !toppings[0] ) // checks if plain or not
         {
-            if ( item )
+            for ( boolean item : toppings )
             {
-                toppingCost = toppingCost + costPerTopping;
+                if ( item )
+                {
+                    toppingCost = toppingCost + costPerTopping;
+                }
             }
         }
 

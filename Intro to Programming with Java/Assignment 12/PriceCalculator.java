@@ -1,9 +1,9 @@
 /**
- * This program is part of my response to Assignment 11 for the class 605.201.81
+ * This program is part of my response to Assignment 12 for the class 605.201.81
  * Intro to Programming Using Java at the JHU EPP CS program.
  *
- * This program will allow the user to import a csv-style contact list, add or
- * remove contacts to the list, and export the list as a csv-style file.
+ * This program creates a GUI that allows the user to calculate the cost of a
+ * pizza, based on size and topping selection. Price is updated in real time.
  *
  * @author: Sean Connor
  */
@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.event.*;
 import javafx.geometry.*;
 import javafx.beans.property.*;
+import javafx.scene.image.Image;
 
 public class PriceCalculator extends Application
 {
@@ -24,6 +25,11 @@ public class PriceCalculator extends Application
     Price pizza = new Price(numberAvailableToppings);
     Label totalPrice;
     String sPizzaCost = "$0.00";
+
+    // this SimpleStringProperty is necessary because it allows PizzaCost to
+    // be Observable - this is used later to BIND pizzaCost to the totalPrice
+    // Label, allowing it to be automatically updated with any change (such
+    // as a button press)
     SimpleStringProperty pizzaCost = new SimpleStringProperty(sPizzaCost);
 
     // initialize size attributes
@@ -49,38 +55,65 @@ public class PriceCalculator extends Application
     {
         // set title
         myStage.setTitle("Pizza Price Calculator");
+        myStage.getIcons().add(
+                new Image(
+                        PriceCalculator.class.getResourceAsStream(
+                                "icon.jpg" )));
 
         // set root node
         FlowPane rootNode = new FlowPane(20, 20);
 
         // create a scene
-        Scene myScene = new Scene(rootNode, 300, 300);
+        Scene myScene = new Scene(rootNode, 460, 350);
+        myScene.getStylesheets().add("PriceCalculator.css");
 
         // set scene on stage
         myStage.setScene(myScene);
 
         // create label to report price
         totalPrice = new Label(sPizzaCost);
+        // this BIND allows the totalPrice Label to be updated automatically
+        // with any change in pizzaCost, which is updated with any change via
+        // pizzaCost.setValue( pizza.printTotalCost() ) in the event handlers
         totalPrice.textProperty().bind(pizzaCost);
+        Pane pizzaCost = new BorderedTitledPane("Total Cost",
+                totalCost());
 
         // create size selection flow pane
-        FlowPane sizePane = sizeSelection();
+        Pane pizzaSize = new BorderedTitledPane("Pizza Size",
+                sizeSelection());
 
         // create topping selection flow pane
-        FlowPane toppingPane = toppingSelection();
+        Pane pizzaToppings = new BorderedTitledPane("Pizza Toppings",
+                toppingSelection());
 
         // add to scene
-        rootNode.getChildren().addAll(sizePane,toppingPane,totalPrice);
+        rootNode.getChildren().addAll(pizzaSize,pizzaToppings,pizzaCost);
 
         // show stage and scene
         myStage.show();
 
     }
 
+
+    public FlowPane totalCost() {
+        // create size selection flowpane
+        FlowPane totalCostPane = new FlowPane(10, 10);
+        totalCostPane.setAlignment(Pos.CENTER);
+
+        // add buttons as children to size selection pane
+        totalCostPane.getChildren().addAll(totalPrice);
+
+        // return size flow pane
+        return totalCostPane;
+    }
+
+
     public FlowPane sizeSelection()
     {
         // create size selection flowpane
         FlowPane sizeSelectionPane = new FlowPane(10,10);
+        sizeSelectionPane.setAlignment(Pos.CENTER);
 
         // create size radio buttons
         rbSmall = new RadioButton("Small");
@@ -105,6 +138,7 @@ public class PriceCalculator extends Application
 
         // add buttons as children to size selection pane
         sizeSelectionPane.getChildren().addAll(rbSmall, rbMedium, rbLarge);
+//        sizeSelectionPane.setStyle("-fx-border-color: red;");
 
         // return size flow pane
         return sizeSelectionPane;
@@ -115,6 +149,7 @@ public class PriceCalculator extends Application
     {
         // create size selection flowpane
         FlowPane toppingSelectionPane = new FlowPane(10,10);
+        toppingSelectionPane.setAlignment(Pos.CENTER);
 
         // create topping check box buttons
         cbPlain = new CheckBox("Plain");
@@ -139,9 +174,22 @@ public class PriceCalculator extends Application
         return toppingSelectionPane;
     }
 
+    class BorderedTitledPane extends StackPane
+    {
+        BorderedTitledPane(String titleString, Node content)
+        {
+            Label title = new Label(" " + titleString + " ");
+            title.getStyleClass().add("bordered-titled-title");
+            StackPane.setAlignment(title, Pos.TOP_CENTER);
 
+            StackPane contentPane = new StackPane();
+            content.getStyleClass().add("bordered-titled-content");
+            contentPane.getChildren().add(content);
 
-
+            getStyleClass().add("bordered-titled-border");
+            getChildren().addAll(title, contentPane);
+        }
+    }
 
 
 
@@ -218,6 +266,10 @@ public class PriceCalculator extends Application
             else
             {
                 pizza.setTopping(1,false);
+                if ( !cbMushroom.isSelected() & !cbPepperoni.isSelected() )
+                {
+                    cbPlain.setSelected(true);
+                }
             }
 
             pizzaCost.setValue( pizza.printTotalCost() );
@@ -238,6 +290,10 @@ public class PriceCalculator extends Application
             else
             {
                 pizza.setTopping(2,false);
+                if ( !cbSausage.isSelected() & !cbPepperoni.isSelected() )
+                {
+                    cbPlain.setSelected(true);
+                }
             }
 
             pizzaCost.setValue( pizza.printTotalCost() );
@@ -258,6 +314,10 @@ public class PriceCalculator extends Application
             else
             {
                 pizza.setTopping(3,false);
+                if ( !cbSausage.isSelected() & !cbMushroom.isSelected() )
+                {
+                    cbPlain.setSelected(true);
+                }
             }
 
             pizzaCost.setValue( pizza.printTotalCost() );
