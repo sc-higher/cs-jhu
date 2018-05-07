@@ -4,6 +4,7 @@
  * @author: Sean Connor
  */
 
+import java.io.*;
 import java.util.*;
 import javafx.util.*;
 import javafx.application.*;
@@ -61,12 +62,37 @@ public class SongDatabase extends Application
         if ( args.length == 1 )
         {
             filename = args[0];
-            ReadCSV songCSV = new ReadCSV(filename);
-            database = FXCollections.observableArrayList(songCSV.toArrayList());
+
+            try
+            {
+                // lazy file exists test
+                File exists = new File(filename);
+                Scanner exist_test = new Scanner(exists);
+
+                //
+                ReadCSV songCSV = new ReadCSV(filename);
+                database = FXCollections.observableArrayList(songCSV.toArrayList());
+            }
+            catch (FileNotFoundException exception)
+            {
+                System.out.println("\nFile does not exist.");
+                System.out.println("Create new song database? (1 = yes, 2 = no)");
+                UserInput selectionMenu = new UserInput(1,2);
+                selection = selectionMenu.getUserSelection();
+
+                if ( selection != 1 )
+                {
+                    System.out.println("\nGoodbye!");
+                    System.exit(1);
+                }
+
+                database = FXCollections.observableArrayList();
+            }
+
         }
         else
         {
-            System.out.println("\nFile does not exist.");
+            System.out.println("\nInvalid number of arguments.");
             System.out.println("Create new song database? (1 = yes, 2 = no)");
             UserInput selectionMenu = new UserInput(1,2);
             selection = selectionMenu.getUserSelection();
@@ -199,6 +225,56 @@ public class SongDatabase extends Application
         exitButton.setOnAction( new exitButtonHandler() );
 
         return allButtons;
+    }
+
+
+
+    private void writeData(ObservableList<Song> database, String filename)
+    {
+        String output_filename = filename;
+
+        try ( BufferedWriter bw = new BufferedWriter(
+                new OutputStreamWriter(
+                        new FileOutputStream(output_filename))) )
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("Title");
+            sb.append(",");
+            sb.append("Item Code");
+            sb.append(",");
+            sb.append("Description");
+            sb.append(",");
+            sb.append("Artist");
+            sb.append(",");
+            sb.append("Album");
+            sb.append(",");
+            sb.append("Price");
+            sb.append("\n");
+
+            for(Song s : database)
+            {
+                sb.append(s.getTitle());
+                sb.append(",");
+                sb.append(s.getItemCode());
+                sb.append(",");
+                sb.append(s.getDescription());
+                sb.append(",");
+                sb.append(s.getArtist());
+                sb.append(",");
+                sb.append(s.getAlbum());
+                sb.append(",");
+                sb.append(s.getPrice());
+                sb.append("\n");
+            }
+
+            bw.write(sb.toString());
+        }
+
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
@@ -428,8 +504,7 @@ public class SongDatabase extends Application
     {
         public void handle( ActionEvent e )
         {
-            // IMPLEMENT DATABASE SAVE
-
+            writeData(database,"song-database.csv");
 
             System.exit(1);
         }

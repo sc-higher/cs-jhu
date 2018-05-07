@@ -51,7 +51,8 @@ public class ReadCSV
 
         catch(FileNotFoundException e)
         {
-            e.printStackTrace();
+            System.out.println("\nFile not found. Please try again.\n");
+            System.exit(1);
         }
     }
 
