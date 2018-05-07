@@ -1,5 +1,12 @@
 /**
+ * This program is part of my response to Project 3 for the class 605.201.81
+ * Intro to Programming Using Java at the JHU EPP CS program.
  *
+ * This program will provide the user with a GUI that allows them to add, edit,
+ * or delete songs from a song database. The database can be imported as a CSV-
+ * style file (command-line argument for filename), or a new database can be
+ * created. Any changes to the database are saved upon exit to the specified
+ * filename.
  *
  * @author: Sean Connor
  */
@@ -18,7 +25,6 @@ import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 
 public class SongDatabase extends Application
 {
@@ -53,12 +59,30 @@ public class SongDatabase extends Application
     Button acceptButton = new Button("Accept");
     Button cancelButton = new Button("Cancel");
     Button exitButton = new Button("Exit");
+    Button saveButton = new Button("Save As...");
+
+    // initialize save window stuff
+    Stage saveWindow = new Stage();
+    Label filenameLabel = new Label("Filename:");
+    TextField filenameTF = new TextField();
+    Button okButton = new Button("OK");
+    Button saveCancelButton = new Button("Cancel");
 
 
-    // main method
+    /**
+     * Main method. Handles validation of argument/filename and creation of
+     * initial database. Incorporates the launch() method for javafx gui.
+     *
+     * @param args   can accept a filename as a command line argument
+     */
     public static void main(String[] args)
     {
         // get command line argument for database filename (if applicable)
+        // case 1 - one argument, valid filename --> open database
+        // case 2 - one argument, invalid filename --> start new database?
+        // case 3 - less/more than one argument --> start new database?
+        // case 4 - one argument, valid filename, incorrect format --> not
+        //          handled
         if ( args.length == 1 )
         {
             filename = args[0];
@@ -69,12 +93,13 @@ public class SongDatabase extends Application
                 File exists = new File(filename);
                 Scanner exist_test = new Scanner(exists);
 
-                //
+                // create the database from given file
                 ReadCSV songCSV = new ReadCSV(filename);
                 database = FXCollections.observableArrayList(songCSV.toArrayList());
             }
             catch (FileNotFoundException exception)
             {
+                // ask user if want to create new database
                 System.out.println("\nFile does not exist.");
                 System.out.println("Create new song database? (1 = yes, 2 = no)");
                 UserInput selectionMenu = new UserInput(1,2);
@@ -86,12 +111,18 @@ public class SongDatabase extends Application
                     System.exit(1);
                 }
 
+                // if 'yes' create new empty database
                 database = FXCollections.observableArrayList();
             }
 
         }
         else
         {
+            // set filename
+            filename = "song-database.csv";
+
+            // no command-line argument provided
+            // ask user if want to create new database
             System.out.println("\nInvalid number of arguments.");
             System.out.println("Create new song database? (1 = yes, 2 = no)");
             UserInput selectionMenu = new UserInput(1,2);
@@ -103,6 +134,7 @@ public class SongDatabase extends Application
                 System.exit(1);
             }
 
+            // if 'yes' create new empty database
             database = FXCollections.observableArrayList();
         }
 
@@ -111,7 +143,11 @@ public class SongDatabase extends Application
     }
 
 
-    // override the start() method
+    /**
+     *
+     * @param myStage
+     */
+    @Override
     public void start(Stage myStage)
     {
         // set title
@@ -211,7 +247,12 @@ public class SongDatabase extends Application
         VBox allButtons = new VBox(10);
         HBox buttons = createButtons();
         buttons.setAlignment(Pos.CENTER);
-        allButtons.getChildren().addAll(buttons,exitButton);
+
+        HBox saveExitButtons = new HBox(10);
+        saveExitButtons.getChildren().addAll(saveButton,exitButton);
+        saveExitButtons.setAlignment(Pos.CENTER);
+
+        allButtons.getChildren().addAll(buttons,saveExitButtons);
         allButtons.setAlignment(Pos.CENTER);
 
         acceptButton.setDisable(true);
@@ -223,6 +264,9 @@ public class SongDatabase extends Application
         acceptButton.setOnAction( new acceptButtonHandler() );
         cancelButton.setOnAction( new cancelButtonHandler() );
         exitButton.setOnAction( new exitButtonHandler() );
+        saveButton.setOnAction( new saveButtonHandler() );
+        okButton.setOnAction( new okButtonHandler() );
+        saveCancelButton.setOnAction( new saveCancelButtonHandler() );
 
         return allButtons;
     }
@@ -278,6 +322,9 @@ public class SongDatabase extends Application
     }
 
 
+    /**********************/
+    /**  EVENT HANDLERS  **/
+    /**********************/
 
 
     class selectionCBHandler implements EventHandler<ActionEvent>
@@ -327,6 +374,7 @@ public class SongDatabase extends Application
             editButton.setDisable(true);
             deleteButton.setDisable(true);
             exitButton.setDisable(true);
+            saveButton.setDisable(true);
             acceptButton.setDisable(false);
             cancelButton.setDisable(false);
 
@@ -352,6 +400,7 @@ public class SongDatabase extends Application
         }
     }
 
+
     class editButtonHandler implements EventHandler<ActionEvent>
     {
         public void handle( ActionEvent e )
@@ -364,6 +413,7 @@ public class SongDatabase extends Application
             editButton.setDisable(true);
             deleteButton.setDisable(true);
             exitButton.setDisable(true);
+            saveButton.setDisable(true);
             acceptButton.setDisable(false);
             cancelButton.setDisable(false);
 
@@ -377,6 +427,7 @@ public class SongDatabase extends Application
         }
     }
 
+
     class deleteButtonHandler implements EventHandler<ActionEvent>
     {
         public void handle( ActionEvent e )
@@ -384,6 +435,7 @@ public class SongDatabase extends Application
             database.remove(selectionCB.getValue());
         }
     }
+
 
     class acceptButtonHandler implements EventHandler<ActionEvent>
     {
@@ -442,6 +494,7 @@ public class SongDatabase extends Application
             editButton.setDisable(false);
             deleteButton.setDisable(false);
             exitButton.setDisable(false);
+            saveButton.setDisable(false);
             acceptButton.setDisable(true);
             cancelButton.setDisable(true);
 
@@ -450,6 +503,7 @@ public class SongDatabase extends Application
 
         }
     }
+
 
     class cancelButtonHandler implements EventHandler<ActionEvent>
     {
@@ -492,6 +546,7 @@ public class SongDatabase extends Application
             editButton.setDisable(false);
             deleteButton.setDisable(false);
             exitButton.setDisable(false);
+            saveButton.setDisable(false);
             acceptButton.setDisable(true);
             cancelButton.setDisable(true);
 
@@ -500,145 +555,60 @@ public class SongDatabase extends Application
         }
     }
 
+
+    class saveButtonHandler implements EventHandler<ActionEvent>
+    {
+        public void handle( ActionEvent e )
+        {
+            GridPane gp = new GridPane();
+            gp.add(filenameLabel,0,0,1,1);
+            gp.add(filenameTF,1,0,1,1);
+            gp.add(okButton,0,1,1,1);
+            gp.add(saveCancelButton,1,1,1,1);
+
+            gp.setPadding(new Insets(20, 40, 20, 40));
+            gp.setHgap(10);
+            gp.setVgap(10);
+
+            Scene saveScene = new Scene(gp);
+
+            // New window (Stage)
+            saveWindow.setTitle("Save As...");
+            saveWindow.setScene(saveScene);
+
+            saveWindow.show();
+        }
+    }
+
+
     class exitButtonHandler implements EventHandler<ActionEvent>
     {
         public void handle( ActionEvent e )
         {
-            writeData(database,"song-database.csv");
+            writeData(database,filename);
 
             System.exit(1);
         }
     }
 
 
+    class okButtonHandler implements EventHandler<ActionEvent>
+    {
+        public void handle( ActionEvent e )
+        {
+            filename = filenameTF.getText();
+            writeData(database,filename);
+            System.exit(1);
+        }
+    }
 
 
-
-    // OLD STUFF!!!!
-
-//    public FlowPane totalCost() {
-//        // create size selection flowpane
-//        FlowPane totalCostPane = new FlowPane(10, 10);
-//        totalCostPane.setAlignment(Pos.CENTER);
-//
-//        // add buttons as children to size selection pane
-//        totalCostPane.getChildren().addAll(totalPrice);
-//
-//        // return size flow pane
-//        return totalCostPane;
-//    }
-//
-//
-//    public FlowPane sizeSelection()
-//    {
-//        // create size selection flowpane
-//        FlowPane sizeSelectionPane = new FlowPane(10,10);
-//        sizeSelectionPane.setAlignment(Pos.CENTER);
-//
-//        // create size radio buttons
-//        rbSmall = new RadioButton("Small");
-//        rbMedium = new RadioButton("Medium");
-//        rbLarge = new RadioButton("Large");
-//
-//        // create size toggle group
-//        ToggleGroup tgSize = new ToggleGroup();
-//
-//        // add size radio buttons to size toggle group
-//        rbSmall.setToggleGroup(tgSize);
-//        rbMedium.setToggleGroup(tgSize);
-//        rbLarge.setToggleGroup(tgSize);
-//
-//        // handle action events for size radio buttons
-//        rbSmall.setOnAction( new smallHandler() );
-//        rbMedium.setOnAction( new mediumHandler() );
-//        rbLarge.setOnAction( new largeHandler() );
-//
-//        // make small size default
-//        rbSmall.fire();
-//
-//        // add buttons as children to size selection pane
-//        sizeSelectionPane.getChildren().addAll(rbSmall, rbMedium, rbLarge);
-////        sizeSelectionPane.setStyle("-fx-border-color: red;");
-//
-//        // return size flow pane
-//        return sizeSelectionPane;
-//    }
-//
-//
-//    public FlowPane toppingSelection()
-//    {
-//        // create size selection flowpane
-//        FlowPane toppingSelectionPane = new FlowPane(10,10);
-//        toppingSelectionPane.setAlignment(Pos.CENTER);
-//
-//        // create topping check box buttons
-//        cbPlain = new CheckBox("Plain");
-//        cbSausage = new CheckBox("Sausage");
-//        cbMushroom = new CheckBox("Mushroom");
-//        cbPepperoni = new CheckBox("Pepperoni");
-//
-//        // handle action events for size radio buttons
-//        cbPlain.setOnAction( new plainHandler() );
-//        cbSausage.setOnAction( new sausageHandler() );
-//        cbMushroom.setOnAction( new mushroomHandler() );
-//        cbPepperoni.setOnAction( new pepperoniHandler() );
-//
-//        // make small size default
-//        cbPlain.fire();
-//
-//        // add buttons as children to size selection pane
-//        toppingSelectionPane.getChildren().addAll(cbPlain, cbSausage,
-//                cbMushroom, cbPepperoni);
-//
-//        // return size flow pane
-//        return toppingSelectionPane;
-//    }
-//
-//    class BorderedTitledPane extends StackPane
-//    {
-//        BorderedTitledPane(String titleString, Node content)
-//        {
-//            Label title = new Label(" " + titleString + " ");
-//            title.getStyleClass().add("bordered-titled-title");
-//            StackPane.setAlignment(title, Pos.TOP_CENTER);
-//
-//            StackPane contentPane = new StackPane();
-//            content.getStyleClass().add("bordered-titled-content");
-//            contentPane.getChildren().add(content);
-//
-//            getStyleClass().add("bordered-titled-border");
-//            getChildren().addAll(title, contentPane);
-//        }
-//    }
-//
-//
-//
-//
-//    /* HANDLERS */
-//
-//    class mushroomHandler implements EventHandler<ActionEvent>
-//    {
-//        public void handle( ActionEvent e )
-//        {
-//            if ( cbMushroom.isSelected() )
-//            {
-//                pizza.setTopping(0,false);
-//                pizza.setTopping(2,true);
-//
-//                cbPlain.setSelected(false);
-//            }
-//            else
-//            {
-//                pizza.setTopping(2,false);
-//                if ( !cbSausage.isSelected() & !cbPepperoni.isSelected() )
-//                {
-//                    cbPlain.setSelected(true);
-//                }
-//            }
-//
-//            pizzaCost.setValue( pizza.printTotalCost() );
-//        }
-//    }
-
+    class saveCancelButtonHandler implements EventHandler<ActionEvent>
+    {
+        public void handle( ActionEvent e )
+        {
+            saveWindow.close();
+        }
+    }
 
 }
