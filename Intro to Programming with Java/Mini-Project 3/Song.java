@@ -1,5 +1,9 @@
 /**
+ * This program is part of my response to Project 3 for the class 605.201.81
+ * Intro to Programming Using Java at the JHU EPP CS program.
  *
+ * This class is used to create a Song object that has title, item code, etc
+ * attributes and appropriate get/set methods for each.
  *
  * @author: Sean Connor
  */

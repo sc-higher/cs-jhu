@@ -41,7 +41,6 @@ public class SongDatabase extends Application
     Label artistLabel = new Label("Artist:");
     Label albumLabel = new Label("Album:");
     Label priceLabel = new Label("Price:");
-    Label modeLabel = new Label("Mode:");
 
     // initialize text fields
     ComboBox<Song> selectionCB = new ComboBox<Song>();
@@ -67,6 +66,14 @@ public class SongDatabase extends Application
     TextField filenameTF = new TextField();
     Button okButton = new Button("OK");
     Button saveCancelButton = new Button("Cancel");
+
+    // initialize fail stuff
+    Stage failWindow = new Stage();
+    VBox fail;
+    Label failLabel;
+
+    // initialize ComboBox<Song> callback for getTitle update
+    Callback<ListView<Song>, ListCell<Song>> factory;
 
 
     /**
@@ -95,13 +102,15 @@ public class SongDatabase extends Application
 
                 // create the database from given file
                 ReadCSV songCSV = new ReadCSV(filename);
-                database = FXCollections.observableArrayList(songCSV.toArrayList());
+                database = FXCollections.observableArrayList(
+                        songCSV.toArrayList());
             }
             catch (FileNotFoundException exception)
             {
                 // ask user if want to create new database
                 System.out.println("\nFile does not exist.");
-                System.out.println("Create new song database? (1 = yes, 2 = no)");
+                System.out.println("Create new song database? " +
+                        "(1 = yes, 2 = no)");
                 UserInput selectionMenu = new UserInput(1,2);
                 selection = selectionMenu.getUserSelection();
 
@@ -144,6 +153,7 @@ public class SongDatabase extends Application
 
 
     /**
+     * JavaFX start method override
      *
      * @param myStage
      */
@@ -183,6 +193,12 @@ public class SongDatabase extends Application
     }
 
 
+    /**
+     * Creates the labels and text fields for the GUI, assembled as a GridPane
+     * node.
+     *
+     * @return  GridPane node with labels and text fields
+     */
     public GridPane createEntryFields()
     {
         selectionCB.setPrefWidth(400);
@@ -213,6 +229,8 @@ public class SongDatabase extends Application
 
         selectionCB.setItems(database);
 
+        /* OLD METHOD - throws exception on some machines */
+
         // selectionCB.setConverter(new StringConverter<Song>()
         // {
             // @Override
@@ -225,17 +243,18 @@ public class SongDatabase extends Application
                 // return null;
             // }
         // });
-        
-        Callback<ListView<Song>, ListCell<Song>> factory = lv -> new ListCell<Song>() 
+
+
+        // NEW METHOD - set callback to update ComboBox after edit with getTitle
+        factory = lv -> new ListCell<Song>()
         {
             @Override
-            protected void updateItem(Song item, boolean empty) 
+            protected void updateItem(Song item, boolean empty)
             {
                 super.updateItem(item, empty);
                 setText(empty ? "" : item.getTitle());
             }
         };
-
         selectionCB.setCellFactory(factory);
         selectionCB.setButtonCell(factory.call(null));
         
@@ -274,20 +293,31 @@ public class SongDatabase extends Application
 
         selectionCB.setOnAction( new selectionCBHandler() );
         
-
-
         return gridPane;
     }
 
+
+    /**
+     * Create an HBox with a row of buttons
+     *
+     * @return HBox with a row of buttons
+     */
     public HBox createButtons()
     {
         HBox hb = new HBox(10);
 
-        hb.getChildren().addAll(addButton,editButton,deleteButton,acceptButton,cancelButton);
+        hb.getChildren().addAll(addButton,editButton,deleteButton,
+                acceptButton,cancelButton);
 
         return hb;
     }
 
+
+    /**
+     * Combines the two button rows as a VBox
+     *
+     * @return a VBox with all buttons
+     */
     public VBox createAllButtons()
     {
         VBox allButtons = new VBox(10);
@@ -303,6 +333,11 @@ public class SongDatabase extends Application
 
         acceptButton.setDisable(true);
         cancelButton.setDisable(true);
+        if (database.isEmpty() )
+        {
+            editButton.setDisable(true);
+            deleteButton.setDisable(true);
+        }
 
         addButton.setOnAction( new addButtonHandler() );
         editButton.setOnAction( new editButtonHandler() );
@@ -318,7 +353,12 @@ public class SongDatabase extends Application
     }
 
 
-
+    /**
+     * Method to write data from database to filename as a csv-style file
+     *
+     * @param database An OnservableList serving as song database
+     * @param filename The desired output filename
+     */
     private void writeData(ObservableList<Song> database, String filename)
     {
         String output_filename = filename;
@@ -365,6 +405,27 @@ public class SongDatabase extends Application
         {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Checks if string input is a number.
+     *
+     * @param str A string to check if numeric
+     * @return boolean true if numeric, false otherwise
+     */
+    private boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -479,6 +540,24 @@ public class SongDatabase extends Application
         public void handle( ActionEvent e )
         {
             database.remove(selectionCB.getValue());
+
+            if (database.isEmpty() )
+            {
+                editButton.setDisable(true);
+                deleteButton.setDisable(true);
+            }
+
+            factory = lv -> new ListCell<Song>()
+            {
+                @Override
+                protected void updateItem(Song item, boolean empty)
+                {
+                    super.updateItem(item, empty);
+                    setText(empty ? "" : item.getTitle());
+                }
+            };
+            selectionCB.setCellFactory(factory);
+            selectionCB.setButtonCell(factory.call(null));
         }
     }
 
@@ -489,65 +568,269 @@ public class SongDatabase extends Application
         {
             if ( selectionCB.isVisible() ) // this is for 'edit' function
             {
-                selectionCB.getValue().setTitle(titleTF.getText());
-                selectionCB.getValue().setItemCode(itemCodeTF.getText());
-                selectionCB.getValue().setDescription(descriptionTF.getText());
-                selectionCB.getValue().setArtist(artistTF.getText());
-                selectionCB.getValue().setAlbum(albumTF.getText());
-                selectionCB.getValue().setPrice(priceTF.getText());
+                if ( titleTF.getText().trim().isEmpty() ||
+                        itemCodeTF.getText().trim().isEmpty() ||
+                        descriptionTF.getText().trim().isEmpty() ||
+                        artistTF.getText().trim().isEmpty() ||
+                        albumTF.getText().trim().isEmpty() ||
+                        priceTF.getText().trim().isEmpty() )
+                {
+                    fail = new VBox(10);
+                    failLabel = new Label("Entry must not be blank!");
+                    fail.getChildren().addAll(failLabel);
+
+                    fail.setPadding(new Insets(20, 40, 20, 40));
+
+                    Scene failScene = new Scene(fail);
+
+                    // New window (Stage)
+                    failWindow.setTitle("");
+                    failWindow.setScene(failScene);
+                    failWindow.show();
+
+                    if ( database.isEmpty() )
+                    {
+                        editButton.setDisable(true);
+                        deleteButton.setDisable(true);
+                    }
+                }
+                else if ( !isNumeric(priceTF.getText().trim()) )
+                {
+                    fail = new VBox(10);
+                    failLabel = new Label("Price must be numeric!");
+                    fail.getChildren().addAll(failLabel);
+                    fail.setPadding(new Insets(20, 40, 20, 40));
+
+                    Scene failScene = new Scene(fail);
+
+                    // New window (Stage)
+                    failWindow.setTitle("");
+                    failWindow.setScene(failScene);
+                    failWindow.show();
+                }
+                else
+                {
+                    selectionCB.getValue().setTitle(
+                            titleTF.getText());
+
+                    selectionCB.getValue().setItemCode(
+                            itemCodeTF.getText());
+
+                    selectionCB.getValue().setDescription(
+                            descriptionTF.getText());
+
+                    selectionCB.getValue().setArtist(
+                            artistTF.getText());
+
+                    selectionCB.getValue().setAlbum(
+                            albumTF.getText());
+
+                    selectionCB.getValue().setPrice(
+                            priceTF.getText());
+
+                    selectionCB.getSelectionModel().selectFirst();
+
+                    try
+                    {
+                        selectionCB.setDisable(false);
+
+                        titleTF.setText(
+                                selectionCB.getValue().getTitle());
+                        titleTF.setDisable(true);
+
+                        itemCodeTF.setText(
+                                selectionCB.getValue().getItemCode());
+                        itemCodeTF.setDisable(true);
+
+                        descriptionTF.setText(
+                                selectionCB.getValue().getDescription());
+                        descriptionTF.setDisable(true);
+
+                        artistTF.setText(
+                                selectionCB.getValue().getArtist());
+                        artistTF.setDisable(true);
+
+                        albumTF.setText(
+                                selectionCB.getValue().getAlbum());
+                        albumTF.setDisable(true);
+
+                        priceTF.setText(
+                                selectionCB.getValue().getPrice());
+                        priceTF.setDisable(true);
+                    }
+                    catch ( NullPointerException exception)
+                    {
+                        titleTF.clear();
+                        titleTF.setDisable(true);
+
+                        itemCodeTF.clear();
+                        itemCodeTF.setDisable(true);
+
+                        descriptionTF.clear();
+                        descriptionTF.setDisable(true);
+
+                        artistTF.clear();
+                        artistTF.setDisable(true);
+
+                        albumTF.clear();
+                        albumTF.setDisable(true);
+
+                        priceTF.clear();
+                        priceTF.setDisable(true);
+                    }
+
+                    // disable/enable certain buttons
+                    addButton.setDisable(false);
+                    editButton.setDisable(false);
+                    deleteButton.setDisable(false);
+                    exitButton.setDisable(false);
+                    saveButton.setDisable(false);
+                    acceptButton.setDisable(true);
+                    cancelButton.setDisable(true);
+
+                    //
+                    selectionCB.setVisible(true);
+
+                    //
+                    factory = lv -> new ListCell<Song>()
+                    {
+                        @Override
+                        protected void updateItem(Song item, boolean empty)
+                        {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : item.getTitle());
+                        }
+                    };
+                    selectionCB.setCellFactory(factory);
+                    selectionCB.setButtonCell(factory.call(null));
+
+                }
             }
             else // this is for 'add' function
             {
-                database.add(new Song(titleTF.getText(),itemCodeTF.getText(),
-                        descriptionTF.getText(), artistTF.getText(),
-                        albumTF.getText(),priceTF.getText()));
+                if ( titleTF.getText().trim().isEmpty() ||
+                        itemCodeTF.getText().trim().isEmpty() ||
+                        descriptionTF.getText().trim().isEmpty() ||
+                        artistTF.getText().trim().isEmpty() ||
+                        albumTF.getText().trim().isEmpty() ||
+                        priceTF.getText().trim().isEmpty() )
+                {
+                    fail = new VBox(10);
+                    failLabel = new Label("Entry must not be blank!");
+                    fail.getChildren().addAll(failLabel);
+                    fail.setPadding(new Insets(20, 40, 20, 40));
+
+                    Scene failScene = new Scene(fail);
+
+                    // New window (Stage)
+                    failWindow.setTitle("");
+                    failWindow.setScene(failScene);
+                    failWindow.show();
+
+                    if ( database.isEmpty() )
+                    {
+                        editButton.setDisable(true);
+                        deleteButton.setDisable(true);
+                    }
+                }
+                else if ( !isNumeric(priceTF.getText().trim()) )
+                {
+                    fail = new VBox(10);
+                    failLabel = new Label("Price must be numeric!");
+                    fail.getChildren().addAll(failLabel);
+                    fail.setPadding(new Insets(20, 40, 20, 40));
+
+                    Scene failScene = new Scene(fail);
+
+                    // New window (Stage)
+                    failWindow.setTitle("");
+                    failWindow.setScene(failScene);
+
+                    failWindow.show();
+                }
+                else
+                {
+                    database.add(new Song(titleTF.getText(),
+                        itemCodeTF.getText(), descriptionTF.getText(),
+                        artistTF.getText(), albumTF.getText(),
+                        priceTF.getText()));
+
+                    selectionCB.getSelectionModel().selectFirst();
+                    try
+                    {
+                        selectionCB.setDisable(false);
+
+                        titleTF.setText(
+                                selectionCB.getValue().getTitle());
+                        titleTF.setDisable(true);
+
+                        itemCodeTF.setText(
+                                selectionCB.getValue().getItemCode());
+                        itemCodeTF.setDisable(true);
+
+                        descriptionTF.setText(
+                                selectionCB.getValue().getDescription());
+                        descriptionTF.setDisable(true);
+
+                        artistTF.setText(
+                                selectionCB.getValue().getArtist());
+                        artistTF.setDisable(true);
+
+                        albumTF.setText(
+                                selectionCB.getValue().getAlbum());
+                        albumTF.setDisable(true);
+
+                        priceTF.setText(
+                                selectionCB.getValue().getPrice());
+                        priceTF.setDisable(true);
+                    }
+                    catch ( NullPointerException exception)
+                    {
+                        titleTF.clear();
+                        titleTF.setDisable(true);
+
+                        itemCodeTF.clear();
+                        itemCodeTF.setDisable(true);
+
+                        descriptionTF.clear();
+                        descriptionTF.setDisable(true);
+
+                        artistTF.clear();
+                        artistTF.setDisable(true);
+
+                        albumTF.clear();
+                        albumTF.setDisable(true);
+
+                        priceTF.clear();
+                        priceTF.setDisable(true);
+                    }
+
+                    // disable/enable certain buttons
+                    addButton.setDisable(false);
+                    editButton.setDisable(false);
+                    deleteButton.setDisable(false);
+                    exitButton.setDisable(false);
+                    saveButton.setDisable(false);
+                    acceptButton.setDisable(true);
+                    cancelButton.setDisable(true);
+
+                    //
+                    selectionCB.setVisible(true);
+
+                    //
+                    factory = lv -> new ListCell<Song>()
+                    {
+                        @Override
+                        protected void updateItem(Song item, boolean empty)
+                        {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : item.getTitle());
+                        }
+                    };
+                    selectionCB.setCellFactory(factory);
+                    selectionCB.setButtonCell(factory.call(null));
+                }
             }
-
-            selectionCB.getSelectionModel().selectFirst();
-            try
-            {
-                selectionCB.setDisable(false);
-                titleTF.setText(selectionCB.getValue().getTitle());
-                titleTF.setDisable(true);
-                itemCodeTF.setText(selectionCB.getValue().getItemCode());
-                itemCodeTF.setDisable(true);
-                descriptionTF.setText(selectionCB.getValue().getDescription());
-                descriptionTF.setDisable(true);
-                artistTF.setText(selectionCB.getValue().getArtist());
-                artistTF.setDisable(true);
-                albumTF.setText(selectionCB.getValue().getAlbum());
-                albumTF.setDisable(true);
-                priceTF.setText(selectionCB.getValue().getPrice());
-                priceTF.setDisable(true);
-            }
-            catch ( NullPointerException exception)
-            {
-                titleTF.clear();
-                titleTF.setDisable(true);
-                itemCodeTF.clear();
-                itemCodeTF.setDisable(true);
-                descriptionTF.clear();
-                descriptionTF.setDisable(true);
-                artistTF.clear();
-                artistTF.setDisable(true);
-                albumTF.clear();
-                albumTF.setDisable(true);
-                priceTF.clear();
-                priceTF.setDisable(true);
-            }
-
-            // disable/enable certain buttons
-            addButton.setDisable(false);
-            editButton.setDisable(false);
-            deleteButton.setDisable(false);
-            exitButton.setDisable(false);
-            saveButton.setDisable(false);
-            acceptButton.setDisable(true);
-            cancelButton.setDisable(true);
-
-            //
-            selectionCB.setVisible(true);
-
         }
     }
 

@@ -1,11 +1,10 @@
 /**
- * This program is my response to Project 2 for the class 605.201.81 Intro
- * to Programming Using Java at the JHU EPP CS program.
- * This class provides an easy way to retrieve user selection as integers.
- * The constructor accepts two int arguments representing the range of int
- * values that are accepted as user input.
+ * This program is part of my response to Project 3 for the class 605.201.81
+ * Intro to Programming Using Java at the JHU EPP CS program.
+ *
+ * This class is used to obtain user input (as integer) from the terminal.
+ *
  * @author: Sean Connor
- * Date:    15 April 2018
  */
 
 import java.util.Scanner;

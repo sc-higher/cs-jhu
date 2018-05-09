@@ -1,5 +1,8 @@
 /**
+ * This program is part of my response to Project 3 for the class 605.201.81
+ * Intro to Programming Using Java at the JHU EPP CS program.
  *
+ * This class is utilized to read input file to a usable data type.
  *
  * @author: Sean Connor
  */
@@ -134,9 +137,11 @@ public class ReadCSV
 
 
     /**
+     * Reads the csv-style file with name filename and parses data to an
+     * ArrayList of Song objects, each with attributes of a particular song.
      *
-     * @param filename
-     * @return
+     * @param filename file to be read
+     * @return ArrayList of Song objects
      */
     public ArrayList<Song> toArrayList()
     {
