@@ -213,18 +213,31 @@ public class SongDatabase extends Application
 
         selectionCB.setItems(database);
 
-        selectionCB.setConverter(new StringConverter<Song>()
+        // selectionCB.setConverter(new StringConverter<Song>()
+        // {
+            // @Override
+            // public String toString(Song object) {
+                // return object.getTitle();
+            // }
+
+            // @Override
+            // public Song fromString(String string) {
+                // return null;
+            // }
+        // });
+        
+        Callback<ListView<Song>, ListCell<Song>> factory = lv -> new ListCell<Song>() 
         {
             @Override
-            public String toString(Song object) {
-                return object.getTitle();
+            protected void updateItem(Song item, boolean empty) 
+            {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getTitle());
             }
+        };
 
-            @Override
-            public Song fromString(String string) {
-                return null;
-            }
-        });
+        selectionCB.setCellFactory(factory);
+        selectionCB.setButtonCell(factory.call(null));
 
 
         selectionCB.setOnAction( new selectionCBHandler() );
