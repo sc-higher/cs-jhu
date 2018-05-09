@@ -238,9 +238,42 @@ public class SongDatabase extends Application
 
         selectionCB.setCellFactory(factory);
         selectionCB.setButtonCell(factory.call(null));
-
+        
+        // initialize with first entry
+        selectionCB.getSelectionModel().selectFirst();
+        try
+            {
+                titleTF.setText(selectionCB.getValue().getTitle());
+                titleTF.setDisable(true);
+                itemCodeTF.setText(selectionCB.getValue().getItemCode());
+                itemCodeTF.setDisable(true);
+                descriptionTF.setText(selectionCB.getValue().getDescription());
+                descriptionTF.setDisable(true);
+                artistTF.setText(selectionCB.getValue().getArtist());
+                artistTF.setDisable(true);
+                albumTF.setText(selectionCB.getValue().getAlbum());
+                albumTF.setDisable(true);
+                priceTF.setText(selectionCB.getValue().getPrice());
+                priceTF.setDisable(true);
+            }
+            catch ( NullPointerException exception)
+            {
+                titleTF.clear();
+                titleTF.setDisable(true);
+                itemCodeTF.clear();
+                itemCodeTF.setDisable(true);
+                descriptionTF.clear();
+                descriptionTF.setDisable(true);
+                artistTF.clear();
+                artistTF.setDisable(true);
+                albumTF.clear();
+                albumTF.setDisable(true);
+                priceTF.clear();
+                priceTF.setDisable(true);
+            }
 
         selectionCB.setOnAction( new selectionCBHandler() );
+        
 
 
         return gridPane;
@@ -470,6 +503,7 @@ public class SongDatabase extends Application
                         albumTF.getText(),priceTF.getText()));
             }
 
+            selectionCB.getSelectionModel().selectFirst();
             try
             {
                 selectionCB.setDisable(false);
