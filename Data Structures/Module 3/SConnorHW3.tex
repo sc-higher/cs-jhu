@@ -1,0 +1,223 @@
+%=======================02-713 LaTeX template, following the 15-210 template==================
+%
+% You don't need to use LaTeX or this template, but you must turn your homework in as
+% a typeset PDF somehow.
+%
+% How to use:
+%    1. Update your information in section "A" below
+%    2. Write your answers in section "B" below. Precede answers for all 
+%       parts of a question with the command "\question{n}{desc}" where n is
+%       the question number and "desc" is a short, one-line description of 
+%       the problem. There is no need to restate the problem.
+%    3. If a question has multiple parts, precede the answer to part x with the
+%       command "\part{x}".
+%    4. If a problem asks you to design an algorithm, use the commands
+%       \algorithm, \correctness, \runtime to precede your discussion of the 
+%       description of the algorithm, its correctness, and its running time, respectively.
+%    5. You can include graphics by using the command \includegraphics{FILENAME}
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{placeins}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1 #2}\vspace{.5em}\hrule\vspace{.10in}}
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+\newcommand\algorithm{\vspace{.10in}\textbf{Algorithm: }}
+\newcommand\correctness{\vspace{.10in}\textbf{Correctness: }}
+\newcommand\runtime{\vspace{.10in}\textbf{Running time: }}
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\chead{\textbf{HW\HWNUM}}
+\rhead{\today}
+\begin{document}\raggedright
+%Section A==============Change the values below to match your information==================
+\newcommand\NAME{Sean Connor}  % your name
+\newcommand\HWNUM{3}              % the homework number
+%Section B==============Put your answers to the questions below here=======================
+
+\question{Q1}{}
+\begin{lstlisting}
+/* Algorithm to recursively compute a+b, where a and b are non-neg integers */
+add( int a, int b )
+	if( b == 0 )
+		return a;
+	return add( a+1, b-1 );
+
+/* Test case */
+a = 3, b = 2
+add( 3, 2 )
+	return add( 4, 1 )
+		return add( 5, 0 )
+			return 5
+= 5
+\end{lstlisting}
+
+\question{Q2}{}
+We need to find the sum of the array by adding each item recursively, and then divide by the number of elements in the array (N = array.length). There will be three cases, as follows:
+\begin{enumerate}
+	\item i == 0
+	\item i == N-1 (base case)
+	\item all other values of i
+\end{enumerate}
+Thus, the Java/pseudocode will be as follows:
+\begin{lstlisting}
+/* Java/pseudocode for average of array */
+averageArray( int[] A, int i, int N )
+	if( i == 0 )  // Case 1 - this case returns the average
+		return ( A[i] + averageArray( A, i+1, N )  ) /  N;
+	else if( i == N-1 )  // Case 2 (base case)
+		return A[i];
+	else  // Case 3
+		return A[i] + averageArray( A, i+1, N );
+\end{lstlisting}
+Then one could simply call averageArray(A, 0, A.length) with the initial call having i = 0 as a requirement for proper calculation of average.
+
+\question{Q3}{}
+There are three cases here as follows:
+\begin{enumerate}
+	\item Case 1 (base case 1) $\rightarrow$ n == 0, return f0
+	\item Case 2 (base case 2) $\rightarrow$ n == 1, return f1
+	\item Case 3  $\rightarrow$ n $>$ 1, return gfib(f0, f1, n-1) + gfib(f0, f1, n-2)
+\end{enumerate}
+The Java/pseudocode is as follows:
+\begin{lstlisting}
+/* Java/pseudocode for generalized fibonacci */
+gfib( int f0, int f1, int n )
+	if( n == 0 )
+		return f0;
+	else if( n == 1 )
+		return f1;
+	else
+		return gfib(f0, f1, n-1) + gfib(f0, f1, n-2);
+\end{lstlisting}
+
+\question{Q4}{}
+For this question I wrote and executed a Java program to compute Ackerman(2,2). The code is as follows:
+\begin{lstlisting}
+public class Ackerman
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Ackerman(2,2) = " + ack(2,2));
+    }
+
+    public static int ack(int m, int n)
+    {
+        if( m == 0 )
+        {
+            return n + 1;
+        }
+        else if( n == 0 )
+        {
+            return ack(m-1, 1);
+        }
+        else
+        {
+            return ack(m-1, ack(m, n-1));
+        }
+    }
+}
+\end{lstlisting}
+The result of this is:
+\begin{lstlisting}
+C:\Users\Sean\Documents\jhu-cs\Data Structures\Module 3>java Ackerman
+Ackerman(2,2) = 7
+\end{lstlisting}
+
+\question{Q5}{}
+For this problem, it is simple to convert the recursive function to an iterative function using a while loop. The Java/pseudocode for this is as follows:
+\begin{lstlisting}
+int rec(int n)
+	bool x = f(n);
+	int a = n;
+	while( x == FALSE )
+		/* any group of statements that do not change the value of n */
+		a = g(a);
+		x = f(a);
+	return 0;
+\end{lstlisting}
+In this way, f(n) is initially calculated using n. By setting a variable `a' equal to n, n remains unchanged and a can be updated to equal g(n) and so on recursively. Finally, when x = f(a) returns TRUE, the method returns 0.
+
+\question{Q6}{}
+There are four obvious ways to implement the queue. They are...
+\begin{itemize}
+	\item Sorted array
+	\item Sorted linked list
+	\item Unsorted array
+	\item Unsorted linked list
+\end{itemize}
+For my ADT, I chose to use an unsorted array, with methods modified to account for the additional requirements (namely searching for highest priority item in array and shifting items for deletion).
+\begin{lstlisting}
+ADT PriorityQueue
+	Data
+		An empty unsorted array of values with a reference to the first (front) item, which is highest priority. The queue stores information on two parts of an item - the data and the priority
+	Methods
+		isEmpty
+			Input  	None
+			Precondition  	None
+			Process  	Check if the queue contains any data items
+			Postcondition  	None
+			Output  	Return true if queue is empty, and false otherwise
+		Insert
+			Input   	A data item to be stored in the queue
+			Precondition  	Item has an assigned priority
+			Process  	Store an item at the rear of a queue
+			Postcondition  	The queue contains one additional data item
+			Output  	None
+		Delete
+			Input  	None
+			Precondition  	Queue contains meaningful data values
+			Process  	Remove the highest priority element, accomplished by searching the queue
+			Postcondition 	 Shift all elements greater than index of removed element left by one element
+			Output  	Return deleted value	
+		Peek
+			Input  	None
+			Precondition	  Queue contains meaningful data values
+			Process 	 Search queue for highest priority item
+			Postcondition 	 None
+			Output 	Return the value of the data item at the front of the queue (highest priority)
+end ADT PriorityQueue	
+\end{lstlisting}
+
+\end{document}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,369 @@
+%=======================02-713 LaTeX template, following the 15-210 template==================
+%
+% You don't need to use LaTeX or this template, but you must turn your homework in as
+% a typeset PDF somehow.
+%
+% How to use:
+%    1. Update your information in section "A" below
+%    2. Write your answers in section "B" below. Precede answers for all 
+%       parts of a question with the command "\question{n}{desc}" where n is
+%       the question number and "desc" is a short, one-line description of 
+%       the problem. There is no need to restate the problem.
+%    3. If a question has multiple parts, precede the answer to part x with the
+%       command "\part{x}".
+%    4. If a problem asks you to design an algorithm, use the commands
+%       \algorithm, \correctness, \runtime to precede your discussion of the 
+%       description of the algorithm, its correctness, and its running time, respectively.
+%    5. You can include graphics by using the command \includegraphics{FILENAME}
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1 #2}\vspace{.5em}\hrule\vspace{.10in}}
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+\newcommand\algorithm{\vspace{.10in}\textbf{Algorithm: }}
+\newcommand\correctness{\vspace{.10in}\textbf{Correctness: }}
+\newcommand\runtime{\vspace{.10in}\textbf{Running time: }}
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\chead{\textbf{HW\HWNUM}}
+\rhead{\today}
+
+\newenvironment{centermath}
+ {\begin{center}$\displaystyle}
+ {$\end{center}}
+
+\begin{document}\raggedright
+%Section A==============Change the values below to match your information==================
+\newcommand\NAME{Sean Connor}  % your name
+\newcommand\HWNUM{3}              % the homework number
+%Section B==============Put your answers to the questions below here=======================
+
+\question{2.3}{} 
+Find: B[8] = A[i-j] in MIPS where
+\begin{gather*}
+f = \$s0 \ g = \$s1 \ h = \$s2 \ i = \$s3 \ j = \$s4 \\ 
+A = \$s6 \ B = \$s7 \\
+\end{gather*}
+Answer:
+\begin{enumerate}
+	\item sub \$t0, \$s3, \$s4 \# i-j to \$t0
+	\item sll \$t0, \$t0, 2 \# shift \$t0 left two bits, effectively multiplying by four to get correct byte address
+	\item add \$t0, \$t0, \$s6 \# add (i-j) to base of A
+	\item lw \$t1, 0(\$t0) \# load A[i-j] to temp register
+	\item sw \$t1, 32(\$s7) \# store A[i-j] in B[8] address
+\end{enumerate} 
+
+\question{2.4}{}
+Find: Convert MIPS instructions to C statement where
+\begin{gather*}
+f = \$s0 \ g = \$s1 \ h = \$s2 \ i = \$s3 \ j = \$s4 \\ 
+A = \$s6 \ B = \$s7 \\
+\end{gather*}
+Answer:
+\begin{enumerate}
+	\item \$t0 = f * 4
+	\item \$t0 = \&A[f]
+	\item \$t1 = g * 4
+	\item \$t1 = \&B[g]
+	\item f = A[f]
+	\item \$t2 = \&A[f+1]
+	\item \$t0 = A[f+1]
+	\item \$t0 = A[f+1] + A[f]
+	\item B[g] = A[f+1] + A[f]
+\end{enumerate} 
+
+\question{2.12}{} 
+\$s0 = 0x80000000 \ \$s1 = 0xD0000000 \\
+\part{1}
+Find: \$t0 in `add \$t0, \$s0, \$s1' \\
+\vspace{5mm}
+Answer: \\
+\vspace{5mm}
+\begin{array}[t]{r}
+    1000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\
++ \ 1101\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\ \hline
+    1\ 0101\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000
+\end{array} \ = 0x150000000 \\
+\part{2}
+Find: Has there been overflow? \\
+\vspace{5mm}
+Answer: There has been overflow if register is 32 bits. \\
+\part{3}
+Find: \$t0 in `sub \$t0, \$s0, \$s1' \\
+\vspace{5mm}
+Answer: There are two methods to accomplish this subtraction - either provides the same result.
+\begin{enumerate}
+	\item a - b = -(b - a)
+	\item a - b = a + -b
+\end{enumerate}
+Using the first method, one can do \\
+\vspace{5mm}
+\begin{array}[t]{r}
+    1101\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\
+ -\ 1000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\ \hline
+    \ 0101\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000
+\end{array}
+then simply convert using two's complement to \\
+\vspace{5mm}
+\begin{array}[t]{r}
+    1010\ 1111\ 1111\ 1111\ 1111\ 1111\ 1111\ 1111\ + 1\ =\ 1011\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000
+\end{array} \ = 0xB0000000 \\
+\vspace{5mm}
+Using the second method, one can do \\
+\vspace{5mm}
+\begin{array}[t]{r}
+    1000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\
++ \ 0011\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\ \hline
+   \ 1011\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000
+\end{array} \ = 0xB0000000 \\
+\part{4}
+Find: Has there been overflow? \\
+\vspace{5mm}
+Answer: No, this is the desired result. \\
+\part{5}
+Find: \$t0 after `add \$t0, \$s0, \$s1' and `add \$t0, \$t0, \$s0' \\
+\vspace{5mm}
+Answer: From part (1) we know that \$s0 + \$s1 = 0x150000000. Thus, for \$s0 + \$t0 we can do \\
+\vspace{5mm}
+\begin{array}[t]{r}
+    1000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\
++ \ 1\ 0101\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000 \\ \hline
+    1\ 1101\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000\ 0000
+\end{array} \ = 0x1D0000000 \\
+\part{6}
+Find: Has there been overflow? \\
+\vspace{5mm}
+Answer: There has been overflow, because the number requires 33 bits.
+
+\question{2.14}{}
+Find: Type and assembly language instruction for the binary value 0000 0010 0001 0000 1000 0000 0010 0000. \\
+\vspace{5mm}
+Answer: Look at the first six bits. They are 000000. Thus, this is an R-type instruction.
+\begin{gather*}
+op = 000000 = 0 \\
+rs = 10000 = 16 \\
+rt = 10000 = 16 \\ 
+rd = 10000 = 16 \\
+shamt = 00000 = 0 \\
+funct = 100000 = 32
+\end{gather*}
+From Figure 2.5 in text, we know this corresponds to an `add' instruction. Thus, the final answer is
+\begin{gather*}
+\fbox{add \$s1, \$s1, \$s1}
+\end{gather*}
+
+
+\question{2.15}{} 
+Find: Type and hex representation of `sw \$t1, 32(\$t2)' \\
+\vspace{5mm}
+Answer: According to Figure 2.5 in the text, sw (store word) is I-type (Immediate). Also accoring to Figure 2.5, the op code for sw is 43. Thus
+\begin{gather*}
+op = 43 = 101011 \\
+rs = 10 = 01010 \\
+rt = 9 = 01001 \\ 
+address = 32 = 0000000000100000
+\end{gather*}
+Final binary representation is 1010 1101 0100 1001 0000 0000 0010 0000, which is equivalent to
+\begin{gather*}
+\fbox{0xAD490020}
+\end{gather*}
+\newline
+
+\question{2.16}{}
+Find: Type, assembly language instruction, and binary representation of 
+\begin{gather*}
+op = 0 \\
+rs = 3 \\
+rt = 2 \\ 
+rd = 3 \\
+shamt = 0 \\
+funct = 34
+\end{gather*}
+Answer: According to Figure 2.5 in the text, op = 0 and funct = 34 corresponds to sub (substract) instruction, which is type-R (register). This is represented in binary by
+\begin{gather*}
+000000 \ 00011 \ 00010 \ 00011 \ 00000 \ 100010
+\end{gather*}
+Finally, 2 and 3 correspond to registers \$v0 and \$v1, respectively. Thus, the instruction is
+\begin{gather*}
+\fbox{sub \$v1, \$v1, \$v0}
+\end{gather*}
+
+\question{2.17}{} 
+Find: Type, assembly language instruction, and binary representation of 
+\begin{gather*}
+op = 0x23 \\
+rs = 1 \\
+rt = 2 \\ 
+const = 0x4
+\end{gather*}
+Answer: 0x23 in binary is 00100011. The six rightmost bits are taken, which corresponds to 100011 = 35 = lw (load word). Thus, the type is type-I. 1 and 2 correspond to registers \$at and \$v0, respectively. Const 0x4 in binary is 0000 0000 0000 0100, or simply 4. Thus, the instruction and binary representation are
+\begin{gather*}
+\fbox{lw \$v0, 4(\$at)} \\
+\fbox{100011 00001 00010 0000000000000100}
+\end{gather*}
+
+\question{2.19}{}
+\$t0 = 0xAAAAAAAA \quad \$t1 = 0x12345678
+
+\part{1}
+Find: Value of \$t2 following `sll \$t2, \$t0, 44' and `or \$t2, \$t2, \$t1' \\
+\vspace{5mm}
+Answer: Shift 0xAAAAAAAA left 44 times to give
+\begin{gather*}
+\$t2 = 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000
+\end{gather*}
+Next, since \$t2 is 0x00000000, the result of the `or' operation is simply \$t1, or 0x12345678. Thus
+\begin{gather*}
+\fbox{\$t2 = 0x12345678}
+\end{gather*}
+
+\part{2}
+Find: Value of \$t2 following `sll \$t2, \$t0, 4' and `andi \$t2, \$t2, -1' \\
+\vspace{5mm}
+Answer: Shift 0xAAAAAAAA left 4 times to give
+\begin{gather*}
+\$t2 = 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 0000
+\end{gather*}
+Next perform the `andi' operation on \$t2 and -1. \\
+\vspace{5mm}
+\begin{centermath}
+\begin{array}[t]{r}
+    1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 0000 \\
+AND \ 1111\ 1111\ 1111\ 1111\ 1111\ 1111\ 1111\ 1111 \\ \hline
+   \ 1010\ 1010\ 1010\ 1010\ 1010\ 1010\ 1010\ 0000
+\end{array} 
+\end{centermath}
+\begin{gather*}
+\fbox{\$t2 = 0xAAAAAAA0}
+\end{gather*}
+
+\part{3}
+Find: Value of \$t2 following `srl \$t2, \$t0, 3' and `andi \$t2, \$t2, 0xFFEF' \\
+\vspace{5mm}
+Answer: Shift 0xAAAAAAAA right 3 times to give
+\begin{gather*}
+\$t2 = 0001 \ 0101 \ 0101 \ 0101 \ 0101 \ 0101 \ 0101 \ 0101
+\end{gather*}
+Next perform the `andi' operation on \$t2 and 0xFFEF. \\
+\vspace{5mm}
+\begin{centermath}
+\begin{array}[t]{r}
+    0001 \ 0101 \ 0101 \ 0101 \ 0101 \ 0101 \ 0101 \ 0101 \\
+AND \ 0000\ 0000\ 0000\ 0000\ 1111\ 1111\ 1110\ 1111 \\ \hline
+   \ 0000\ 0000\ 0000\ 0000\ 0101\ 0101\ 0100\ 0101
+\end{array} 
+\end{centermath}
+\begin{gather*}
+\fbox{\$t2 = 0x5545}
+\end{gather*}
+
+\question{3.20}{} 
+Find: Decimal representation of 0x0C000000 if (a) 2s complement and (b) unsigned. \\
+\vspace{5mm}
+Answer: The binary representation of 0x0C000000 is 
+\begin{gather*}
+0000 \ 1100 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000
+\end{gather*}
+Because the leftmost bit is zero, this is a positive number in the 2s complement system. Thus, the value is the same regardless of 2s complement or unsigned, and is equal to 
+\begin{gather*}
+\fbox{201326592}
+\end{gather*}
+
+\question{3.21}{}
+Find: MIPS instruction represented by 0x0C000000 \\
+\vspace{5mm}
+Answer: The binary representation of 0x0C000000 is 
+\begin{gather*}
+0000 \ 1100 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000
+\end{gather*}
+The first six bits representing the op are 000011. This corresponds to the `jal' jump and link instruction. 
+
+\question{3.22}{} 
+Find: Convert 0x0C000000 to floating point value using IEEE 754 standard. \\
+\vspace{5mm}
+Answer: The binary representation of 0x0C000000 is 
+\begin{gather*}
+0000 \ 1100 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000
+\end{gather*}
+From this, we see that the sign bit S is 0, the exponent bits E are 00011000, and the mantissa bits M are 000 0000 0000 0000 0000 0000.
+\begin{gather*}
+S = 0 \\
+E = 00011000 = 24 \\
+M = 000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000
+\end{gather*}
+Using a bias of 127, we see that the exponent is (24-127), or -103. The form of the floating point number is 
+\begin{align*}
+(-1)^S  \cdot (1 + frac) \cdot 2^{E} \\ = (-1)^0  \cdot (1 + 0) \cdot 2^{-103} \\ = 1 \cdot 2^{-103}
+\end{align*}
+\begin{gather*}
+\fbox{9.8607613e-32}
+\end{gather*}
+
+\question{3.29}{}
+Find: Sum of 2.612e1 and 4.150390625e-1 assuming 16-bit half precision and 1 guard, 1 round, and 1 sticky bit. \\
+\vspace{5mm}
+Answer: First, convert numbers to binary. The first value is 26.125. 26 is simply 11010 and the decimal is determined by
+\begin{gather*}
+0.125 \cdot 2 = 0.25 \\
+0.25 \cdot 2 = 0.5 \\
+0.5 \cdot 2 = 1.0
+\end{gather*}
+Thus, 26.125 = 11010.0010 \\
+\vspace{5mm}
+The second value is 0.4150390625. The decimal is determined by
+\begin{gather*}
+0.4150390625 \cdot 2 = 0.830078125 \\
+0.830078125 \cdot 2 = 1.66015625 \\
+0.66015625 \cdot 2 = 1.3203125 \\
+0.3203125 \cdot 2 = 0.640625 \\
+0.640625 \cdot 2 = 1.28125 \\
+0.28125 \cdot 2 = 0.5625 \\
+0.5625 \cdot 2 = 1.125 \\
+0.125 \cdot 2 = 0.25 \\
+0.25 \cdot 2 = 0.5 \\
+0.5 \cdot 2 = 1.0
+\end{gather*}
+Thus, 0.4150390625 = 0.01101010010. \\
+\vspace{5mm}
+Next, we need to adjust the smaller value to match the exponent of the larger value.
+\begin{gather*}
+11010.001 = 1.1010001 \cdot 2^4 \\
+ 0.01101010010 = 0.00000110101001 \cdot 2^4
+\end{gather*}
+Performing the addition yields
+\begin{centermath}
+\begin{array}[t]{r}
+      1.10100010000000 \\
++ \ 0.00000110101001 \\ \hline
+      1.10101000101001
+\end{array} 
+\end{centermath}
+In IEEE 754 half-precision, the mantissa is 10 bits, plus 3 GRS bits. Thus, the mantissa is 1010100010. The guard bit is 1, the round bit is 0, and the sticky bit is 1 because there is a 1 in a position past the twelth bit (13\textsuperscript{th} sticky bit or beyond), so GRS = 101 and we round up, making the mantissa 1010100011.
+\begin{gather*}
+1.1010100011 \cdot 2^4 = 11010.100011 = \fbox{26.546875}
+\end{gather*}
+The IEEE 764 binary representation is calculated by the following
+\begin{gather*}
+S = 0 \\
+E = 4 + 15 = 19 = 10011 \\
+M = 1010100011 \\
+\fbox{0100111010100011}
+\end{gather*}
+
+\end{document}
+
+
+
+
+
+
+
+
+
