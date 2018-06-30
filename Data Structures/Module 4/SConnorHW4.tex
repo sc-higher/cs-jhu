@@ -1,0 +1,362 @@
+%=======================02-713 LaTeX template, following the 15-210 template==================
+%
+% You don't need to use LaTeX or this template, but you must turn your homework in as
+% a typeset PDF somehow.
+%
+% How to use:
+%    1. Update your information in section "A" below
+%    2. Write your answers in section "B" below. Precede answers for all 
+%       parts of a question with the command "\question{n}{desc}" where n is
+%       the question number and "desc" is a short, one-line description of 
+%       the problem. There is no need to restate the problem.
+%    3. If a question has multiple parts, precede the answer to part x with the
+%       command "\part{x}".
+%    4. If a problem asks you to design an algorithm, use the commands
+%       \algorithm, \correctness, \runtime to precede your discussion of the 
+%       description of the algorithm, its correctness, and its running time, respectively.
+%    5. You can include graphics by using the command \includegraphics{FILENAME}
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{placeins}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1 #2}\vspace{.5em}\hrule\vspace{.10in}}
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+\newcommand\algorithm{\vspace{.10in}\textbf{Algorithm: }}
+\newcommand\correctness{\vspace{.10in}\textbf{Correctness: }}
+\newcommand\runtime{\vspace{.10in}\textbf{Running time: }}
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\chead{\textbf{HW\HWNUM}}
+\rhead{\today}
+\begin{document}\raggedright
+%Section A==============Change the values below to match your information==================
+\newcommand\NAME{Sean Connor}  % your name
+\newcommand\HWNUM{4}              % the homework number
+%Section B==============Put your answers to the questions below here=======================
+
+\question{Q1}{}
+This method will return the given singly linked list in the reverse order. It acts by rearranging pointers. Head and tail pointers are correctly set.
+\begin{lstlisting}
+/* Java/pseudocode to reverse the elements of a singly-linked list */
+reverseSLL(list)
+	prevNode = null
+	currNode = list.head
+	nextNode = null
+
+	while(currNode != null) // list traversal
+		nextNode = currNode.next
+		currNode.next = prevNode
+		prevNode = currNode
+		currNode = nextNode
+
+	list.tail = list.head
+	list.head = prevNode
+
+	return list
+    
+\end{lstlisting}
+
+\question{Q2}{}
+For both unordered lists and arrays, one must iterate through each element in the list/array until the value is found. It is assumed that the ‘order’ of the unordered list/array is completely random, in which case the average number of nodes accessed in a search will be n/2.
+\newline
+\newline
+For an ordered array (random access), a binary search can be employed to search for a particular node. The time complexity of binary search is O(log2 n) or simply O(log n).  The best case is Ω(1); however, the average performance of binary search is Θ(log n). Thus, the average number of nodes accessed will be log n.
+\newline
+\newline
+For an ordered list, average number of nodes accessed would depend on the implementation – namely whether list is random or sequential access. From the Java API on binarySearch (https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html)
+\begin{quotation}
+This method runs in log(n) time for a "random access" list (which provides near-constant-time positional access). If the specified list does not implement the RandomAccess interface and is large, this method will do an iterator-based binary search that performs O(n) link traversals and O(log n) element comparisons.
+\end{quotation}
+Thus, the average number of nodes for a sequential access list will be n/2, and for a random access list log n. 
+
+\question{Q3}{}
+This question is deceptively tricky because there are several different cases to evaluate. 
+\begin{lstlisting}
+/* Java/pseudocode to interchange the mth and nth elements of a singly-linked list */
+swap(list,m,n)
+	curr = list.head
+	prevM = null
+	currM = null
+	nextM = null
+	prevN = null
+	currN = null
+	nextN = null
+
+	if(curr == M) // case head --> m
+		currM = curr
+		nextM = curr.next
+
+	if(curr == N) // case head --> n
+		currN = curr
+		nextN = curr.next
+
+	while(curr != null) // list traversal
+		if(curr.next == M)
+			prevM = curr
+			currM = curr.next
+			nextM = curr.next.next
+		if(curr.next == N)
+			prevN = curr
+			currN = curr.next
+			nextN = curr.next.next
+		curr = curr.next
+
+	if(prevM == null) // case head --> m
+		list.head = currN
+		currN.next = nextM
+
+		prevN.next = currM
+		currM.next = nextN
+
+	else if(prevM == null) // case head --> n
+		list.head = currM
+		currM.next = nextN
+
+		prevM.next = currN
+		currN.next = nextM
+	
+	else
+		prevM.next = currN // m-1 --> n
+		currN.next = nextM // n --> m+1
+		
+		prevN.next = currM // n-1 --> m
+		currM.next = nextN // m --> n+1	
+\end{lstlisting}
+
+\question{Q4}{}
+\begin{lstlisting}
+/* Java/pseudocode to implement the deque as a doubly-linked list (not circular, no header) with InsertLeft and DeleteRight methods */
+public class Deque
+	private Node head = null // left
+	private Node tail = null // right
+
+	private class Node
+		Node left
+		Node right
+		Item data
+
+		Node(Item data, Node left, Node right)
+			this.data = data
+			this.left = left
+			this.right = right
+
+	boolean isEmpty()
+		if(head == null AND tail == null)
+			return true
+		else 
+			return false
+
+	void insertLeft(Item data)
+		Node node = new Node(data, null, head) // data, left (head), right (tail)
+		head = node
+
+	Item deleteRight()
+		if(isEmpty())
+			throw exception
+		else
+			Node temp = tail
+			tail.left.right = tail.right // set node n-1 next to null
+			tail = tail.left // set tail to node n-1
+			return temp	
+\end{lstlisting}
+
+\question{Q5}{}
+\begin{lstlisting}
+/* Java/pseudocode to implement the deque as a doubly-linked circular list with a header and InsertRight and DeleteLeft methods. */
+public class Deque
+	
+	private class Node
+		Node left // head
+		Node right // tail
+		Item data
+
+		Node(Item data, Node left, Node right)
+			this.data = data
+			this.left = left // head
+			this.right = right // tail
+
+	Node header = new Node(null,null,null)
+	
+	boolean isEmpty()
+		if(head == null AND tail == null)
+			return true
+		else 
+			return false
+
+	void insertRight(Item data)
+		if(isEmpty())
+			Node node = new Node(data, node, node) // points to itself
+		else
+			Node node = new Node(data, header.left, header.right)
+			header.right.right = node
+			node.right = header.left
+			header.right = node
+
+	Item deleteRight()
+		if(isEmpty())
+			throw exception
+		else
+			Node temp = header.left // temp = first (head) node
+			header.right.right = header.left.right // set trail node next to header.next
+			header.left = header.left.right // update where header head points to
+			return temp	
+\end{lstlisting}
+
+\question{Q6}{}
+My answer to this question does require additional working out, but these are the basics.
+\begin{lstlisting}
+/* Java/pseudocode for hybrid implementation of list capable of handling multiple stacks/queues */
+public class HybridArray{
+
+    private int size;
+    Node[] data = new Node[size];
+    Stack free = new Stack(size);
+
+    public HybridArray(int size){
+        this.size = size;
+        for(int i = 0; i < size; i++){
+            free.push(i);
+        }
+    }
+
+    // Implement stack as an array
+    private class Stack{
+        private int arr[];
+        private int size;
+        private int top = 0;
+
+        private Stack(int size){
+            this.size = size;
+            arr = new int[size];
+        }
+
+        private void push(int element){
+            if(top == size) {
+                System.out.println("Invalid.");
+            }
+            else {
+                arr[top] = element;
+                top++;
+            }
+        }
+
+        private int pop(){
+            if (isEmpty()){
+                System.out.println("Invalid.");
+            }
+            return arr[top-1];
+        }
+
+        private boolean isEmpty(){
+            if (top == 0) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    // Implement node to hold data and pointer
+    private class Node{
+        int data;
+        int next;
+
+        private Node(int data, int next){
+            this.data = data;
+            this.next = next;
+        }
+    }
+
+
+    // Methods to push and pop to/from the free index stack
+    public int freeIndex(){
+        if(free.isEmpty()){
+            System.out.println("Invalid.");
+        }
+        return free.pop();
+    }
+
+    public void returnFree(int index){
+        free.push(index);
+    }
+
+    // Stack methods
+    public void push(int data, int next){
+        int freeIndex = free.pop(); // obtain an index from the free index stack
+        Node node = new Node(data, 0)
+        data[freeIndex] = node;
+    }
+
+    public Node pop(){
+        if(data.isEmpty()){
+            throw exception;
+        }
+        node = startNode
+        while(node.next != 0){ // traverse array to find last node in stack
+            prevNode = node;
+            node = data[node.next];
+        }
+        data[prevNode].next = 0; // set pointer of new last item to 0
+        returnFree(node); // return the index to the free index stack
+        return data[node];
+    }
+
+    // Queue methods
+    public void add(int data, int next){
+        int freeIndex = free.pop(); // obtain an index from the free index stack
+        Node node = new Node(data, 0)
+        data[freeIndex] = node;
+    }
+
+    public void remove(){
+        temp = startNode;
+        startNode = startNode.next; // set new startNode to the next element in queue
+        returnFree(temp); // return the index to the free index stack
+        return data[temp];
+    }
+    
+}
+\end{lstlisting}
+
+\end{document}
+
+
+
+
+
+
+
+
+
