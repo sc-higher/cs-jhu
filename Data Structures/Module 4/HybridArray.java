@@ -1,3 +1,5 @@
+/* This is Java/pseudocode made for Problem 6 of Data Structures Assignment 4*/
+
 public class HybridArray{
 
     private int size;
