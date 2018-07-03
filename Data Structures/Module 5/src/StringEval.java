@@ -1,5 +1,5 @@
 /**
- * This program is part of my response to Project 3 for the class 605.202
+ * This program is part of my response to Project 1 for the class 605.202
  * Data Structures at the JHU EPP CS program.
  *
  * This program will evaluate a file containing a number of lines of strings to
@@ -25,6 +25,9 @@ import java.util.*;
 public class StringEval {
 
     public static void main(String[] args) {
+        // Set start time
+        final long startTime = System.currentTimeMillis();
+
         // create object of StringEval in order to use non-static methods
         StringEval se = new StringEval();
 
@@ -36,6 +39,10 @@ public class StringEval {
 
         // perform all language checks and write information to output_filename
         se.writeData(filename, output_filename);
+
+        // Set finish time and display difference
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Total execution time (ms): " + (endTime - startTime));
     }
 
 
@@ -71,6 +78,10 @@ public class StringEval {
 
 
     /**
+     * Old method that is not used. Originally intended to view results in
+     * console, before a method was created to output results to file and to
+     * console. Calls all evaluation methods (type1, type2, etc) and prints
+     * type if true for each line in test file (each string).
      *
      * @param filename
      */
@@ -130,7 +141,7 @@ public class StringEval {
 
         //
         String lc;
-        Stack stack = new Stack(50);
+        Stack stack = new Stack(500);
 
         // Iterate through string
         for (int i = 0; i < line.length(); i++) {
@@ -140,7 +151,7 @@ public class StringEval {
                 return false;
             }
 
-            else if ( stack.isEmpty() ) {
+            else if (stack.isEmpty()) {
                 stack.push(lc);
             }
 
@@ -188,7 +199,7 @@ public class StringEval {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack = new Stack(50);
+        Stack stack = new Stack(500);
 
         // Push first character ("A") to stack
         lc = String.valueOf(line.charAt(0));
@@ -250,7 +261,7 @@ public class StringEval {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack = new Stack(50);
+        Stack stack = new Stack(500);
 
         // Push first character ("A") to stack
         lc = String.valueOf(line.charAt(0));
@@ -315,8 +326,8 @@ public class StringEval {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack1 = new Stack(50);
-        Stack stack2 = new Stack(50);
+        Stack stack1 = new Stack(500);
+        Stack stack2 = new Stack(500);
 
         // Set first grouping pattern and initial fill stack2
         for (int i = 0; i < line.length(); i++) {
@@ -385,10 +396,10 @@ public class StringEval {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack1 = new Stack(50);
-        Stack stack2 = new Stack(50);
-        Stack stackB = new Stack(50);
-        Stack stackM = new Stack(50);
+        Stack stack1 = new Stack(500);
+        Stack stack2 = new Stack(500);
+        Stack stackB = new Stack(500);
+        Stack stackM = new Stack(500);
 
         // Make sure all characters in string are either A or B
         for (int i = 0; i < line.length(); i++) {

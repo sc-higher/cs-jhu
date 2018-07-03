@@ -1,4 +1,16 @@
 /**
+ * This program is part of my response to Project 1 for the class 605.202
+ * Data Structures at the JHU EPP CS program.
+ *
+ * This class is used to create an array-based stack. This stack holds String
+ * type values in a String[].
+ *
+ * @author Sean Connor
+ * @date 30 June 2018
+ */
+
+
+/**
  * This class is used to create an array-based stack. This stack holds String
  * type values in a String[].
  *

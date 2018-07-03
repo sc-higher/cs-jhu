@@ -1,0 +1,110 @@
+@author Sean Connor
+@date 30 June 2018
+
+L1 = { w: w contains equal numbers of A's and B's (in any order) and no other characters}
+L2 = { w: w is of the form AnBn, for some n > 0 }
+L3 = { w: w is of the form AnB2n, for some n > 0 }
+L4 = { w: w is of the form (AnBm)p, for some m,n,p > 0 }
+L5 = { w: w is of the form AnBmAn for some n,m > 0 }
+L6 = { w: w is of the form ... }
+
+Line 0: AAABBB
+Type 1
+Type 2
+Type 4
+
+Line 1: AB
+Type 1
+Type 2
+Type 4
+
+Line 2: 
+Type 1
+
+Line 3: ABABABA
+No type
+
+Line 4: ABAB
+Type 1
+Type 4
+
+Line 5: BBAA
+Type 1
+
+Line 6: BBBAA
+No type
+
+Line 7: AAB
+Type 4
+
+Line 8: AABBCCD
+No type
+
+Line 9: ABCBA
+No type
+
+Line 10: ABBBA
+Type 5
+
+Line 11: ABBA
+Type 1
+Type 5
+
+Line 12: ABAABBAAABBB
+Type 1
+
+Line 13: AABACABAA
+No type
+
+Line 14: AABBBAABBB
+Type 4
+
+Line 15: AAAABBBB
+Type 1
+Type 2
+Type 4
+
+Line 16: AAAABBBBB
+Type 4
+
+Line 17: AAAABBB
+Type 4
+
+Line 18: AA
+No type
+
+Line 19: BBB
+No type
+
+Line 20: ABBBABBB
+Type 4
+
+Line 21: ABCABC
+No type
+
+Line 22: ACBACB
+No type
+
+Line 23: AABBBBB
+Type 4
+
+Line 24: AABBBB
+Type 3
+Type 4
+
+Line 25: AABBB
+Type 4
+
+Line 26: ABB
+Type 3
+Type 4
+
+Line 27: ABA
+Type 5
+
+Line 28: AABAA
+Type 5
+
+Line 29: ABBBBA
+Type 5
+

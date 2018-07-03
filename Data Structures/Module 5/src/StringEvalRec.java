@@ -1,5 +1,5 @@
 /**
- * This program is part of my response to Project 3 for the class 605.202
+ * This program is part of my response to Project 1 for the class 605.202
  * Data Structures at the JHU EPP CS program.
  *
  * This program will evaluate a file containing a number of lines of strings to
@@ -9,7 +9,10 @@
  * file of the specified name.
  *
  * This program requires two arguments - input filename and output filename. To
- * run the program, enter:  java StringEval [inputFile] [outputfile].
+ * run the program, enter:  java StringEvalRec [inputFile] [outputfile].
+ *
+ * Note: This program is identical to StringEval except that this contains
+ * the recursive type 1 method.
  *
  * Requirement - You need to read the characters in and parse them as you read
  * them. The stack is not intended to hold the input, it is to be used to
@@ -25,6 +28,9 @@ import java.util.*;
 public class StringEvalRec {
 
     public static void main(String[] args) {
+        // Set start time
+        final long startTime = System.currentTimeMillis();
+
         // create object of StringEval in order to use non-static methods
         StringEvalRec se = new StringEvalRec();
 
@@ -36,6 +42,10 @@ public class StringEvalRec {
 
         // perform all language checks and write information to output_filename
         se.writeData(filename, output_filename);
+
+        // Set finish time and display difference
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Total execution time (ms): " + (endTime - startTime));
     }
 
 
@@ -71,6 +81,10 @@ public class StringEvalRec {
 
 
     /**
+     * Old method that is not used. Originally intended to view results in
+     * console, before a method was created to output results to file and to
+     * console. Calls all evaluation methods (type1, type2, etc) and prints
+     * type if true for each line in test file (each string).
      *
      * @param filename
      */
@@ -130,7 +144,7 @@ public class StringEvalRec {
 
         //
         String lc;
-        Stack stack = new Stack(50);
+        Stack stack = new Stack(500);
 
         // Iterate through string
         for (int i = 0; i < line.length(); i++) {
@@ -170,18 +184,27 @@ public class StringEvalRec {
      * @return   boolean value true if type 1, false otherwise
      */
     private boolean type1rec(String line, Stack stack, String lc) {
-        //
-        lc = String.valueOf(line.charAt(0));
-        
-        //
+        // check if string is empty
+        // redundant recursively
         if (line.isEmpty()) {
             return true;
         }
 
-        if (!lc.equals("A") && !lc.equals("B")) {
+        // check if there are any characters beside A and B in string
+        // again, redundant recursively
+        for (int i = 0; i < line.length(); i++) {
+            lc = String.valueOf(line.charAt(i));
+
+            if (!lc.equals("A") && !lc.equals("B")) {
                 return false;
             }
-        
+        }
+
+        // set lc to first char in string
+        lc = String.valueOf(line.charAt(0));
+
+        // push if stack empty or if same as top of stack
+        // pop otherwise
         if (stack.isEmpty()) {
             stack.push(lc);
         } else {
@@ -191,12 +214,17 @@ public class StringEvalRec {
                 stack.pop();
             }
         }
-        
-        while (line.length() > 2) {
+
+        // recursively iterate through string by using substring to 'remove'
+        // first character
+        if (line.length() > 1) {
             line = line.substring(1,line.length());
             type1rec(line, stack, lc);
         }
-        
+
+        // at this point, all stack operations will have been performed after
+        // iterating through entire string
+        // redundant for all but first case
         if (stack.isEmpty()) {
             return true;
         } else {
@@ -230,7 +258,7 @@ public class StringEvalRec {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack = new Stack(50);
+        Stack stack = new Stack(500);
 
         // Push first character ("A") to stack
         lc = String.valueOf(line.charAt(0));
@@ -292,7 +320,7 @@ public class StringEvalRec {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack = new Stack(50);
+        Stack stack = new Stack(500);
 
         // Push first character ("A") to stack
         lc = String.valueOf(line.charAt(0));
@@ -357,8 +385,8 @@ public class StringEvalRec {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack1 = new Stack(50);
-        Stack stack2 = new Stack(50);
+        Stack stack1 = new Stack(500);
+        Stack stack2 = new Stack(500);
 
         // Set first grouping pattern and initial fill stack2
         for (int i = 0; i < line.length(); i++) {
@@ -427,10 +455,10 @@ public class StringEvalRec {
 
         // Once past initial tests, declare objects
         String lc;
-        Stack stack1 = new Stack(50);
-        Stack stack2 = new Stack(50);
-        Stack stackB = new Stack(50);
-        Stack stackM = new Stack(50);
+        Stack stack1 = new Stack(500);
+        Stack stack2 = new Stack(500);
+        Stack stackB = new Stack(500);
+        Stack stackM = new Stack(500);
 
         // Make sure all characters in string are either A or B
         for (int i = 0; i < line.length(); i++) {
@@ -520,10 +548,16 @@ public class StringEvalRec {
             while ( ( line = br.readLine() ) != null ) {
                 System.out.println("\nLine " + i + ": " + line);
                 i++;
-                if (type1(line) || type2(line) || type3(line) || type4(line) ||
-                        type5(line)) {
+
+                Stack stack = new Stack(500);
+                String lc = "";
+                if (type1(line) || type1rec(line,stack,lc) || type2(line) ||
+                        type3(line) || type4(line) || type5(line)) {
                     if (type1(line)) {
                         System.out.println("Type 1");
+                    }
+                    if (type1rec(line,stack,lc)) {
+                        System.out.println("Type 1 RECURSIVE");
                     }
                     if (type2(line)) {
                         System.out.println("Type 2");
@@ -586,9 +620,9 @@ public class StringEvalRec {
                     sb.append("Line " + i + ": " + line);
                     i++;
                     
-                    Stack stack = new Stack(50);
+                    Stack stack = new Stack(500);
                     String lc = "";
-                    if (type1(line) || type1rec(line,stack,lc) || type2(line) || 
+                    if (type1(line) || type1rec(line,stack,lc) || type2(line) ||
                             type3(line) || type4(line) || type5(line)) {
                         if (type1(line)) {
                             sb.append(System.getProperty("line.separator"));

@@ -8,103 +8,186 @@ L4 = { w: w is of the form (AnBm)p, for some m,n,p > 0 }
 L5 = { w: w is of the form AnBmAn for some n,m > 0 }
 L6 = { w: w is of the form ... }
 
-Line 0: AAABBB
+Line 0: AAAAAABBBBBB
 Type 1
 Type 2
 Type 4
 
-Line 1: AB
+Line 1: AAABBBBBBAAA
+Type 1
+Type 5
+
+Line 2: BBBBBBBBBBBB
+No type
+
+Line 3: ABBABBABBABB
+Type 4
+
+Line 4: ABCABCABCABC
+No type
+
+Line 5: AAAAAABBBBBB
 Type 1
 Type 2
 Type 4
 
-Line 2: 
-Type 1
-
-Line 3: ABABABA
-No type
-
-Line 4: ABAB
-Type 1
-Type 4
-
-Line 5: BBAA
-Type 1
-
-Line 6: BBBAA
-No type
-
-Line 7: AAB
-Type 4
-
-Line 8: AABBCCD
-No type
-
-Line 9: ABCBA
-No type
-
-Line 10: ABBBA
-Type 5
-
-Line 11: ABBA
+Line 6: AAABBBBBBAAA
 Type 1
 Type 5
 
-Line 12: ABAABBAAABBB
-Type 1
-
-Line 13: AABACABAA
+Line 7: BBBBBBBBBBBB
 No type
 
-Line 14: AABBBAABBB
+Line 8: ABBABBABBABB
 Type 4
 
-Line 15: AAAABBBB
+Line 9: ABCABCABCABC
+No type
+
+Line 10: AAAAAABBBBBB
 Type 1
 Type 2
 Type 4
 
-Line 16: AAAABBBBB
-Type 4
-
-Line 17: AAAABBB
-Type 4
-
-Line 18: AA
-No type
-
-Line 19: BBB
-No type
-
-Line 20: ABBBABBB
-Type 4
-
-Line 21: ABCABC
-No type
-
-Line 22: ACBACB
-No type
-
-Line 23: AABBBBB
-Type 4
-
-Line 24: AABBBB
-Type 3
-Type 4
-
-Line 25: AABBB
-Type 4
-
-Line 26: ABB
-Type 3
-Type 4
-
-Line 27: ABA
+Line 11: AAABBBBBBAAA
+Type 1
 Type 5
 
-Line 28: AABAA
+Line 12: BBBBBBBBBBBB
+No type
+
+Line 13: ABBABBABBABB
+Type 4
+
+Line 14: ABCABCABCABC
+No type
+
+Line 15: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 16: AAABBBBBBAAA
+Type 1
 Type 5
 
-Line 29: ABBBBA
+Line 17: BBBBBBBBBBBB
+No type
+
+Line 18: ABBABBABBABB
+Type 4
+
+Line 19: ABCABCABCABC
+No type
+
+Line 20: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 21: AAABBBBBBAAA
+Type 1
 Type 5
+
+Line 22: BBBBBBBBBBBB
+No type
+
+Line 23: ABBABBABBABB
+Type 4
+
+Line 24: ABCABCABCABC
+No type
+
+Line 25: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 26: AAABBBBBBAAA
+Type 1
+Type 5
+
+Line 27: BBBBBBBBBBBB
+No type
+
+Line 28: ABBABBABBABB
+Type 4
+
+Line 29: ABCABCABCABC
+No type
+
+Line 30: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 31: AAABBBBBBAAA
+Type 1
+Type 5
+
+Line 32: BBBBBBBBBBBB
+No type
+
+Line 33: ABBABBABBABB
+Type 4
+
+Line 34: ABCABCABCABC
+No type
+
+Line 35: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 36: AAABBBBBBAAA
+Type 1
+Type 5
+
+Line 37: BBBBBBBBBBBB
+No type
+
+Line 38: ABBABBABBABB
+Type 4
+
+Line 39: ABCABCABCABC
+No type
+
+Line 40: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 41: AAABBBBBBAAA
+Type 1
+Type 5
+
+Line 42: BBBBBBBBBBBB
+No type
+
+Line 43: ABBABBABBABB
+Type 4
+
+Line 44: ABCABCABCABC
+No type
+
+Line 45: AAAAAABBBBBB
+Type 1
+Type 2
+Type 4
+
+Line 46: AAABBBBBBAAA
+Type 1
+Type 5
+
+Line 47: BBBBBBBBBBBB
+No type
+
+Line 48: ABBABBABBABB
+Type 4
+
+Line 49: ABCABCABCABC
+No type
+
+Line 50: 
+Type 1
 
