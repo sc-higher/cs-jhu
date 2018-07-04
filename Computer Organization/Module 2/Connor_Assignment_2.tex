@@ -222,17 +222,20 @@ E = 10 \rightarrow 15+10 = 25 = 11001 \\
 M = 1011101011 \\
 1771.0 = 0110011011101011 \\
 \end{gather*}
-Next, we can carry out the addition.
+Next, we can carry out the addition. First add the numbers in parenthesis.
 \begin{gather*}
-1.10011*2^{-2} + 1.01100*2^{-2} = 10.1111*2^{-2} = 1.011111*2^{-1} \\
+1.10011*2^{-2} + 1.01100*2^{-2} = 10.1111*2^{-2} = 1.011111*2^{-1} = 0.7421875
+\end{gather*}
+Now, add 0.7421875 to 1771.
+\begin{gather*}
 1.011111*2^{-1} = 0.00000000001011111*2^{10} \\
- 0.00000000001011111*2^{10} + 1.1011101011000000*2^{10}  = 1.1011101100011111*10^{10}
+ 0.00000000001011111*2^{10} + 1.10111010110000000*2^{10}  = 1.10111010111011111*10^{10}
 \end{gather*}
 Since the mantissa in 16-bit half precision IEEE754 is only 10 bits, we shorten the result to 10 bits, plus 3 extra for guard, round, and sticky bits.
 \begin{gather*}
-1.1011101100011111*10^{10} \rightarrow 1.1011101100011*10^{10}
+1.1011101100011111*10^{10} \rightarrow 1.1011101011101*10^{10}
 \end{gather*}
-Here, the GRS is 011 which indicats to round down if possible. In this case, the last bit in the mantissa is 0, so nothing happens.
+Here, the GRS is 101 which indicates to round up.
 The final result is given by the following:
 \begin{gather*}
 16bit \: FP = 0110011011101100 = 1772
@@ -245,25 +248,25 @@ We can reuse the conversions from question 3.32 for this problem.
 \begin{gather*}
 0.3984375 + (0.34375 + 1771.0)
 \end{gather*}
-Perform the addition and cut to 13 bits (10-bit mantissa + 3 extra)...
+Perform the addition and cut to 13 bits (10-bit mantissa + 3 extra). First do 0.34375 + 1771.0.
 \begin{gather*}
-0.000000000001011 * 2^{10} + 1.1011101011000000*2^{10} = 1.1011101100010 * 2^{10} \\
-GRS = 010
-\end{gather*}
-Because the last bit in the mantissa is zero and GRS = 010, no rounding occurs. Perform the next addition step...
-\begin{gather*}
-1.1011101100 * 2^{10} + 0.00000000000110011 * 2^{10} = 1.1011101100011 \\
+0.000000000001011 * 2^{10} + 1.1011101011000000*2^{10} = 1.101110101101011 * 2^{10} \\
 GRS = 011
 \end{gather*}
-Because the last bit in the mantissa is zero and GRS = 011, no rounding occurs. The final result is given by the following:
+Because GRS = 011, no rounding occurs. Perform the next addition step of 1771 and 0.3984375.
 \begin{gather*}
-16bit \: FP = 0110011011101100 = 1772
+1.1011101011 * 2^{10} + 0.00000000000110011 * 2^{10} = 1.10111010110110011 \\
+GRS = 011
+\end{gather*}
+Because GRS = 011, no rounding occurs. The final result is given by the following:
+\begin{gather*}
+16bit \: FP = 0110011011101011 = 1771
 \end{gather*}
 
 \question{3.34}{} 
 Based on your answers to 3.32 and 3.33, does (3.984375 x 10\textsuperscript{-1} + 3.4375 x 10\textsuperscript{-1}) + 1.771 x 10\textsuperscript{3} = 3.984375 x 10\textsuperscript{-1} + (3.4375 x 10\textsuperscript{-1} + 1.771 x 10\textsuperscript{3})?\\[1em]
 
-The two statements both result in a 16-bit floating point value of 0110011011101100, which is equal to 1772. Thus, they are indeed equivalent. According to the Wikipedia page on IEEE 754 half-precision binary floating-point format, the precision limitation on decimal values between 1024 and 2048 is fixed interval 2\textsuperscript{0}, which basically means any real number between 1024 and 2048 is represented as an integer value between 1024 and 2048.
+The two statements result in different floating point values, as problem 3.32 yields 1772 but problem 3.33 yields 1771, due to normalization/rounding after the first addition.
 
 
 
