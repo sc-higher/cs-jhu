@@ -213,15 +213,22 @@ Answer: 0x23 in binary is 00100011. The six rightmost bits are taken, which corr
 \$t0 = 0xAAAAAAAA \quad \$t1 = 0x12345678
 
 \part{1}
-Find: Value of \$t2 following `sll \$t2, \$t0, 44' and `or \$t2, \$t2, \$t1' \\
+Find: Value of \$t2 following `sll \$t2, \$t0, 4' and `or \$t2, \$t2, \$t1' \\
 \vspace{5mm}
-Answer: Shift 0xAAAAAAAA left 44 times to give
+Answer: Shift 0xAAAAAAAA left 4 times to give
 \begin{gather*}
-\$t2 = 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000 \ 0000
+\$t2 = 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 0000
 \end{gather*}
-Next, since \$t2 is 0x00000000, the result of the `or' operation is simply \$t1, or 0x12345678. Thus
+Next, perform the OR operation.
+\begin{centermath}
+\begin{array}[t]{r}
+    1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 0000 \\
+OR \ 0001\ 0010\ 0011\ 0100\ 0101\ 0110\ 0111\ 1000 \\ \hline
+   \ 1011\ 1010\ 1011\ 1110\ 1111\ 1110\ 1111\ 1000
+\end{array} 
+\end{centermath}
 \begin{gather*}
-\fbox{\$t2 = 0x12345678}
+\fbox{\$t2 = 0xBABEFEF88}
 \end{gather*}
 
 \part{2}
@@ -231,17 +238,17 @@ Answer: Shift 0xAAAAAAAA left 4 times to give
 \begin{gather*}
 \$t2 = 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 0000
 \end{gather*}
-Next perform the `andi' operation on \$t2 and -1. \\
+Next perform the `andi' operation on \$t2 and -1. Note that AND immediate for -1 is a zero extended 0xFFFF. \\
 \vspace{5mm}
 \begin{centermath}
 \begin{array}[t]{r}
     1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 1010 \ 0000 \\
-AND \ 1111\ 1111\ 1111\ 1111\ 1111\ 1111\ 1111\ 1111 \\ \hline
-   \ 1010\ 1010\ 1010\ 1010\ 1010\ 1010\ 1010\ 0000
+AND \ 0000\ 0000\ 0000\ 0000\ 1111\ 1111\ 1111\ 1111 \\ \hline
+   \ 0000\ 0000\ 0000\ 0000\ 1010\ 1010\ 1010\ 0000
 \end{array} 
 \end{centermath}
 \begin{gather*}
-\fbox{\$t2 = 0xAAAAAAA0}
+\fbox{\$t2 = 0x0000AAA0}
 \end{gather*}
 
 \part{3}
