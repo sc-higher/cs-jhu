@@ -99,7 +99,7 @@ public class MatrixDeterminant {
 
             String line;
             int k = 0;
-            int size;
+            int size = 0;
             String[] elements;
             int[][] matrix;
             int result;
@@ -121,11 +121,32 @@ public class MatrixDeterminant {
 
             // Move through input file to identify matrix and pass to det()
             while ( ( line = br.readLine() ) != null ) {
-                size = Integer.parseInt(line);
+                
+                // Check for empty line
+                if ( line.equals("") ) {
+                    System.out.println("\nError: Empty line found. Please check input.");
+                    System.exit(1);
+                }
+                
+                // Check size specifier
+                try {
+                    size = Integer.parseInt(line);
+                } catch (Exception e) {
+                    System.out.println("\nError: Invalid size specifier. Please check input.");
+                    System.exit(1);
+                }
+                
+                // Continue evaluation
                 matrix = new int[size][size];
                 for (int i = 0; i < size; i++) {
                     line = br.readLine();
                     elements = line.split("\\s+");
+                    // Check for square matrix (rows)
+                    if ( elements.length != size ) {
+                        System.out.println("\nError: Matrix not square. Please check input.");
+                        System.exit(1);
+                    }
+                    // Iterate through elements in row
                     for (int j = 0; j < size; j++) {
                         matrix[i][j] = Integer.parseInt(elements[j]);
                         System.out.print(elements[j] + " ");

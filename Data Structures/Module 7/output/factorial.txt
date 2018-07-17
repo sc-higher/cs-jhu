@@ -2,29 +2,29 @@ Matrix Determinant Program
 @author Sean Connor
 @date 15 July 2018
 
-Calculation Date: 2018-07-17T11:54:19.420800300
+Calculation Date: 2018-07-17T14:38:16.668626500
 
 1 
 Determinant = 1
-Time to Result (ns): 17000
+Time to Result (ns): 29311
 
 1 0 
 0 2 
 Determinant = 2
-Time to Result (ns): 21103
+Time to Result (ns): 29897
 
 1 0 0 
 0 2 0 
 0 0 3 
 Determinant = 6
-Time to Result (ns): 39276
+Time to Result (ns): 73862
 
 1 0 0 0 
 0 2 0 0 
 0 0 3 0 
 0 0 0 4 
 Determinant = 24
-Time to Result (ns): 133069
+Time to Result (ns): 266138
 
 1 0 0 0 0 
 0 2 0 0 0 
@@ -32,7 +32,7 @@ Time to Result (ns): 133069
 0 0 0 4 0 
 0 0 0 0 5 
 Determinant = 120
-Time to Result (ns): 623724
+Time to Result (ns): 767931
 
 1 0 0 0 0 0 
 0 2 0 0 0 0 
@@ -41,7 +41,7 @@ Time to Result (ns): 623724
 0 0 0 0 5 0 
 0 0 0 0 0 6 
 Determinant = 720
-Time to Result (ns): 1102655
+Time to Result (ns): 1174758
 
 1 0 0 0 0 0 0 
 0 2 0 0 0 0 0 
@@ -51,7 +51,7 @@ Time to Result (ns): 1102655
 0 0 0 0 0 6 0 
 0 0 0 0 0 0 7 
 Determinant = 5040
-Time to Result (ns): 8832375
+Time to Result (ns): 8686997
 
 1 0 0 0 0 0 0 0 
 0 2 0 0 0 0 0 0 
@@ -62,7 +62,7 @@ Time to Result (ns): 8832375
 0 0 0 0 0 0 7 0 
 0 0 0 0 0 0 0 8 
 Determinant = 40320
-Time to Result (ns): 53374118
+Time to Result (ns): 53310807
 
 1 0 0 0 0 0 0 0 0 
 0 2 0 0 0 0 0 0 0 
@@ -74,7 +74,7 @@ Time to Result (ns): 53374118
 0 0 0 0 0 0 0 8 0 
 0 0 0 0 0 0 0 0 9 
 Determinant = 362880
-Time to Result (ns): 349909695
+Time to Result (ns): 361098035
 
 1 0 0 0 0 0 0 0 0 0 
 0 2 0 0 0 0 0 0 0 0 
@@ -87,7 +87,7 @@ Time to Result (ns): 349909695
 0 0 0 0 0 0 0 0 9 0 
 0 0 0 0 0 0 0 0 0 10 
 Determinant = 3628800
-Time to Result (ns): 3532830798
+Time to Result (ns): 3624995384
 
 1 0 0 0 0 0 0 0 0 0 0 
 0 2 0 0 0 0 0 0 0 0 0 
@@ -101,5 +101,5 @@ Time to Result (ns): 3532830798
 0 0 0 0 0 0 0 0 0 10 0 
 0 0 0 0 0 0 0 0 0 0 11 
 Determinant = 39916800
-Time to Result (ns): 37835486372
+Time to Result (ns): 39484796437
 

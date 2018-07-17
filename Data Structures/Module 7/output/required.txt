@@ -2,43 +2,50 @@ Matrix Determinant Program
 @author Sean Connor
 @date 15 July 2018
 
-Calculation Date: 2018-07-16T22:32:30.055
+Calculation Date: 2018-07-17T14:39:25.451507300
 
 5 
 Determinant = 5
+Time to Result (ns): 33413
 
 2 3 
 5 9 
 Determinant = 3
+Time to Result (ns): 29897
 
 3 -2 4 
 -1 5 2 
 -3 6 4 
 Determinant = 64
+Time to Result (ns): 247380
 
 2 4 5 6 
 0 3 6 9 
 0 0 9 8 
 0 0 0 5 
 Determinant = 270
+Time to Result (ns): 151241
 
 2 4 5 6 
 0 0 0 0 
 0 0 9 8 
 0 0 0 5 
 Determinant = 0
+Time to Result (ns): 201656
 
 2 0 0 0 
 0 3 0 0 
 0 0 9 0 
 0 0 0 5 
 Determinant = 270
+Time to Result (ns): 160621
 
 2 4 0 6 
 1 3 0 0 
 4 0 0 8 
 2 5 0 5 
 Determinant = 0
+Time to Result (ns): 169413
 
 6 4 6 4 6 4 
 1 2 3 4 5 6 
@@ -47,6 +54,7 @@ Determinant = 0
 4 6 4 6 4 6 
 1 1 1 1 1 1 
 Determinant = 0
+Time to Result (ns): 2541206
 
 5 8 1 6 6 5 2 3 7 8 
 -1 0 3 3 3 5 5 5 2 2 
@@ -59,6 +67,7 @@ Determinant = 0
 8 8 8 8 8 8 8 8 8 8 
 0 1 0 1 0 1 0 1 0 1 
 Determinant = 0
+Time to Result (ns): 3648132375
 
 1 0 0 0 0 0 0 0 
 0 2 0 0 0 0 0 0 
@@ -69,6 +78,5 @@ Determinant = 0
 0 0 0 0 0 0 7 0 
 0 0 0 0 0 0 0 8 
 Determinant = 40320
+Time to Result (ns): 39652192
 
-
-Time to Result (ms): 1001
