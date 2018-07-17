@@ -2,6 +2,10 @@
  * This program is part of my response to Project 2 for the class 605.202
  * Data Structures at the JHU EPP CS program.
  *
+ * This program accepts a text file input containing square matrices of
+ * integers and integer values indicating the size of each matrix. The
+ * program will calculate the determinant of each matrix. Finally, the
+ * program will output each matrix and its determinant into a new text file.
  *
  * @author Sean Connor
  * @date 15 July 2018
@@ -9,6 +13,7 @@
 
 import java.io.*;
 import java.util.*;
+import java.time.LocalDateTime;
 
 public class MatrixDeterminant {
 
@@ -25,9 +30,28 @@ public class MatrixDeterminant {
         String output_filename = data[1];
         System.out.println("\nFilename: " + filename + "\n");
 
-        //
-        md.evaluateStrings(filename);
+        // Process input file and calculate matrix determinants
+        StringBuilder output = md.evaluateStrings(filename);
 
+        // Set end time
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Time to Result (ms): " + (endTime - startTime));
+        output.append(System.getProperty("line.separator"));
+        output.append("Time to Result (ms): " + (endTime - startTime));
+
+        // Create BufferedWriter object and write to txt file
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream("../output/"+output_filename)))) {
+
+            bw.write(output.toString());
+
+        }
+        catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("\nFile not found. Please try again.\n");
+                System.out.println();
+                System.exit(1);
+        }
     }
 
 
@@ -44,7 +68,7 @@ public class MatrixDeterminant {
             String filename = args[0];
             String output_filename = args[1];
             try {
-                // lazy file exists test
+                // Lazy file exists test
                 File exists = new File(filename);
                 Scanner exist_test = new Scanner(exists);
             } catch (FileNotFoundException exception) {
@@ -65,13 +89,23 @@ public class MatrixDeterminant {
 
 
     /**
+     * This method moves through the input file line by line to read matrix
+     * size information and the matrices themselves. For each matrix, it will
+     * convert String values to Integer values stored in a 2d int[][] array.
      *
-     * @param filename
+     * It will then call the det(matrix[][]) method with the matrix as an
+     * argument to compute the determinant.
+     *
+     * The matrix information and determinant are printed to console and added
+     * to a StringBuilder object, which is returned.
+     *
+     * @param filename Name of the file to be evaluated
+     * @return A StringBuilder object containing the information to be written
+     *         to txt file.
      */
-    private void evaluateStrings(String filename) {
-        try ( BufferedReader br = new BufferedReader(
-                new InputStreamReader(
-                        new FileInputStream(filename))) ) {
+    private StringBuilder evaluateStrings(String filename) {
+        try ( BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(filename))) ) {
 
             String line;
             int k = 0;
@@ -80,6 +114,20 @@ public class MatrixDeterminant {
             int[][] matrix;
             int result;
 
+            // Header for StringBuilder output to be written to txt
+            StringBuilder output = new StringBuilder();
+            output.append("Matrix Determinant Program");
+            output.append(System.getProperty("line.separator"));
+            output.append("@author Sean Connor");
+            output.append(System.getProperty("line.separator"));
+            output.append("@date 15 July 2018");
+            output.append(System.getProperty("line.separator"));
+            output.append(System.getProperty("line.separator"));
+            output.append("Calculation Date: " + LocalDateTime.now());
+            output.append(System.getProperty("line.separator"));
+            output.append(System.getProperty("line.separator"));
+
+            // Move through input file to identify matrix and pass to det()
             while ( ( line = br.readLine() ) != null ) {
                 size = Integer.parseInt(line);
                 matrix = new int[size][size];
@@ -89,14 +137,25 @@ public class MatrixDeterminant {
                     for (int j = 0; j < size; j++) {
                         matrix[i][j] = Integer.parseInt(elements[j]);
                         System.out.print(elements[j] + " ");
+                        output.append(elements[j] + " ");
                     }
                     System.out.println();
+                    output.append(System.getProperty("line.separator"));
                 }
+
+                // Calculate determinant
                 result = det(matrix);
+
+                // Output stuff
                 System.out.println();
                 System.out.println("Determinant = " + result);
+                output.append("Determinant = " + result);
                 System.out.println();
+                output.append(System.getProperty("line.separator"));
+                output.append(System.getProperty("line.separator"));
             }
+
+            return output;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,14 +163,19 @@ public class MatrixDeterminant {
             System.out.println();
             System.exit(1);
         }
+
+        return null;
+
     }
 
 
 
     /**
+     * This method recursively calculates the determinant of the input
+     * square matrix.
      *
-     * @param matrix
-     * @return
+     * @param matrix A 2d int[][] array representing a square matrix
+     * @return An int value representing the matrix determinant
      */
     private int det(int[][] matrix) {
         int size = matrix[0].length;
@@ -119,7 +183,7 @@ public class MatrixDeterminant {
         int[][] sub;
         int sign;
 
-        // recursive base case
+        // Recursive base case
         if ( size == 1 ){
             return matrix[0][0];
         }
@@ -154,14 +218,12 @@ public class MatrixDeterminant {
                 sign = -1;
             }
 
-            // Increases the running total
+            // Increase running sum. Recursively call det().
             sum = sum + sign * matrix[0][k] * (det(sub));
-
         }
 
         // Returns the sum. When recursion is finished, returns final determinant.
         return sum;
-
     }
 
 }
