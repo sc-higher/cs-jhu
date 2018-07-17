@@ -18,9 +18,6 @@ import java.time.LocalDateTime;
 public class MatrixDeterminant {
 
     public static void main(String[] args) {
-        // Set start time
-        final long startTime = System.currentTimeMillis();
-
         // create object of MatrixDeterminant in order to use non-static methods
         MatrixDeterminant md = new MatrixDeterminant();
 
@@ -33,18 +30,11 @@ public class MatrixDeterminant {
         // Process input file and calculate matrix determinants
         StringBuilder output = md.evaluateStrings(filename);
 
-        // Set end time
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Time to Result (ms): " + (endTime - startTime));
-        output.append(System.getProperty("line.separator"));
-        output.append("Time to Result (ms): " + (endTime - startTime));
-
         // Create BufferedWriter object and write to txt file
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream("../output/"+output_filename)))) {
 
             bw.write(output.toString());
-
         }
         catch (Exception e) {
                 e.printStackTrace();
@@ -113,6 +103,8 @@ public class MatrixDeterminant {
             String[] elements;
             int[][] matrix;
             int result;
+            long startTime;
+            long endTime;
 
             // Header for StringBuilder output to be written to txt
             StringBuilder output = new StringBuilder();
@@ -143,14 +135,19 @@ public class MatrixDeterminant {
                     output.append(System.getProperty("line.separator"));
                 }
 
-                // Calculate determinant
+                // Calculate determinant and time to calculate
+                startTime = System.nanoTime();
                 result = det(matrix);
+                endTime = System.nanoTime();                
 
                 // Output stuff
                 System.out.println();
                 System.out.println("Determinant = " + result);
                 output.append("Determinant = " + result);
                 System.out.println();
+                System.out.println("Time to Result (ms): " + (endTime - startTime));
+                output.append(System.getProperty("line.separator"));
+                output.append("Time to Result (ns): " + (endTime - startTime));
                 output.append(System.getProperty("line.separator"));
                 output.append(System.getProperty("line.separator"));
             }
