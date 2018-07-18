@@ -1,6 +1,7 @@
 \documentclass[12pt, titlepage]{article}
 \usepackage[a4paper,margin=.75in]{geometry}
 \usepackage{tgtermes}
+\usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{placeins}
 \usepackage{listings}
@@ -8,6 +9,13 @@
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -46,50 +54,91 @@
 
 \section {Data Structures}
 
-In this project we were required to use the stack data structure, with a strict requirement being that language identification be accomplished via stack manipulation and counting in any way being forbidden. In addition, we were required to implement our own stack class, and not use Java's generic Stack$<$E$>$ class. While I believe that there are many ways to accomplish the goal of this project (language identification), using and manipulating a stack is a relatively simple solution.
+ The only defined requirements in this project (beside correct calculation of the determinant of a matrix) were that an array be used and that the determinant be calculated using a recursive algorithm. Thus, I did not explicitly create any data structures for this project (i.e. stack, queue, etc). However, recursive methods utilize the ``the stack", which is also known as the call stack, execution stack, program stack, control stack, run-time stack, or machine stack [1].  I am taking 605.204 Computer Organization concurrently with this class, and am learning much more about this topic. With each recursive function call of the det() method, the stack pointer is incremented some amount. The block of memory allocated for a particular instance of the recursive function contains local variables specific to that instance. As the methods conclude, the stack pointer is decremented and the memory is freed up.
 
-First, a brief discussion of my implementation of the stack. I chose to use an array-based implementation due to its simplicity and ease of implementation and use. My implementation of stack is designed for use with the String data type, and will not work with any other type (i.e. char, int, etc). It includes a constructor which allows the user to initialize a String[] array of specified size which represents the stack. The size of the stack is fixed. If the number of characters in any line of the input file exceeds the hardcoded stack size (500), a stack overflow exception will be thrown. This is the main disadvantage of the array implementation of the stack.
+To represent a particular matrix, I choose to use a 2-dimensional int[][] array with each dimension being equal to the size of the square matrix i.e. int[size][size]. The int type was used in this case; however, it would be quite simple to use the double type instead if the matrices contained real numbers.
 
-Four essential methods are included - push(String item), pop(), peek(), and isEmpty(). With just these four methods one is able to accomplish the goal of the project. While it was revealed near the project deadline that comparing the number of items in the stack was acceptable, I included no methods to return the size of stack, as I was unsure if this would constitute counting. However, implementing this method is trivial.
+The recursive algorithm functions by breaking each matrix down into smaller matrices, and calling the determinant method on each of those (which in turn may be broken down further). For a square matrix of size n, there will be n submatrices evaluated. This means that each ``block" on the call stack contains information about the matrix and each submatrix, to include an integer representing size and information on the matrix itself (the int[][]). 
 
-With the Stack class in place, it was then a matter of employing stack manipulation to determine language.
+Aside from this, no other data structures featured so far in this course were used.
 
 \section{General Strategy}
 
-The input was read line by line from a text file, with each line representing a different string to be evaluated. For each line, a number of methods included in my StringEval class are used to evaluate the string, and print the results to both the console and a new file using StringBuilder and BufferedWriter/OutputStreamWriter/FileOutputStream. These methods are aptly named type1, type2, type3, type4, and type5. 
+The recursive algorithm to be used was described in one of the project description files (ALT3.2.6.pdf). It is restated here for convenience.
+\begin{equation}
+\textrm{det}(a) = \sum_j \textrm{power}(-1, i+j) \times a[i,j] \times \textrm{det}(\textrm{minor}(a[i,j])), \textrm{for any i}
+\end{equation}
 
-The bulk of the project was found in designing algorithms that correctly identified languages using stacks and stack manipulation. The general strategy employed here was as follows:
-\begin{enumerate}
-	\item Test simple cases first (i.e. Is string empty? Is the first character an `A'?).
-	\item Declare objects (i.e. Initialize the stack(s) to be used).
-	\item Iterate through the string using a combination of a for-loop and the charAt(int location) methods.
-	\item Perform language-specific stack manipulation.
-	\item Exit loop. If stack is empty, return true. Else, return false.
-\end{enumerate}
-The language-specific stack manipulation varies substantially by language, and is best understood by viewing the source code. However, there was a common theme. When iterating through a string, if an `A' was encountered, push it to the stack. If a `B' was encountered, pop the stack. At the conclusion of the iteration, check if the stack was empty. If yes, return true.
+The recursive method is called det(), and accepts an int[][] as input. Thus, the form of the method is det(int[][] matrix). The first step in implementing this algorithm was defining a base case. The base case was defined to be when the square matrix size was equal to one. At this point, simply return the value. The remainder of the method consists of a series of nested for-loops that iterate through each submatrix, and through each column and row of those submatrices. Each submatrix is stored in an int[][] and passed recursively to the det() method. As mentioned previously, a square matrix of size n will have n submatrices. Each of these submatrices is passed to the det() method. For example, for a square matrix of size three, the det() method will be called a total of ten times. 
 
-One solution that I am particularly happy with was my solution to language 4. In this, I utilize two stacks and continually push/pop between the two. One stack is essentially used to store the order. The initial grouping establishes the order that must be maintained through the rest of the string, and is pushed to stack1. When popped to stack2, the top of stack2 is the same as the first item in the next grouping (if the string is a valid type 4). In this way, the order is continually checked as we iterate through the string.
+
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{1}{|l|}{\textbf{size}} & \multicolumn{1}{l|}{\textbf{number of det() calls}} \\ \hline
+1                                   & 1                                                   \\ \hline
+2                                   & 3                                                   \\ \hline
+3                                   & 10                                                  \\ \hline
+4                                   & 41                                                  \\ \hline
+5                                   & 206                                                 \\ \hline
+6                                   & 1237                                                \\ \hline
+7                                   & 8660                                                \\ \hline
+\end{tabular}
+\end{table}
+
+Clearly, the number of recursive calls quickly gets out of hand.
+
+The input was read line by line from a text file using a combination of BufferedReader, InputSteamReader, and FileInputStream. The input text file must be formatted correctly, otherwise the program will produce an error message. Typical errors include empty lines in the text file, improper specification of size, and matrices that are not square. The first line of the input file is read normally. This line specifies the size of the first matrix. After this, the program reads n lines, where n is equal to specified matrix size. After reading each line, the String.split() and Integer.parseInt() methods are employed to split the String into a String[] of numbers, which are then converted to int and placed in an int[][] matrix. Finally, as the reader moves through the input file and calculated the determinants, the matrix information (including determinant) is printed to the console and appended to a StringBuilder object, which is returned and written to specified output file in the main() method using BufferedWriter/OutputStreamWriter/FileOutputStream.
 
 \section{Algorithm Efficiency}
 
-As described previously, the program first iterates through the input, line by line, and performs the language type evaluations on each string. Each language type evaluation method generally contains one or two non-nested for-loops that iterate through the characters in the string. Each stack function (push, pop, peek, isEmpty) features simple comparisons that are considered O(1). Considering this, I would expect the worst-case efficiency of the program to be O(n\textsuperscript{2}) due to the existence of nested for-loops. However, I am uncertain if this is the case, as the items which are being iterated through are different. In the nested for-loop, we iterate through the characters in the string, whereas in the parent for-loop we iterate through each line in the input file. The results would be quite different for 1000 lines of string length 5, 1000 lines of string length 1000, 5 lines of string length 1000, and 5 lines of string length 5.
+As described previously, this algorithm requires a drastically increasing number of recursive det() calls as the size increases only slightly (see previous table). In fact, it is even worse than (n!)! The efficiency is best characterized as O(n!), which is very bad. To test this, I implemented an execution timer to calculate and print the amount of time it takes to find the determinant of each matrix. I created a test case input file containing diagonal square matrices of size 1 to 11 with the diagonal values ranging from 1 at the upper left corner, and incrementing by 1 to size n at the bottom right corner. 
 
-To test this hypothesis (and provide enhancement to the program), I implemented a program execution timer and ran several test cases (n=5,50,100,500) with test cases beyond n=5 featuring repeats of the original five strings (average length = 5.4 and average length = 12). I then ran each test case five times and calculated the average time to execute. The results are presented in the figures below. Admittedly the sample size is small; however, we can see a linear trendline (R\textsuperscript{2} = 0.978 and R\textsuperscript{2} = 0.999). This is indicative of O(n) efficiency.
+\[
+\begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 2 & 0 & 0 \\
+    0 & 0 & 3 & 0 \\
+    0 & 0 & 0 & 4
+\end{bmatrix}
+\]
 
-More testing would need to be done on this to get a better idea of performance at larger values of n and with longer string lengths. Perhaps in this case the numbers are simply too small to show the true nature of the efficiency of the algorithm. 
+I evaluated the test case three separate times and recorded time to completion results. These results were plotted in Excel. An exponential curve was created with equation $f(x) \approx 651.103^{1.483x}$ and an R\textsuperscript{2} value of 0.959. See figure below.
 
-\section{Recursion}
+As seen in the graphic, the performance of the algorithm aligns well with (n!). Thus, the estimate of O(n!) efficiency is confirmed, at least for values of n up to 11. 
 
-Any iterative code can be converted to recursive and vice-versa. I'm still fairly new to recursion, so this was initially a bit tricky for me. However, with some thought, I realized it is simply a matter of implementing iteration in a recursive manner - that is, to call the same method but with a different parameter that ``increments" to the next step. 
+\includegraphics[width=\textwidth]{efficiency}
 
-I was not able to do this as simply a thought exercise - I had to create working recursive code as a proof of concept for at least one of the language evaluation methods. This code serves as an enhancement to the program, and is part of this document in the appendix (Section 6.1). Essentially, I include the same basic checks as the iterative method (in fact, I copy/pasted much of the code in the recursive method from the iterative method), but include an additional if-statement that invokes the recursive call until the last character of the string is reached. This same thought process can be applied to any of the other language evaluation methods - it is just a matter of making the iterative case `pseudo-iterative' using recursion.
+\section{Iteration}
 
-Perhaps my recursive method is not very good, perhaps it could be optimized. But from initial inspection, I would argue that my iterative code is more efficient than my recursive code. My recursive code includes several statements that are redundant beyond the initial method call (such as checking if the string is empty or not). I would think that this reduces efficiency. If any iterative code can be replaced with recursive code and vice versa, then I think I will be sticking mostly with iterative methods, as it is simpler for me (at present time) to understand and implement. 
+Any iterative code can be converted to recursive and vice-versa. In this case, the conversion can be achieved by using a series of nested loops. We know that for a matrix of size n, there will be n submatrices to evaluate. Thus, a while loop can be used to iterate through all sizes.
+\begin{lstlisting}
+/* braingstorming pseudocode for iterative implementation */
+while (size > 0) {
+	matrix[size]
+	while ( i < length ) {
+		matrix[i] = ...
+	}
+	// calculation here to evaluate determinant
+}
+\end{lstlisting}
+A stack could be a good data structure to implement an iterative version. A numerical result is returned beginning at size one evaluation. These numerical results are fed into equations at higher levels/sizes to create numerical results at these levels. Thus, the results from lower levels could be pushed to a stack when calculated, and popped when needed for calculation of determinant at higher levels. It is almost pseudo-recursive, as it implements the same general algorithm without actually calling itself.
 
 \section{Lessons Learned}
 
-This was a great exercise in learning how to utilize the stack data structure. This is a great thing, because developing comfort in using a tool (data structure) expands the programmer's ``toolbox". This in turn expands the programmer's capabilities. I was most happy with my response to language type 4 for this very reason - I felt that I was really utilizing the stack/stack manipulation to accomplish the identification. 
+This was a great exercise in learning how to utilize implement recursive methods. In addition, it is always good practice learning to handle/process IO for different applications and think creatively to effectively implement methods for this.
 
-In the same manner, thinking about this from a recursive view increases my comfort and capability in using and implementing recursion. So far, most of this class has been theory without much application. It felt great putting to practice the things we have been learning.
+One major lesson learned is the importance of algorithm efficiency, and how easy it was in this case for the program execution time to spiral out of control. At around size 12, it was taking my computer more than a minute to calculate. At size 14 it would take hours. Beginning at size 15 it would take days. This served as a great practical example to teach this lesson. Upon some further research, it seems that the most popular algorithm used to find the determinant is Gaussian Elimination. The efficiency of this is O(n\textsuperscript{3}), which is still not ideal but is orders of magnitude faster than O(n!).
+
+I didn't get much practice with different data structures we have learned about, such as stack, queue, and list, but it was a good exercise nonetheless.
+
+\newpage
+
+\section{References}
+\begin{enumerate}
+	\item ``Call Stack" Wikipedia. \url{https://en.wikipedia.org/wiki/Call_stack}
+	\item ``What and where are the stack and heap?" StackOverflow. \url{https://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap}
+\end{enumerate}
 
 \end{document}
