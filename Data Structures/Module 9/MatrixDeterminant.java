@@ -188,12 +188,9 @@ public class MatrixDeterminant {
     }
 
 
-
-
-
     /**
-     * This method utilizes Gaussian Elimination to calculate the determinant
-     * of the input square matrix.
+     * This method utilizes Gaussian Elimination with partial pivoting 
+     * to calculate the determinant of the input square matrix.
      *
      * @param matrix A LinkedList of type Double representing a square matrix
      * @return An int value representing the matrix determinant
@@ -201,12 +198,30 @@ public class MatrixDeterminant {
     private double det1(LinkedList<Double> matrix) {
 
         int size = (int) Math.sqrt(matrix.size());
-        double epsilon = 1e-10;
+        double epsilon = 1e-10; // This is necessary due to way numbers are stored and rounding errors
         double result = 1;
         double temp;
 
+        // Reduce matrix to upper triangular system.
         for ( int i = 0; i < size-1; i++ ) {
 
+            // This implements a partial pivot solution for Naive Gaussian Elimination.
+            // Necessary if matrix(i,i) == 0 to avoid division by zero.
+            if ( matrix.getValue(i,i) == 0 ) {
+                int p;
+                for ( p = i + 1; p < size; p++ ) {
+                    if ( Math.abs(matrix.getValue(p,i)) > epsilon ) {
+                        break;
+                    }
+                }
+                if ( p >= size ) {
+                    return 0.0;
+                }
+                matrix.swapRows(i,p);
+                result *= -1;
+            }
+            
+            // "Naive" Gaussian Elimination Method
             for (int j = i + 1; j < size; j++) {
 
                 if ( Math.abs(matrix.getValue(j,i)) > epsilon ) {
@@ -221,64 +236,16 @@ public class MatrixDeterminant {
 
         }
 
+        // Determinant is product of diagonal.
         for ( int i = 0; i < size; i++ ) {
             result *= matrix.getValue(i,i);
         }
 
-        return result;
-
-    }
-
-
-    /**
-     * OLD METHOD - NOT USED
-     */
-    private double det(LinkedList<Double> matrix) {
-
-        int size = (int) Math.sqrt(matrix.size());
-        double epsilon = 1e-10;
-        boolean[] used = new boolean[size];
-        double result = 1;
-
-        for (int i = 0; i < size; i++) {
-
-            // Identify pivot
-            int p;
-            for (p = 0; p < size; p++) {
-                if (!used[p] && Math.abs(matrix.getValue(p,i)) > epsilon) {
-                    break;
-                }
-            }
-
-            // If no nonzero value, determinant is zero
-            if (p >= size) {
-                return 0;
-            }
-
-            // Update result --> product of result and pivot value
-            result *= matrix.getValue(p,i);
-
-            // Set pivot row to used because can only pivot once per row/column
-            used[p] = true;
-
-            // Divide all elements in pivot row by pivot value
-            double z = 1 / matrix.getValue(p,i);
-            for (int j = 0; j < size; j++)
-                matrix.setValue(p,j,matrix.getValue(p,j)*z);
-
-            // For all rows except pivot row...
-            for (int j = 0; j < size; ++j) {
-                if (j != p) {
-                    z = matrix.getValue(j,i);
-                    // And for all columns...
-                    for (int k = 0; k < size; ++k) {
-                        matrix.setValue(j,k,matrix.getValue(j,k) - (z * matrix.getValue(p,k)));
-                    }
-                }
-            }
-
+        // Avoid outputting -0.0 due to way numbers are stored.
+        if ( Math.abs(result) < epsilon ) {
+            result = Math.abs(result);
         }
-
+        
         return result;
 
     }
