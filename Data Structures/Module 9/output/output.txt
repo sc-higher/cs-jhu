@@ -2,50 +2,50 @@ Matrix Determinant Program
 @author Sean Connor
 @date 28 July 2018
 
-Calculation Date: 2018-07-31T18:30:43.993
+Calculation Date: 2018-07-31T20:53:05.813
 
 5 
 Determinant = 5.0
-Time to Result (ns): 36157
+Time to Result (ns): 39037
 
 2 3 
 5 9 
 Determinant = 3.0
-Time to Result (ns): 14078
+Time to Result (ns): 17599
 
 3 -2 4 
 -1 5 2 
 -3 6 4 
 Determinant = 64.0
-Time to Result (ns): 43197
+Time to Result (ns): 40318
 
 2 4 5 6 
 0 3 6 9 
 0 0 9 8 
 0 0 0 5 
 Determinant = 270.0
-Time to Result (ns): 17279
+Time to Result (ns): 17918
 
 2 4 5 6 
 0 0 0 0 
 0 0 9 8 
 0 0 0 5 
 Determinant = 0.0
-Time to Result (ns): 10239
+Time to Result (ns): 10880
 
 2 0 0 0 
 0 3 0 0 
 0 0 9 0 
 0 0 0 5 
 Determinant = 270.0
-Time to Result (ns): 17918
+Time to Result (ns): 19518
 
 2 4 0 6 
 1 3 0 0 
 4 0 0 8 
 2 5 0 5 
 Determinant = 0.0
-Time to Result (ns): 117751
+Time to Result (ns): 152949
 
 6 4 6 4 6 4 
 1 2 3 4 5 6 
@@ -54,19 +54,19 @@ Time to Result (ns): 117751
 4 6 4 6 4 6 
 1 1 1 1 1 1 
 Determinant = 0.0
-Time to Result (ns): 257900
+Time to Result (ns): 245422
 
 1 2 3 
 4 5 6 
 7 8 9 
 Determinant = 0.0
-Time to Result (ns): 15678
+Time to Result (ns): 17279
 
 -1 0 0 
 0 -2 0 
 0 0 -3 
 Determinant = -6.0
-Time to Result (ns): 2560
+Time to Result (ns): 3840
 
 2 4 5 6 5 8 2 5 8 3 5 1 7 3 1 9 4 1 5 9 8 2 5 4 6 
 0 3 6 9 8 4 1 5 5 4 2 5 4 8 7 4 3 1 1 2 5 8 6 1 9 
@@ -94,31 +94,31 @@ Time to Result (ns): 2560
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 7 
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
 Determinant = -1.1450855951999688E15
-Time to Result (ns): 16589169
+Time to Result (ns): 15626360
 
 0 1 2 
 3 4 5 
 6 7 8 
 Determinant = 0.0
-Time to Result (ns): 16638
+Time to Result (ns): 15998
 
 0 1 2 
 0 3 4 
 0 5 6 
 Determinant = 0.0
-Time to Result (ns): 1600
+Time to Result (ns): 3200
 
 1 2 
 0 3 
 Determinant = 3.0
-Time to Result (ns): 1919
+Time to Result (ns): 2239
 
 0 3 
 1 2 
 Determinant = -3.0
-Time to Result (ns): 3520
+Time to Result (ns): 5120
 
 0 
 Determinant = 0.0
-Time to Result (ns): 1600
+Time to Result (ns): 1920
 
