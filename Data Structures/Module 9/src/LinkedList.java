@@ -9,7 +9,6 @@
 
 public class LinkedList<T> {
 
-    private Node<T> header;
     private Node<T> first;
     private Node<T> last;
 
@@ -18,12 +17,13 @@ public class LinkedList<T> {
      * Constructor. Create a LinkedList object with initialized values.
      */
     public LinkedList() {
-        header = null;
         first = null;
         last = null;
     }
 
+
     /**
+     * If LinkedList<T> is empty, returns true. Otherwise returns false.
      *
      * @return
      */
@@ -38,6 +38,7 @@ public class LinkedList<T> {
 
 
     /**
+     * Returns number of Nodes in LinkedList<T> as an integer value.
      *
      * @return
      */
@@ -52,11 +53,11 @@ public class LinkedList<T> {
         }
 
         return size;
-
     }
 
 
     /**
+     * Inserts a node with data of type T at the end of the LinkedList.
      *
      * @param data
      */
@@ -67,7 +68,7 @@ public class LinkedList<T> {
             first = node;
             last = node;
             node.setNext(null);
-            node.setPrevious(header);
+            node.setPrevious(null);
         }
         else {
             last.setNext(node);
@@ -79,10 +80,12 @@ public class LinkedList<T> {
 
 
     /**
+     * Converts a square matrix row and column to the index of the corresponding
+     * Node in the LinkedList.
      *
      * @param row
      * @param col
-     * @return
+     * @return   int value representing index in LinkedList of matrix(row,col)
      */
     public int matrixToListIndex(int row, int col) {
         int size = (int) Math.sqrt(this.size());
@@ -100,6 +103,8 @@ public class LinkedList<T> {
 
 
     /**
+     * Sets the value of square matrix element matrix(row,col) to data of
+     * type <T>.
      *
      * @param row
      * @param col
@@ -121,6 +126,7 @@ public class LinkedList<T> {
 
 
     /**
+     * Gets the data of square matrix element matrix(row,col) Node.
      *
      * @param row
      * @param col
@@ -142,6 +148,8 @@ public class LinkedList<T> {
 
 
     /**
+     * Swaps the data values of two square matrix rows in the storage
+     * LinkedList
      *
      * @param row1
      * @param row2
@@ -159,7 +167,7 @@ public class LinkedList<T> {
 
 
     /**
-     *
+     * Prints the data values of all Nodes in the Linked List.
      */
     @SuppressWarnings("unchecked")
     public void print() {
@@ -173,21 +181,6 @@ public class LinkedList<T> {
         System.out.println();
     }
 
-    /**
-     *
-     * @return
-     */
-    public Node getHeader() {
-        return header;
-    }
-
-    /**
-     *
-     * @param header
-     */
-    public void setHeader(Node<T> header) {
-        this.header = header;
-    }
 
     /**
      *
@@ -197,6 +190,7 @@ public class LinkedList<T> {
         return first;
     }
 
+
     /**
      *
      * @param first
@@ -205,6 +199,7 @@ public class LinkedList<T> {
         this.first = first;
     }
 
+
     /**
      *
      * @return
@@ -212,6 +207,7 @@ public class LinkedList<T> {
     public Node getLast() {
         return last;
     }
+
 
     /**
      *

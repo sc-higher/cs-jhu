@@ -21,6 +21,7 @@ public class Node<T> {
         this.data = data;
     }
 
+
     /**
      * Get method for Node data.
      *
@@ -29,6 +30,7 @@ public class Node<T> {
     public T getData() {
         return data;
     }
+
 
     /**
      * Get method for next Node.
@@ -39,6 +41,7 @@ public class Node<T> {
         return next;
     }
 
+
     /**
      * Get method for previous Node.
      *
@@ -48,6 +51,7 @@ public class Node<T> {
         return previous;
     }
 
+
     /**
      *
      * @param data
@@ -55,6 +59,7 @@ public class Node<T> {
     public void setData(T data) {
         this.data = data;
     }
+
 
     /**
      *  Set method for next Node.
@@ -65,6 +70,7 @@ public class Node<T> {
         this.next = next;
     }
 
+
     /**
      * Set method for previous Node.
      *
@@ -73,6 +79,7 @@ public class Node<T> {
     public void setPrevious(Node<T> previous) {
         this.previous = previous;
     }
+
 
     /**
      * Prints the data content of Node to terminal

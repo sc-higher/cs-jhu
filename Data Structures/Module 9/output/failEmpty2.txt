@@ -1,0 +1,8 @@
+Matrix Determinant Program
+@author Sean Connor
+@date 28 July 2018
+
+Calculation Date: 2018-07-31T18:20:22.094
+
+
+ERROR: Empty line found. Please check input.

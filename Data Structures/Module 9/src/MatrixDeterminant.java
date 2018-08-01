@@ -35,7 +35,7 @@ public class MatrixDeterminant {
         // Create BufferedWriter object and write to txt file
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
                 // new FileOutputStream("../output/"+output_filename)))) {
-                new FileOutputStream(output_filename)))) {
+                new FileOutputStream("../output/"+output_filename)))) {
 
             bw.write(output.toString());
         }
@@ -126,16 +126,18 @@ public class MatrixDeterminant {
 
                 // Check for empty line
                 if ( line.equals("") ) {
-                    System.out.println("\nError: Empty line found. Please check input.");
-                    System.exit(1);
+                    System.out.println("\nERROR: Empty line found. Please check input.");
+                    output.append("\nERROR: Empty line found. Please check input.");
+                    return output;
                 }
 
                 // Check size specifier
                 try {
                     size = Integer.parseInt(line);
                 } catch (Exception e) {
-                    System.out.println("\nError: Invalid size specifier. Please check input.");
-                    System.exit(1);
+                    System.out.println("\nERROR: Invalid size specifier. Please check input.");
+                    output.append("\nERROR: Invalid size specifier. Please check input.");
+                    return output;
                 }
 
                 // Continue evaluation
@@ -145,8 +147,9 @@ public class MatrixDeterminant {
                     elements = line.split("\\s+");
                     // Check for square matrix (rows)
                     if ( elements.length != size ) {
-                        System.out.println("\nError: Matrix not square. Please check input.");
-                        System.exit(1);
+                        System.out.println("\nERROR: Matrix not square. Please check input.");
+                        output.append("\nERROR: Matrix not square. Please check input.");
+                        return output;
                     }
                     // Iterate through elements in row
                     for (int j = 0; j < size; j++) {
@@ -166,7 +169,7 @@ public class MatrixDeterminant {
                 // Output stuff
                 System.out.println("Determinant = " + result);
                 output.append("Determinant = " + result);
-                System.out.println("Time to Result (ms): " + (endTime - startTime));
+                System.out.println("Time to Result (ns): " + (endTime - startTime));
                 output.append(System.getProperty("line.separator"));
                 output.append("Time to Result (ns): " + (endTime - startTime));
                 output.append(System.getProperty("line.separator"));
