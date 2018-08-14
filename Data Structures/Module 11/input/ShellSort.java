@@ -1,16 +1,20 @@
+/**
+ *
+ */
+
 import java.io.*;
 import java.util.*;
 import java.time.LocalDateTime;
 
-public class HeapSort {
+public class ShellSort {
     
     public static void main(String[] args) {
         
         // Create object of ShellSort in order to use non-static methods
-        HeapSort hs = new HeapSort();
+        ShellSort ss = new ShellSort();
         
         // Read filename from args if valid
-        String[] input = hs.readArgs(args);
+        String[] input = ss.readArgs(args);
         String filename = input[0];
         String output_filename = input[1];
         System.out.println("\nFilename: " + filename + "\n");
@@ -30,8 +34,8 @@ public class HeapSort {
 
         StringBuilder output = ss.arrayToFile(data, deltaTime);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-                // new FileOutputStream("../output/"+output_filename)))) {
-                new FileOutputStream(output_filename)))) {
+                new FileOutputStream("../output/"+output_filename)))) {
+                //new FileOutputStream(output_filename)))) {
 
             bw.write(output.toString());
         }
@@ -75,10 +79,16 @@ public class HeapSort {
             return null;
         }
     }
-    
-    
-    
-    // MAKE COMMENT HERE
+
+
+
+    /**
+     *
+     *
+     * @param filename
+     * @param size
+     * @return
+     */
     private int[] readFile(String filename, int size) {
         try ( BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(filename))) ) {
@@ -114,10 +124,15 @@ public class HeapSort {
 
         return null;
     }
-    
-    
-    
-    // MAKE COMMENT HERE
+
+
+
+    /**
+     *
+     *
+     * @param filename
+     * @return
+     */
     private int fileSize(String filename) {
         
         try ( BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -150,10 +165,15 @@ public class HeapSort {
         return 0;
         
     }
-    
-    
-    
-    // MAKE COMMENT HERE
+
+
+
+    /**
+     *
+     *
+     * @param data
+     * @param sequence
+     */
     private void sort(int[] data, int[] sequence) {
         
         int size = data.length;
@@ -172,10 +192,15 @@ public class HeapSort {
         }
         
     }
-    
-    
-    
-    // MAKE COMMENT HERE - CHANGE CODE TO MAKE UNIQUE
+
+
+
+    /**
+     *
+     *
+     * @param data
+     * @param gap
+     */
     private void insertionSort(int[] data, int gap) {
         
         int j;
@@ -198,7 +223,13 @@ public class HeapSort {
 
 
 
-    // MAKE COMMENT HERE
+    /**
+     *
+     *
+     * @param array
+     * @param time
+     * @return
+     */
     private StringBuilder arrayToFile(int[] array, long time) {
 
         StringBuilder output = new StringBuilder();

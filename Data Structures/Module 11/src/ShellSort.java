@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 import java.io.*;
 import java.util.*;
 import java.time.LocalDateTime;
@@ -30,8 +34,8 @@ public class ShellSort {
 
         StringBuilder output = ss.arrayToFile(data, deltaTime);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-                // new FileOutputStream("../output/"+output_filename)))) {
-                new FileOutputStream(output_filename)))) {
+                new FileOutputStream("../output/"+output_filename)))) {
+                //new FileOutputStream(output_filename)))) {
 
             bw.write(output.toString());
         }
@@ -75,10 +79,16 @@ public class ShellSort {
             return null;
         }
     }
-    
-    
-    
-    // MAKE COMMENT HERE
+
+
+
+    /**
+     *
+     *
+     * @param filename
+     * @param size
+     * @return
+     */
     private int[] readFile(String filename, int size) {
         try ( BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(filename))) ) {
@@ -114,10 +124,15 @@ public class ShellSort {
 
         return null;
     }
-    
-    
-    
-    // MAKE COMMENT HERE
+
+
+
+    /**
+     *
+     *
+     * @param filename
+     * @return
+     */
     private int fileSize(String filename) {
         
         try ( BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -150,10 +165,15 @@ public class ShellSort {
         return 0;
         
     }
-    
-    
-    
-    // MAKE COMMENT HERE
+
+
+
+    /**
+     *
+     *
+     * @param data
+     * @param sequence
+     */
     private void sort(int[] data, int[] sequence) {
         
         int size = data.length;
@@ -172,10 +192,15 @@ public class ShellSort {
         }
         
     }
-    
-    
-    
-    // MAKE COMMENT HERE - CHANGE CODE TO MAKE UNIQUE
+
+
+
+    /**
+     *
+     *
+     * @param data
+     * @param gap
+     */
     private void insertionSort(int[] data, int gap) {
         
         int j;
@@ -198,7 +223,13 @@ public class ShellSort {
 
 
 
-    // MAKE COMMENT HERE
+    /**
+     *
+     *
+     * @param array
+     * @param time
+     * @return
+     */
     private StringBuilder arrayToFile(int[] array, long time) {
 
         StringBuilder output = new StringBuilder();
