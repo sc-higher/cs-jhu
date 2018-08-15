@@ -1,5 +1,13 @@
 /**
+ * This program is part of my response to Project 4 for the class 605.202
+ * Data Structures at the JHU EPP CS program.
  *
+ * This program accepts a text file input containing lines of integers to be
+ * sorted. The lines from the file are read to an array and sorted using
+ * Heap Sort.
+ *
+ * @author Sean Connor
+ * @date 13 August 2018
  */
 
 import java.io.*;
@@ -17,7 +25,7 @@ public class HeapSort {
         String[] input = hs.readArgs(args);
         String filename = input[0];
         String output_filename = input[1];
-        System.out.println("\nFilename: " + filename + "\n");
+        System.out.println("\nFilename: " + filename);
         
         int numLines = hs.fileSize(filename);        
         int[] data = hs.readFile(filename,numLines);
@@ -26,6 +34,14 @@ public class HeapSort {
         hs.sort(data);
         long endTime = System.nanoTime();
         long deltaTime = endTime-startTime;
+
+        for ( int i = 0; i < data.length; i++ ) {
+            System.out.println(data[i]);
+        }
+
+        System.out.println("Heap Sort Time (ns): " + deltaTime + "\n");
+        System.out.println("----------------------------");
+
 
         StringBuilder output = hs.arrayToFile(data, deltaTime);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
@@ -78,9 +94,10 @@ public class HeapSort {
 
 
     /**
+     * Runs through the file line by line and parses integer values to an
+     * int[] array. Returns int[].
      *
-     *
-      * @param filename
+     * @param filename
      * @param size
      * @return
      */
@@ -123,7 +140,8 @@ public class HeapSort {
 
 
     /**
-     *
+     * Determines the number of lines in the input file. Returns in int
+     * representing this value.
      *
      * @param filename
      * @return
@@ -164,7 +182,9 @@ public class HeapSort {
 
 
     /**
-     *
+     * Primary method to heap sort the data. First creates a max heap. Then
+     * iterates through the array swapping max value to back of array and then
+     * heapifying to get a new max.
      *
      * @param data
      */
@@ -186,7 +206,8 @@ public class HeapSort {
 
 
     /**
-     *
+     * Creates a max heap by iterating through all nodes with children,
+     * starting with the bottom-most, right-most node, and heapifying.
      *
      * @param data
      */
@@ -206,7 +227,10 @@ public class HeapSort {
 
 
     /**
-     *
+     * Heapifies the subtree with root node "index". If one child is larger,
+     * swaps with that child and continue down. If both children are larger,
+     * swap with larger child and continue down. If neither are larger, or
+     * if children don't exist, return.
      *
      * @param data
      * @param index
@@ -255,7 +279,7 @@ public class HeapSort {
 
 
     /**
-     *
+     * Swap two values in array.
      *
      * @param data
      * @param item1
@@ -272,7 +296,8 @@ public class HeapSort {
 
 
     /**
-     *
+     * Create a string builder object with headers and relevant data appended.
+     * Can be used by BufferedWriter to create output file.
      *
      * @param array
      * @param time

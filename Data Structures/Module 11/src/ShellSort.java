@@ -1,5 +1,14 @@
 /**
+ * This program is part of my response to Project 4 for the class 605.202
+ * Data Structures at the JHU EPP CS program.
  *
+ * This program accepts a text file input containing lines of integers to be
+ * sorted. The lines from the file are read to an array and sorted using
+ * Shell Sort. The gap sequence can be changed by altering the argument in
+ * Line 40.
+ *
+ * @author Sean Connor
+ * @date 13 August 2018
  */
 
 import java.io.*;
@@ -17,7 +26,7 @@ public class ShellSort {
         String[] input = ss.readArgs(args);
         String filename = input[0];
         String output_filename = input[1];
-        System.out.println("\nFilename: " + filename + "\n");
+        System.out.println("\nFilename: " + filename);
         
         int numLines = ss.fileSize(filename);        
         int[] data = ss.readFile(filename,numLines);
@@ -26,11 +35,19 @@ public class ShellSort {
         int[] sequence2 = new int[] {1, 5, 17, 53, 149, 373, 1123, 3371, 10111, 30341};
         int[] sequence3 = new int[] {1, 10, 30, 60, 120, 360, 1080, 3240, 9720, 29160};
         int[] sequence4 = new int[] {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
-        
+        int[] sequence5 = new int[] {1};
+
         long startTime = System.nanoTime();
-        ss.sort(data,sequence1);
+        ss.sort(data,sequence5);
         long endTime = System.nanoTime();
         long deltaTime = endTime-startTime;
+
+        for ( int i = 0; i < data.length; i++ ) {
+            System.out.println(data[i]);
+        }
+
+        System.out.println("Shell Sort Time (ns): " + deltaTime + "\n");
+        System.out.println("----------------------------");
 
         StringBuilder output = ss.arrayToFile(data, deltaTime);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
@@ -83,7 +100,8 @@ public class ShellSort {
 
 
     /**
-     *
+     * Runs through the file line by line and parses integer values to an
+     * int[] array. Returns int[].
      *
      * @param filename
      * @param size
@@ -128,7 +146,8 @@ public class ShellSort {
 
 
     /**
-     *
+     * Determines the number of lines in the input file. Returns in int
+     * representing this value.
      *
      * @param filename
      * @return
@@ -169,7 +188,8 @@ public class ShellSort {
 
 
     /**
-     *
+     * Performs the shell sort by iterating through gap values in gap sequence
+     * and calling insertion sort at each gap value.
      *
      * @param data
      * @param sequence
@@ -196,7 +216,10 @@ public class ShellSort {
 
 
     /**
-     *
+     * Starting at data[gap] and iterating through to end, perform insertion
+     * sort using input gap value. Gap value of 1 is a standard insertion
+     * sort. If data[current] is less than the preceding (by gap value)
+     * value, swap. Else, move on to next value.
      *
      * @param data
      * @param gap
@@ -224,7 +247,8 @@ public class ShellSort {
 
 
     /**
-     *
+     * Create a string builder object with headers and relevant data appended.
+     * Can be used by BufferedWriter to create output file.
      *
      * @param array
      * @param time

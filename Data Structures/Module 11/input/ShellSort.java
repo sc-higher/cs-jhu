@@ -17,7 +17,7 @@ public class ShellSort {
         String[] input = ss.readArgs(args);
         String filename = input[0];
         String output_filename = input[1];
-        System.out.println("\nFilename: " + filename + "\n");
+        System.out.println("\nFilename: " + filename);
         
         int numLines = ss.fileSize(filename);        
         int[] data = ss.readFile(filename,numLines);
@@ -26,11 +26,15 @@ public class ShellSort {
         int[] sequence2 = new int[] {1, 5, 17, 53, 149, 373, 1123, 3371, 10111, 30341};
         int[] sequence3 = new int[] {1, 10, 30, 60, 120, 360, 1080, 3240, 9720, 29160};
         int[] sequence4 = new int[] {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
-        
+        int[] sequence5 = new int[] {1};
+
         long startTime = System.nanoTime();
-        ss.sort(data,sequence1);
+        ss.sort(data,sequence5);
         long endTime = System.nanoTime();
         long deltaTime = endTime-startTime;
+
+        System.out.println("Shell Sort Time (ns): " + deltaTime + "\n");
+        System.out.println("----------------------------");
 
         StringBuilder output = ss.arrayToFile(data, deltaTime);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(

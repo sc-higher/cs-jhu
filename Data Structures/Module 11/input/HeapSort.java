@@ -17,7 +17,7 @@ public class HeapSort {
         String[] input = hs.readArgs(args);
         String filename = input[0];
         String output_filename = input[1];
-        System.out.println("\nFilename: " + filename + "\n");
+        System.out.println("\nFilename: " + filename);
         
         int numLines = hs.fileSize(filename);        
         int[] data = hs.readFile(filename,numLines);
@@ -26,6 +26,10 @@ public class HeapSort {
         hs.sort(data);
         long endTime = System.nanoTime();
         long deltaTime = endTime-startTime;
+
+        System.out.println("Heap Sort Time (ns): " + deltaTime + "\n");
+        System.out.println("----------------------------");
+
 
         StringBuilder output = hs.arrayToFile(data, deltaTime);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
