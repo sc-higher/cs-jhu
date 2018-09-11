@@ -1,0 +1,229 @@
+%=======================02-713 LaTeX template, following the 15-210 template==================
+%
+% You don't need to use LaTeX or this template, but you must turn your homework in as
+% a typeset PDF somehow.
+%
+% How to use:
+%    1. Update your information in section "A" below
+%    2. Write your answers in section "B" below. Precede answers for all 
+%       parts of a question with the command "\question{n}{desc}" where n is
+%       the question number and "desc" is a short, one-line description of 
+%       the problem. There is no need to restate the problem.
+%    3. If a question has multiple parts, precede the answer to part x with the
+%       command "\part{x}".
+%    4. If a problem asks you to design an algorithm, use the commands
+%       \algorithm, \correctness, \runtime to precede your discussion of the 
+%       description of the algorithm, its correctness, and its running time, respectively.
+%    5. You can include graphics by using the command \includegraphics{FILENAME}
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning, calc}
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{placeins}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1 #2}\vspace{.5em}\hrule\vspace{.10in}}
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+\newcommand\algorithm{\vspace{.10in}\textbf{Algorithm: }}
+\newcommand\correctness{\vspace{.10in}\textbf{Correctness: }}
+\newcommand\runtime{\vspace{.10in}\textbf{Running time: }}
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\chead{\textbf{HW\HWNUM}}
+\rhead{\today}
+\begin{document}\raggedright
+%Section A==============Change the values below to match your information==================
+\newcommand\NAME{Sean Connor (443-414-5111)}  % your name
+\newcommand\HWNUM{1}              % the homework number
+%Section B==============Put your answers to the questions below here=======================
+
+\question{Q1}{}
+Prove the following by induction:
+\begin{equation*}
+\sum_{i=1}^{n} i^3 = \left(\frac{n(n+1)}{2}\right)^2
+\end{equation*}
+
+\part{a} Show that true when n = 1.
+\begin{equation*}
+\sum_{i=1}^{n} i^3 = 1^3 = \left(\frac{1(1+1)}{2}\right)^2 = 1
+\end{equation*}
+
+\part{b} Assume true when n= k.
+\begin{equation*}
+\sum_{i=1}^{k} i^3 = \left(\frac{k(k+1)}{2}\right)^2
+\end{equation*}
+
+\part{c} Show that true when n = k+1.
+\newline
+\newline
+First, evaluate the left hand side (LHS).
+\begin{align*}
+\sum_{i=1}^{k+1} i^3 & = \sum_{i=1}^{k} i^3 + (k+1)^3 \\
+& = \left(\frac{k(k+1)}{2}\right)^2 + (k+1)^3 \\
+& = \frac{k^4 + 2k^3 + k^2}{4} + (k+1)^3 \\
+& = \frac{k^4 + 2k^3 + k^2}{4} + (k+1)(k+1)(k+1) \\
+& = \frac{k^4 + 2k^3 + k^2}{4} + \frac{4k^3 + 12k^2 + 12k + 4}{4} \\
+& = \frac{k^4 + 6k^3 + 13k^2 + 12k + 4}{4}
+\end{align*}
+Next, evaluate the right hand side (RHS).
+\begin{align*}
+\left(\frac{(k+1)(k+2)}{2}\right)^2 &= \left(\frac{k^2 + 3k + 2}{2}\right)^2 \\
+& = \frac{(k^2+3k+2)(k^2+3k+2)}{4} \\
+& = \frac{k^4 + 6k^3 + 13k^2 + 12k + 4}{4}
+\end{align*}
+From this, we see that LHS = RHS. \\
+QED. \\
+\vspace{8mm}
+
+
+\question{Q2}{}
+
+\part{a} Worst case for insertion sort (according to textbook page 27) is 
+\begin{equation*}
+an^2 + bn + c \quad \text{(quadratic)}
+\end{equation*}
+Thus, if there are n/k lists of length k, the time will be:
+\begin{equation*}
+\frac{n}{k}(ak^2 + bk + c) = ank+bn+\frac{cn}{k}
+\end{equation*}
+The highest order term is `ank', thus the worst case time complexity is O(nk).
+
+\part{b} From page 37 of the textbook, the recursion tree for merge sort has $lg(n) + 1$ levels, each of which costs cn. In our case, there are only n/k sublists (as opposed to n sublists). Thus, there are only $lg(n/k) + 1$ levels, each of which costs (n/k)*k = n. The final result then is...
+\begin{equation*}
+\frac{n}{k}k\left(lg\frac{n}{k} + 1\right) = nlg\frac{n}{k} + n
+\end{equation*}
+The highest term is $nlg\frac{n}{k}$, thus the complexity is O($nlg\frac{n}{k}$).
+
+\part{c} Given O($nk+nlg\frac{n}{k}$). Standard merge sort is nlgn. So that what point is the nk term greater than the nlg$\frac{n}{k}$ term?
+\newline
+\newline
+At k = 1, O($n+nlgn$). nlgn is greater than n.
+\newline
+\newline
+At k = n, O($n^2 + nlg1$). n\textsuperscript{2} is greater than nlg1.
+\newline
+\newline
+The term must be between 1 and n. Let's try k = lgn.
+\begin{equation*}
+O(nlgn + nlg\frac{n}{lgn})
+\end{equation*}
+The $nlg\frac{n}{lgn}$ can be simplified as follows:
+\begin{equation*}
+nlg\frac{n}{lgn} = n(lgn - lg(lgn)) \approx nlgn
+\end{equation*}
+When k = lgn, the term are approximately equal. Thus, this is the maximum value.
+
+\part{d} In practice, k should be chosen so that the cost of insertion sort for a list of size k is less than the cost of merge sort on a list of size k.
+
+\question{Q3}{}
+The following is Java/pseudocode for an algorithm to print the in-degree and out-degree of every vertex in an m-edge, n-vertex directed graph represented using adjacency lists. Some assumptions are made. These are (1) that the index increments from zero, and (2) the number of vertices is fixed. The complexity is O(m+n).
+\begin{lstlisting}
+printDegree(Graph graph) {
+	int[] in_count = new int[graph.V];
+	int[] out_count = new int[graph.V];
+	List[] adj = graph.getAdj();
+	
+	// this block iterates through the m edges and determines the 
+	// in-degree and out-degree of each vertex
+	for ( int i = 0; i < graph.V; i++ ) { 
+		out_count[i] = adj[i].size();
+		for ( int j = 0; j < adj[i].size(); j++ ) {
+			in_count[adj[i].get(j)]++;
+		}
+	}
+
+	// this blocks iterates through each vertex and prints
+	// the in-degree and out-degree of each
+	for ( int i = 0; i < graph.V; i++ ) {
+		System.out.println("Vertex " + i + " in: " + in_count[i];
+		System.out.println("Vertex " + i + " out: " + out_count[i];
+	}
+}
+\end{lstlisting}
+
+\question{Q4}{}
+The textbook (page 288) was utilized greatly in answering this question. If starting at root, the traversal visits all nodes (n total nodes). For an empty tree, there is still some constant time to process, i.e. T(0) = c. A tree can be divided to left and right subtrees with k and n-k-1 nodes, respectively. Thus:
+\begin{equation*}
+T(n) \leq T(k) + T(n-k-1) + d
+\end{equation*}
+where d is some constant.
+\begin{align*}
+T(k) & = c_ek + c \\
+T(n-k-1) & = c_en - c_ek - c_e + c
+\end{align*}
+Thus,
+\begin{equation*}
+T(n) \leq T(k) + T(n-k-1) + d = c_en+c
+\end{equation*}
+From this, we see that the highest term is $c_en$ and so the complexity is O(n). Simply put, each node is visited only once and there is a constant time cost for each, ultimately yielding O(n).
+
+\question{Q5}{}
+The search for an AVL tree is idenital to that of a standard binary search tree. However, because the AVL tree is balanced, the complexity of an AVL tree search is O(lgn) as opposed to O(n) for binary search tree. In this particular problem, we are seeking to identify not whether a key exists, but whether the value of a key falls between a range specified in the function arguments. This requires slight modification of the algorithm. 
+
+The algorithm is implemented as a recursive algorithm, with arguments for a, b, and node. First, we check if the node is null, returning false if so. This indicates either that the tree is empty, or that the no node exists between the range a and b. Next, we check if the node key is between a and b, returning true if so. If the node is not null, but the key is not between a and b, we call the method recursively on the left or right subtree, depending on whether or not the key was smaller than a. The Java/pseudocode for this method is below.
+
+\begin{lstlisting}
+avlSearch(int a, int b, Node node) {
+	
+	if (node == null ) {
+		return false;
+	}
+
+	else if ( node.key <= b && node.key >= a ) {
+		return true;
+	}
+
+	else if ( node.key < a ) {
+		avlSearch(a, b, node.right);
+	}
+
+	else {
+		avlSearch(a, b, node.left);
+	}
+
+}
+\end{lstlisting}
+
+As mentioned, the complexity of this method is O(lgn), because the method evaluates at most lgn nodes (the maximum height of the tree).
+
+\end{document}
+
+
+
+
+
+
+
+
+
