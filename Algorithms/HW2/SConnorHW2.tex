@@ -1,0 +1,156 @@
+%=======================02-713 LaTeX template, following the 15-210 template==================
+%
+% You don't need to use LaTeX or this template, but you must turn your homework in as
+% a typeset PDF somehow.
+%
+% How to use:
+%    1. Update your information in section "A" below
+%    2. Write your answers in section "B" below. Precede answers for all 
+%       parts of a question with the command "\question{n}{desc}" where n is
+%       the question number and "desc" is a short, one-line description of 
+%       the problem. There is no need to restate the problem.
+%    3. If a question has multiple parts, precede the answer to part x with the
+%       command "\part{x}".
+%    4. If a problem asks you to design an algorithm, use the commands
+%       \algorithm, \correctness, \runtime to precede your discussion of the 
+%       description of the algorithm, its correctness, and its running time, respectively.
+%    5. You can include graphics by using the command \includegraphics{FILENAME}
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning, calc}
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{placeins}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{forest}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1 #2}\vspace{.5em}\hrule\vspace{.10in}}
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+\newcommand\algorithm{\vspace{.10in}\textbf{Algorithm: }}
+\newcommand\correctness{\vspace{.10in}\textbf{Correctness: }}
+\newcommand\runtime{\vspace{.10in}\textbf{Running time: }}
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\chead{\textbf{HW\HWNUM}}
+\rhead{\today}
+\begin{document}\raggedright
+%Section A==============Change the values below to match your information==================
+\newcommand\NAME{Sean Connor (443-414-5111)}  % your name
+\newcommand\HWNUM{2}              % the homework number
+%Section B==============Put your answers to the questions below here=======================
+
+\question{Q1}{}
+\textbf{FALSE} First, we observe that the equation $T(n) = 3T(\frac{n}{2})+n$ is of a form which is suitable to use with the master method. We see that $a=3$, $b=2$, and $f(n)=n$. Following, $n^{log_ba}$ is equal to $n^{log_23}$, which is approximately equal to $n^{1.58}$. From this, we can set $\epsilon$ to a constant value of $n^{log_23} - 1$. Since $\epsilon > 0$ and $f(n)= n = O(n^{log_ba-\epsilon}) = O(n)$, then the solution is $T(n)=\Theta(n^{log_23})$ $\approx \Theta(n^{1.58})$.
+
+\question{Q2}{}
+\textbf{FALSE} This question is tricky, as it is not immediately apparent that the equation $T(n) = T(\sqrt{n})+1$ is of a form that is suitable for use with the master method. However, we can employ a change of variables (as seen in the textbook on page 86) that will allow us to process the equation with the master method. Perform the following:
+\begin{enumerate}
+\item $T(n) = T(\sqrt{n})+1$
+\item $m = lg(n)$
+\item $T(2^m) = T(2^{m/2}) + 1$
+\item $S(m) = S(m/2) + 1$
+\item $a = 1$, $b = 2$, and $g(m) = 1$
+\item $n^{log_ba} = n^{log_21} = 1 = g(m)$ (CASE 2)
+\item $S(m) = \Theta(lg(m))$
+\item $T(n) = \Theta(lg(lg(n)))$
+\end{enumerate}
+
+\question{Q3}{}
+\textbf{THE MASTER METHOD CANNOT BE USED FOR THIS EQUATION} The equation $T(n) = 2T(\frac{n}{3} + 1) + n$ is not of a form suitable for use with the master method. The master method is used for ``divide and conquer'' style recursion equations, and while this equation does have elements of the ``divide and conquer'' style, it also incorporates a linear term (the ``+ 1'') that makes it unsuitable for use with the master method.
+
+\question{Q4}{}
+\part{a}
+The recursion tree for this equation $T(n) = T(\frac{n}{3}) + T(\frac{2n}{3}) + cn$ can be viewed on page 91 of the textbook. Considering that the upper bound of the equation can be found by multiplying the max height of the tree (the longest simple path from root to leaf) by the cost at each level, it stands to reason that the lower bound can be estimated by multiplying the shortest simple path from root to leaf by the cost at each level. In this case, the shorted possible path is $log_3n$, but the estimate for complexity will still be the same; that is, $\Omega(nlgn)$. We can verify this using the same substitution method used for verifying the upper bound as seen on page 92 of the textbook. In this case, the compartor will be reversed.
+\begin{align*}
+T(n) &\geq T(\frac{n}{3}) + T(\frac{2n}{3}) + cn \\
+&\geq d(\frac{n}{3})lg(\frac{n}{3}) + d(\frac{2n}{3})lg(\frac{2n}{3}) +cn \\
+&= dnlgn - dn(lg3 - \frac{2}{3}) + cn \\
+&\geq dnlgn
+\end{align*}
+
+The previous relation stands as long as $d \leq \frac{c}{lg3 - 2/3}$. Thus, the lower bound is confirmed to be $\Omega(nlgn)$.
+
+\part{b}
+The recursion tree for this problem is illustrated here.
+\begin{center}
+\begin{forest}
+  for tree={
+    draw,
+    align=center
+  }
+  [cn
+    [c$\alpha$n
+      [c$\alpha^2$n
+        [...]
+        [...]
+        ]
+      [c$\alpha(1-\alpha)n$
+        [...]
+        [...]
+        ]
+    ]
+    [c$(\alpha-1)$n
+      [c$\alpha(1-\alpha)$n
+        [...]
+        [...]
+        ]
+      [c$(1-\alpha)^2$n
+        [...]
+        [...]
+        ]
+    ]
+  ]
+\end{forest}
+\end{center}
+It can be seen that the sum at each level is cn. Assuming $0.5<\alpha<1.0$, the longest path (upper bound) is following the leftmost branch of the recursion tree. Conversely, the shortest path is found by following the rightmost path of the recursion tree. The maximum height of the tree is $log_{\frac{1}{\alpha}}n$. The minimum height is $log_{\frac{1}{1-\alpha}}n$. The total cost is given by the height multiplied by the cost per level, which gives an estimate for both the upper and lower bound as approximately nlgn. This can be used as a guess for verification by substitution (as demonstrated on page 92 of the textbook).
+\begin{align*}
+T(n) &\leq T(\alpha n) + T((1-\alpha)n) + cn \\
+&\leq d \alpha n \; \text{lg}(\alpha n) + d(1-\alpha)n \; \text{lg}((1-\alpha)n) + cn \\
+&= d \alpha n \; \text{lg}(\alpha) + d \alpha n \; \text{lg}(n) + d (1-\alpha) n \; \text{lg}(1-\alpha) + d (1-\alpha) n \; \text{lg}(n) + cn \\
+&= d n \; \text{lg}(n) + d \alpha n \; \text{lg}(\alpha) + d (1-\alpha) n \; \text{lg}(1-\alpha) + cn \\
+& \leq dn \; \text{lg}(n) 
+\end{align*}
+
+Holds when $d \alpha n \; \text{lg}(\alpha) + d(1-\alpha)n \; \text{lg}(1-\alpha) + cn \leq 0$. Similarly, for the lower bound the relation holds when $d \alpha n \; \text{lg}(\alpha) + d(1-\alpha)n \; \text{lg}(1-\alpha) + cn \geq 0$. Thus, $\Theta$(nlgn).
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
