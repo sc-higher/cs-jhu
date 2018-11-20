@@ -1,0 +1,297 @@
+%=======================02-713 LaTeX template, following the 15-210 template==================
+%
+% You don't need to use LaTeX or this template, but you must turn your homework in as
+% a typeset PDF somehow.
+%
+% How to use:
+%    1. Update your information in section "A" below
+%    2. Write your answers in section "B" below. Precede answers for all 
+%       parts of a question with the command "\question{n}{desc}" where n is
+%       the question number and "desc" is a short, one-line description of 
+%       the problem. There is no need to restate the problem.
+%    3. If a question has multiple parts, precede the answer to part x with the
+%       command "\part{x}".
+%    4. If a problem asks you to design an algorithm, use the commands
+%       \algorithm, \correctness, \runtime to precede your discussion of the 
+%       description of the algorithm, its correctness, and its running time, respectively.
+%    5. You can include graphics by using the command \includegraphics{FILENAME}
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning, calc}
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{placeins}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{forest}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1 #2}\vspace{.5em}\hrule\vspace{.10in}}
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+\newcommand\algorithm{\vspace{.10in}\textbf{Algorithm: }}
+\newcommand\correctness{\vspace{.10in}\textbf{Correctness: }}
+\newcommand\runtime{\vspace{.10in}\textbf{Running time: }}
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\chead{\textbf{HW\HWNUM}}
+\rhead{\today}
+\begin{document}\raggedright
+%Section A==============Change the values below to match your information==================
+\newcommand\NAME{Sean Connor (443-414-5111)}  % your name
+\newcommand\HWNUM{6}              % the homework number
+%Section B==============Put your answers to the questions below here=======================
+\question{Q1}{}
+Here follows Java/pseudocode for a polynomial-time dynamic programming algorithm that produces an optimal shipping schedule.
+\begin{lstlisting}
+/* Java/pseudocode for optimal shipping schedule */
+ScheduleMaker(int[] supply, int r, int c){
+	
+	String[] schedule = new String[supply.length];
+	int[] best = new int[supply.length];
+	
+	// iterates through the supply array, storing the optimal value in `best' and 
+	// schedule type in `schedule'
+	for (int i = 0; i < supply.length; i++){
+		if ( r*supply[i] + best[i-1] < 4c + best[i-4] ){
+			best[i] = r*supply[i] + best[i-1];
+			schedule[i] = A;
+		}
+		else{
+			best[i] = 4c + best[i-4];
+			schedule[i] = B;
+		}
+	}
+			
+	// This backtracks through to ensure that the proper schedule type is listed
+	int i = supply.length;
+	while ( i > 0 ){
+		if ( schedule[i] == A){
+			i--;
+		}
+		else{
+			schedule[i-1] = B;
+			schedule[i-2] = B;
+			schedule[i-3] = B;
+			i = i-4;
+		}
+	}
+		
+	return schedule;
+
+}
+\end{lstlisting}
+
+\pagebreak
+Here is the result of running this algorithm on the sample set (11, 9, 9, 12, 12, 12, 12, 9, 9, 11) when r=1 and c=10.
+
+\begin{table}[htbp!]
+\centering
+\begin{tabular}{l|l|l|l}
+n  & choice 1       & choice 2       & schedule \\ \hline
+1  & \textbf{11}    &                & A        \\
+2  & \textbf{20}    &                & A        \\
+3  & \textbf{29}    &                & A        \\
+4  & 29+12          & \textbf{40}    & B        \\
+5  & 40+12          & \textbf{40+11} & B        \\
+6  & 51+12          & \textbf{40+20} & B        \\
+7  & 60+12          & \textbf{40+29} & B        \\
+8  & \textbf{69+9}  & 40+40          & A        \\
+9  & \textbf{78+9}  & 40+51          & A        \\
+10 & \textbf{87+11} & 40+60          & A       
+\end{tabular}
+\end{table}
+
+\pagebreak
+\question{Q2}{\;\;\;CLRS 29.4-3}
+From page 860 of the text, and equations for a linear programming formulation of the Max Flow problem are as follows:
+\begin{align}
+\text{maximize: } \\
+\sum_{v \in V}f_{sv} &- \sum_{v \in V}f_{vs} \\
+\text{subject to: } \\
+f_{uv} &\leq c(u,v) && \text{for each } u,v \in V \\
+\sum_{v \in V}f_{vu} &= \sum_{v \in V}f_{uv} && \text{for each } u \in V - \{s,t\} \\
+f_{uv} &\geq 0 && \text{for each } u,v \in V
+\end{align}
+This can be converted to the standard form. This makes it easier to convert the primal to the dual.
+\begin{align}
+\text{maximize: } \\
+\sum_{v \in V}f_{sv} &- \sum_{v \in V}f_{vs} \\
+\text{subject to: } \\
+f_{uv} &\leq c(u,v) && \text{for each } u,v \in V \\
+\sum_{v \in V}f_{vu} - \sum_{v \in V}f_{uv} &\leq 0 && \text{for each } u \in V - \{s,t\} \\
+\sum_{v \in V}-f_{vu} - \sum_{v \in V}-f_{uv} &\leq 0 && \text{for each } u \in V - \{s,t\} \\
+f_{uv} &\geq 0 && \text{for each } u,v \in V
+\end{align}
+The conversion can be done utilizing the following rule:
+
+If the primal is:
+\begin{align}
+\text{maximize} \quad c^Tx \quad \text{such that} \quad
+\begin{dcases}
+    Ax \leq b\\
+    x \geq 0
+\end{dcases} 
+\end{align}
+Then the dual is:
+\begin{align}
+\text{minimize} \quad b^Ty \quad \text{such that} \quad
+\begin{dcases}
+    A^Ty \geq c\\
+    y \geq 0
+\end{dcases} 
+\end{align}
+
+From this, we can determine the dual of the Max Flow linear program to be:
+\begin{align}
+\text{minimize: } \\
+\sum_{(u,v) \in E}c(u,v)y_{uv} \\
+\text{subject to: } \\
+y_{sv} + y_v & \geq 1 && \text{for each } (s,v) \in E \\
+y_{vt} - y_v & \geq 0 && \text{for each } (v,t) \in E \\
+y_{uv} + y_v - y_u &\geq 0 && \text{for each } (u,v) \in E - \{s,t\} \\
+y_{uv} & \geq 0  && \text{for each } (v,t) \in E
+\end{align}
+
+If we take
+\begin{align}
+y_{uv} = 
+\begin{dcases}
+    1, \quad \text{if } u \in S \text{ and } v \in T \\
+    0, \quad \text{otherwise}
+\end{dcases} 
+\end{align}
+and
+\begin{align}
+y_{u} = 
+\begin{dcases}
+    1, \quad \text{if } u \in S \\
+    0, \quad \text{otherwise}
+\end{dcases} 
+\end{align}
+then we can see that the dual of the Max Flow problem is the Min Cut problem; that is, the capacity across valid cuts is minimized. 
+
+\newpage
+\question{Q3}{}
+This can be achieved using dynamic programming in a manner similar to Problem 1.
+\begin{lstlisting}
+/* Java/pseudocode for optimal shipping schedule */
+StringSegment(String A){
+	
+	int n = A.length;
+	int[] spacing = new int[n];
+	int[] best = new int[n];
+	int highest;
+	ArrayList<Integer> finalSpacing = new ArrayList<Integer>();
+	
+	// Iterates through the string array, storing the optimal value in `best' and 
+	// ideal segments in `spacing'
+	for (int i = 1; i < n; i++){
+		highest = 0;
+		for (int j = 1; j <= i; j++){
+			if ( best[j-1]+quality(j...i) > best ){
+				highest = best[j-1]+quality(j...i);
+				spacing[i] = j-1;
+			}
+		best[i] = highest;
+	}
+			
+	// This backtracks through to ensure proper spacing. It starts at last element in 
+	// string and continually `jumps' to that location in the spacing[] array to find 
+	// the optimal spacing for each substring
+	int i = n;
+	while ( i > 0 ){
+		finalSpacing.append(spacing[i]);
+		i = spacing[i];
+	}
+		
+	return finalSpacing;
+
+}
+\end{lstlisting}
+
+This algorithm runs in $O(n^2)$ time because it iterates through the length of the string using nested for loops. At each step, the nested loop size increases by one, starting at one and ending at n. Thus, the runtime is given by a summation; that is, $O(\frac{n(n-1)}{2})$ which is $O(n^2)$. The algorithm produces the correct outcome because the optimal value for the prefix string is used and a new optimum is calculated to be the highest sum of previous optimum plus the quality of the suffix string. This is guaranteed to produce the highest quality score at each iteration. From this, it is clear that the correctness that this point relies on the blackbox quality() method.
+
+\newpage
+\question{Q4}{}
+Given the following ``loss'' matrix A for Player 1 in a game of rock-paper-scissors.:
+\begin{align*}
+A = 
+\begin{bmatrix}
+0 & 1 & -1 \\
+-1 & 0 & 1 \\
+1 & -1 & 0
+\end{bmatrix}
+\end{align*}
+
+\part{a}
+We can construct the following assuming Player 1 and Player 2 both play a mixed strategy:
+\begin{align*}
+\text{Player 1 plays rock: } EV(x_1) = y_1(0) + y_2(1) + y_3(-1) \\
+\text{Player 1 plays paper: } EV(x_2) = y_1(-1) + y_2(0) + y_3(1) \\
+\text{Player 1 plays scissors: } EV(x_3) = y_1(1) + y_2(-1) + y_3(0)
+\end{align*}
+The expected loss then is simply the sum of the expected values given above.
+\begin{align*}
+\text{expected loss } = \sum_{i=1}^3EV(x_i)
+\end{align*}
+Thus, if both players play a mixed ($\frac{1}{3},\frac{1}{3},\frac{1}{3}$) strategy, the expected loss is zero.
+
+\part{b}
+If Player 1 plays a mixed strategy but Player 2 plays exclusively rock, paper, or scissors, then the expected loss for both players will still be zero, as each player will win, lose, and draw a third of the time. If Player 1 plays any strategy in between $\frac{1}{3},\frac{1}{3},\frac{1}{3}$ and $(1, 0, 0)$, $(0, 1, 0)$, and $(0, 0, 1)$, then the outcome is the same. For example, if Player 1 adopts a $\frac{1}{2},\frac{1}{4},\frac{1}{4}$ strategy, then we see the following:
+\begin{align*}
+EV = \frac{1}{6}(1) + \frac{1}{6}(-1) + \frac{1}{6}(0) + \frac{1}{12}(1) + \frac{1}{12}(-1) + \frac{1}{12}(0) + \frac{1}{12}(1) + \frac{1}{12}(-1) + \frac{1}{12}(0) = 0
+\end{align*}
+If both players adopt a strategy other than ($\frac{1}{3},\frac{1}{3},\frac{1}{3}$), then there is the potential for loss (i.e. Player 1 always plays rock and Player 2 always plays scissors, then Player 1 will always win).
+
+\part{c}
+As shown in parts (a) and (b), a player minimizes loss by adopting a ($\frac{1}{3},\frac{1}{3},\frac{1}{3}$) strategy. No matter what the opposing player's strategy is, the expected loss will be zero, and that is the best one can hope for, since any normal human will try to avoid being predictable in rock-paper-scissors.
+
+If we solve the equations given in part (a), with the added requirement then $x_1 + x_2 + x_3 = 1$ and $y_1 + y_2 + y_3 = 1$, we find that $x_1 = x_2 = x_3 = y_1 = y_2 = y_3 = \frac{1}{3}$.
+
+\part{d}
+No. As mentioned in part (c), a ($\frac{1}{3},\frac{1}{3},\frac{1}{3}$) strategy results in an expected loss of zero. However, if Player 2 changes their strategy to something other than ($\frac{1}{3},\frac{1}{3},\frac{1}{3}$), Player 1 could alter their own strategy to improve their gain. By definition, a Nash equilibirum is a case ``in which each player is assumed to know the equilibrium strategies of the other players, and no player has anything to gain by changing only their own strategy.'' Clearly no scenario, except when Player 1 and Player 2 both adopt the ($\frac{1}{3},\frac{1}{3},\frac{1}{3}$) strategy, can be a Nash equilibrium.
+
+\end{document}
+
+
+
+
+
+
+
+
+
