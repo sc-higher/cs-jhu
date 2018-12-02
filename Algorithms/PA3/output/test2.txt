@@ -1,0 +1,42 @@
+JHU 605.621 Programming Assignment 3
+@author Sean Connor
+@date 2018/12/02 18:50:11
+
+Input Filename: test2.txt
+
+Input Strings
+x: 101
+y: 00
+s: 1111111
+
+Extended Strings
+x: 1011011
+y: 0000000
+s: 1111111
+
+# of comparisons made: 135
+
+Dynamic Programming Array (shown only if s <= 20)
+
+
+ | 0 1 2 3 4 5 6 7
+
+-- - - - - - - - -
+
+0| T F F F F F F F
+
+1| T F F F F F F  
+
+2| F F F F F F    
+
+3| F F F F F      
+
+4| F F F F        
+
+5| F F F          
+
+6| F F            
+
+7| F              
+
+Is s and interleaving of x and y? false
