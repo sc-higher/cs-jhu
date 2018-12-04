@@ -15,4 +15,4 @@ Usage is as follows:
 javac *.java
 java Driver ../input/<filename> <output-filename>
 
-Input files contain one integer per line with no blank/empty lines. See one of the provided input files for an example.
+Input files contain one binary string/integer per line with no blank/empty lines. See one of the provided input files for an example.
