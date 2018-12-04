@@ -1,6 +1,6 @@
 JHU 605.621 Programming Assignment 3
 @author Sean Connor
-@date 2018/12/02 18:50:07
+@date 2018/12/03 19:20:16
 
 Input Filename: 100-1000-7.txt
 

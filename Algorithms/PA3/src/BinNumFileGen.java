@@ -1,3 +1,15 @@
+/**
+ * This program is part of my response to PA 3 for the class 605.621
+ * Foundations of Algorithms at the JHU EPP CS program.
+ *
+ * Used to generate test files. Each test file consists of three lines
+ * representing x, y, and s. These test files are used as input for the
+ * main program.
+ *
+ * @author Sean Connor
+ * @date 2 December 2018
+ */
+
 import java.util.Random;
 
 public class BinNumFileGen {

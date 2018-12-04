@@ -103,7 +103,7 @@ public class FileInput {
 
     /**
      * Runs through the file line by line and parses integer values to an
-     * int[] array. Returns int[].
+     * String[] array. Returns String[].
      *
      * @param filename
      * @param size

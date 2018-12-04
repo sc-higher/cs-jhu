@@ -1,3 +1,14 @@
+/**
+ * This program is part of my response to PA 3 for the class 605.621
+ * Foundations of Algorithms at the JHU EPP CS program.
+ *
+ * No longer used. Was initially used to generate binary strings of
+ * varying lengths.
+ *
+ * @author Sean Connor
+ * @date 2 December 2018
+ */
+
 import java.util.Random;
 
 public class RandomBinary {

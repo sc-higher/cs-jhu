@@ -18,6 +18,7 @@ public class Interleaving {
 
 
     /**
+     * Constructor. Accepts a String[] containing x, y, and s.
      *
      * @param data
      */
@@ -30,6 +31,8 @@ public class Interleaving {
 
 
     /**
+     * Extends the length of a string to that of s. Used to extend x and y
+     * so that they are the same length as x. Extend strings by repeating.
      *
      * @param a
      * @return
@@ -53,6 +56,11 @@ public class Interleaving {
 
 
     /**
+     * Main dynamic programming algorithm. Creates a boolean array of size
+     * s.length() by s.length(). Iterates through each element row by row
+     * to calculate a true/false result for the interleaving subproblem.
+     * If any value at a[i][j] where i+j=s.length (the diagonal) is true,
+     * then s is an interleaving of x and y.
      *
      * @return
      */
@@ -90,6 +98,8 @@ public class Interleaving {
 
 
     /**
+     * Converts the boolean array result of calcualte() to a string array for
+     * easy viewing of the result.
      *
      * @param ba
      * @return
@@ -130,6 +140,14 @@ public class Interleaving {
     }
 
 
+    /**
+     * Iterates through the diagonal where i+j=s.length. If any value at
+     * a[i][j] where i+j=s.length (the diagonal) is true, then s is an
+     * interleaving of x and y.
+     *
+     * @param a
+     * @return
+     */
     public boolean decision(boolean[][] a) {
         int j = lenS;
         for (int i = 0; i <= lenS; i++) {
